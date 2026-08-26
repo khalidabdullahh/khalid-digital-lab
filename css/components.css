@@ -1,0 +1,87 @@
+/**
+ * Personal Digital Lab - Components & Interactive Elements CSS
+ * Author: Khalid Abdullah
+ */
+
+/* Card Glows & Elevation */
+.experiment-card, .tool-card, .article-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.experiment-card:hover, .tool-card:hover, .article-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px -8px rgba(0, 240, 255, 0.12);
+}
+
+/* Subtle Animated Grid Background */
+.hero-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+html.theme-light .hero-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+/* Glass Panels */
+.glass-panel {
+  background: rgba(13, 18, 28, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+}
+
+html.theme-light .glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Button & Link States */
+.preset-btn.active, .fraction-btn.active, .p-btn.active, .lab-filter-btn.active, .log-filter-btn.active {
+  background: var(--accent-cyan-glow);
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+/* Modal Animations */
+#experiment-modal-backdrop, #article-modal-backdrop, #cmd-palette-backdrop, #terminal-modal-backdrop {
+  animation: fadeIn 0.18s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Custom Range Sliders */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--bg-surface-elevated);
+  outline: none;
+  border: 1px solid var(--border-color);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent-cyan-glow);
+  transition: transform 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}

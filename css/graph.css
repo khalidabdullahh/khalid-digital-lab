@@ -1,0 +1,12 @@
+/**
+ * Personal Digital Lab - Knowledge Graph CSS
+ * Author: Khalid Abdullah
+ */
+
+#knowledge-graph-canvas {
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.08) 0%, rgba(6, 8, 16, 0.95) 75%);
+}
+
+html.theme-light #knowledge-graph-canvas {
+  background: radial-gradient(circle at center, rgba(2, 132, 199, 0.08) 0%, rgba(248, 250, 252, 0.95) 75%);
+}

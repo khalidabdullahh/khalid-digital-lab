@@ -1,0 +1,27 @@
+/**
+ * Personal Digital Lab - Responsive & Mobile Ergonomics CSS
+ * Author: Khalid Abdullah
+ */
+
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 80px; /* Space for mobile dock */
+  }
+
+  .simulator-wrapper, .ats-wrapper, .kelly-wrapper, .vector-wrapper {
+    padding: 1rem !important;
+  }
+
+  #cursor-follower, #cursor-dot {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

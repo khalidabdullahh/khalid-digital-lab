@@ -1,0 +1,116 @@
+/**
+ * Personal Digital Lab - Main Design System & Tokens
+ * Author: Khalid Abdullah
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Dark-First Palette (Default) */
+  --bg-primary: #05070b;
+  --bg-secondary: #090d15;
+  --bg-surface: #0d121c;
+  --bg-surface-elevated: #131926;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(0, 240, 255, 0.4);
+
+  /* Typography Colors */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Restrained Strategic Accents */
+  --accent-cyan: #00f0ff;
+  --accent-cyan-glow: rgba(0, 240, 255, 0.25);
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #ef4444;
+
+  /* Font Families */
+  --font-sans: 'Geist', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Space Grotesk', 'Geist', sans-serif;
+}
+
+/* Light Theme Variable Overrides */
+html.theme-light {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f1f5f9;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 150, 255, 0.5);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --accent-cyan: #0284c7;
+  --accent-cyan-glow: rgba(2, 132, 199, 0.2);
+}
+
+/* Reset & Base Setup */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+html.theme-light {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-surface-elevated);
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cyan);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-cyan);
+  color: #000000;
+}
+
+/* Utility Tokens Mapping to Tailwind Utilities */
+.bg-surface { background-color: var(--bg-surface); }
+.bg-surface-elevated { background-color: var(--bg-surface-elevated); }
+.border-border { border-color: var(--border-color); }
+.text-text-primary { color: var(--text-primary); }
+.text-text-secondary { color: var(--text-secondary); }
+.text-text-muted { color: var(--text-muted); }
+.text-cyan { color: var(--accent-cyan); }
+.bg-cyan { background-color: var(--accent-cyan); }
+.hover\:bg-cyan-glow:hover { box-shadow: 0 0 20px var(--accent-cyan-glow); }
