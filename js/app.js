@@ -27,7 +27,7 @@ class App {
   init() {
     console.log(`%c🧪 Khalid Abdullah // Personal Digital Lab v${CONFIG.system.version} Initialized.`, "color: #00f0ff; font-weight: bold; font-family: monospace; font-size: 14px;");
 
-    // Initialize Navigation & Utilities
+    // Initialize Navigation & Interactive Sections
     this.components.navigation = new Navigation();
     this.components.heroCanvas = new HeroCanvas("hero-bg-canvas");
     this.components.currentlyBuilding = new CurrentlyBuilding("currently-building-container");
@@ -45,6 +45,7 @@ class App {
     this.components.cursor = new CustomCursor();
 
     this.setupSmoothScroll();
+    this.setupScrollRevealAnimations();
     this.renderFooter();
   }
 
@@ -63,6 +64,18 @@ class App {
     });
   }
 
+  setupScrollRevealAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+
+    document.querySelectorAll(".reveal-item").forEach(el => observer.observe(el));
+  }
+
   renderFooter() {
     const footerEl = document.getElementById("main-footer");
     if (!footerEl) return;
@@ -73,7 +86,7 @@ class App {
           <!-- Brand Column -->
           <div class="md:col-span-2 space-y-4">
             <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-surface-elevated border border-cyan/40 flex items-center justify-center font-mono font-black text-cyan text-sm">
+              <div class="w-8 h-8 rounded-lg bg-surface-elevated border border-cyan/40 flex items-center justify-center font-mono font-black text-cyan text-sm shadow-inner">
                 KA
               </div>
               <span class="font-mono font-bold text-sm tracking-wider text-text-primary uppercase">KHALID ABDULLAH // DIGITAL LAB</span>
@@ -82,7 +95,7 @@ class App {
               «Who I am + What I am researching + What I am building + What I have learned + What people can actually use.»
             </p>
             <div class="text-[11px] font-mono text-text-muted">
-              Built with curiosity, mathematical rigor, and high-performance frontend architecture.
+              Built with curiosity, mathematical rigor, and high-performance web architecture.
             </div>
           </div>
 
@@ -102,12 +115,12 @@ class App {
 
           <!-- Direct Links -->
           <div class="space-y-3">
-            <div class="text-xs font-mono font-bold text-cyan uppercase">EXTERNAL PRODUCTS</div>
+            <div class="text-xs font-mono font-bold text-cyan uppercase">LIVE PRODUCTS</div>
             <ul class="space-y-2 text-xs font-mono text-text-secondary">
-              <li><a href="https://first-project-plum-phi.vercel.app" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>AI CV Builder</span><span>↗</span></a></li>
-              <li><a href="https://oops-snowy-three.vercel.app/" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>Oops! Game</span><span>↗</span></a></li>
-              <li><a href="${CONFIG.author.github}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>GitHub Repos</span><span>↗</span></a></li>
-              <li><a href="${CONFIG.author.linkedin}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>LinkedIn</span><span>↗</span></a></li>
+              <li><a href="https://first-project-plum-phi.vercel.app" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1.5"><span class="text-emerald-400">●</span><span>AI CV Builder</span><span>↗</span></a></li>
+              <li><a href="https://oops-snowy-three.vercel.app/" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1.5"><span class="text-purple-400">●</span><span>Oops! Game</span><span>↗</span></a></li>
+              <li><a href="${CONFIG.author.github}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1.5"><span>GitHub</span><span>↗</span></a></li>
+              <li><a href="${CONFIG.author.linkedin}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1.5"><span>LinkedIn</span><span>↗</span></a></li>
             </ul>
           </div>
         </div>

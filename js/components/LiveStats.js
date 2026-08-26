@@ -23,9 +23,9 @@ export class LiveStats {
     this.container.innerHTML = `
       <div class="py-16 border-y border-border/80 bg-surface/60 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
             ${CONFIG.stats.map(stat => `
-              <div class="p-4 rounded-2xl bg-surface border border-border/80 text-center hover:border-cyan/40 transition-all shadow-md">
+              <div class="p-5 rounded-3xl bg-surface border border-border/80 text-center hover:border-cyan/40 transition-all shadow-md">
                 <div class="text-[11px] font-mono text-text-muted uppercase tracking-wider">${stat.label}</div>
                 <div class="text-3xl sm:text-4xl font-mono font-black text-text-primary mt-1 flex items-center justify-center">
                   <span class="stat-counter" data-target="${stat.value}">0</span>
