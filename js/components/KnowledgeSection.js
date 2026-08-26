@@ -44,10 +44,9 @@ export class KnowledgeSection {
             </p>
           </div>
 
-          <!-- Add New Note Button -->
-          <button id="btn-add-note" class="px-5 py-2.5 rounded-2xl bg-cyan/15 hover:bg-cyan/25 border border-cyan/40 text-cyan text-xs font-mono font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer">
-            <span>✍️ + Write Research Note</span>
-          </button>
+          <div class="px-4 py-2 rounded-2xl bg-surface-elevated border border-border text-xs font-mono text-cyan">
+            <span>● ${KNOWLEDGE_ARTICLES.length} Published Research Briefs</span>
+          </div>
         </div>
 
         <!-- 1. Interactive Knowledge Graph Canvas -->
@@ -81,7 +80,7 @@ export class KnowledgeSection {
           <h3 class="text-xs font-mono font-bold tracking-widest text-text-muted uppercase">
             CURATED ESSAYS & RESEARCH BRIEFS (${KNOWLEDGE_ARTICLES.length})
           </h3>
-          <span class="text-xs font-mono text-cyan">Updated Weekly</span>
+          <span class="text-xs font-mono text-cyan">Authored by Khalid Abdullah</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -187,11 +186,6 @@ export class KnowledgeSection {
     window.addEventListener("resize", () => {
       this.resizeGraph();
       this.setupGraphNodes();
-    });
-
-    // Write note button
-    document.getElementById("btn-add-note")?.addEventListener("click", () => {
-      window.dispatchEvent(new CustomEvent("open-lab-studio", { detail: { type: "note" } }));
     });
 
     const getPos = (e) => {
@@ -327,9 +321,9 @@ export class KnowledgeSection {
 
         <div class="article-body-markdown space-y-4">
           ${article.content.replace(/### (.*?)\n/g, '<h3 class="text-base font-bold text-text-primary mt-6 mb-2 font-mono tracking-tight">$1</h3>')
-            .replace(/```python([\s\S]*?)```/g, '<pre class="p-4 rounded-2xl bg-[#050810] border border-border text-xs font-mono text-emerald-400 overflow-x-auto my-3"><code>$1</code></pre>')
-            .replace(/```typescript([\s\S]*?)```/g, '<pre class="p-4 rounded-2xl bg-[#050810] border border-border text-xs font-mono text-cyan overflow-x-auto my-3"><code>$1</code></pre>')
-            .replace(/```javascript([\s\S]*?)```/g, '<pre class="p-4 rounded-2xl bg-[#050810] border border-border text-xs font-mono text-amber-400 overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```python([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-emerald-400 overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```typescript([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-cyan overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```javascript([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-amber-400 overflow-x-auto my-3"><code>$1</code></pre>')
           }
         </div>
       </div>
