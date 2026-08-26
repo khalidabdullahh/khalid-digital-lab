@@ -42,12 +42,18 @@ export class LabSection {
             </p>
           </div>
 
-          <!-- Filter Pills -->
-          <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-surface border border-border">
-            <button class="lab-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "all" ? "bg-cyan/15 border border-cyan/40 text-cyan font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="all">All (${EXPERIMENTS.length})</button>
-            <button class="lab-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "active" ? "bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="active">Active 🟢</button>
-            <button class="lab-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "experimenting" ? "bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="experimenting">Experimenting 🟡</button>
-            <button class="lab-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "research" ? "bg-blue-500/15 border border-blue-500/40 text-blue-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="research">Research 🔵</button>
+          <!-- Actions & Filter Pills -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="btn-add-experiment" class="px-4 py-2 rounded-xl bg-cyan/15 hover:bg-cyan/25 border border-cyan/40 text-cyan text-xs font-mono font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+              <span>🧪 + New Experiment</span>
+            </button>
+
+            <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-surface border border-border">
+              <button class="lab-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "all" ? "bg-cyan/15 border border-cyan/40 text-cyan font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="all">All (${EXPERIMENTS.length})</button>
+              <button class="lab-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "active" ? "bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="active">Active 🟢</button>
+              <button class="lab-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "experimenting" ? "bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="experimenting">Experimenting 🟡</button>
+              <button class="lab-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "research" ? "bg-blue-500/15 border border-blue-500/40 text-blue-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="research">Research 🔵</button>
+            </div>
           </div>
         </div>
 
@@ -125,6 +131,10 @@ export class LabSection {
   }
 
   bindEvents() {
+    document.getElementById("btn-add-experiment")?.addEventListener("click", () => {
+      window.dispatchEvent(new CustomEvent("open-lab-studio", { detail: { type: "experiment" } }));
+    });
+
     this.container.querySelectorAll(".lab-filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         this.currentFilter = btn.dataset.filter;
@@ -272,7 +282,7 @@ export class LabSection {
           ` : ""}
         </div>
 
-        <button id="btn-close-modal-footer" class="px-4 py-2 rounded-xl bg-surface-elevated hover:bg-border text-text-secondary text-xs font-mono transition-all">
+        <button id="btn-close-modal-footer" class="px-4 py-2 rounded-xl bg-surface-elevated hover:bg-border text-text-secondary text-xs font-mono transition-all cursor-pointer">
           Close Window
         </button>
       </div>

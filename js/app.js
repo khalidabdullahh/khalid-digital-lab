@@ -17,6 +17,7 @@ import { LiveStats } from "./components/LiveStats.js";
 import { CommandPalette } from "./components/CommandPalette.js";
 import { TerminalModal } from "./components/TerminalModal.js";
 import { CustomCursor } from "./components/CustomCursor.js";
+import { LabStudioModal } from "./components/LabStudioModal.js";
 
 class App {
   constructor() {
@@ -39,10 +40,11 @@ class App {
     this.components.stats = new LiveStats("live-stats-container");
     this.components.about = new AboutSection("about-container");
 
-    // Power Features
+    // Power & Studio Features
     this.components.commandPalette = new CommandPalette();
     this.components.terminal = new TerminalModal();
     this.components.cursor = new CustomCursor();
+    this.components.studio = new LabStudioModal();
 
     this.setupSmoothScroll();
     this.setupScrollRevealAnimations();

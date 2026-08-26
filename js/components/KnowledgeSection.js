@@ -40,9 +40,14 @@ export class KnowledgeSection {
               Research Notes & Concept Graph
             </h2>
             <p class="text-base text-text-secondary mt-2 max-w-2xl">
-              What I am learning, deriving, and formalizing. Discover mathematical proofs, architecture lessons, and topological concept relationships.
+              What I am learning, deriving, and formalizing. Discover mathematical proofs, architecture lessons, and interdisciplinary concept connections.
             </p>
           </div>
+
+          <!-- Add New Note Button -->
+          <button id="btn-add-note" class="px-5 py-2.5 rounded-2xl bg-cyan/15 hover:bg-cyan/25 border border-cyan/40 text-cyan text-xs font-mono font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer">
+            <span>✍️ + Write Research Note</span>
+          </button>
         </div>
 
         <!-- 1. Interactive Knowledge Graph Canvas -->
@@ -72,13 +77,16 @@ export class KnowledgeSection {
         </div>
 
         <!-- 2. Research Notes & Articles Grid -->
-        <h3 class="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-6">
-          CURATED ESSAYS & RESEARCH BRIEFS
-        </h3>
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xs font-mono font-bold tracking-widest text-text-muted uppercase">
+            CURATED ESSAYS & RESEARCH BRIEFS (${KNOWLEDGE_ARTICLES.length})
+          </h3>
+          <span class="text-xs font-mono text-cyan">Updated Weekly</span>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           ${KNOWLEDGE_ARTICLES.map(article => `
-            <div class="article-card group relative p-6 rounded-2xl bg-surface border border-border hover:border-cyan/50 hover:bg-surface-elevated/70 transition-all duration-300 flex flex-col justify-between shadow-xl cursor-pointer" data-article-id="${article.id}">
+            <div class="article-card group relative p-7 rounded-3xl bg-surface border border-border hover:border-cyan/50 hover:bg-surface-elevated/70 transition-all duration-300 flex flex-col justify-between shadow-xl cursor-pointer" data-article-id="${article.id}">
               <div>
                 <div class="flex items-center justify-between mb-3">
                   <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-surface-elevated border border-border text-cyan">
@@ -87,7 +95,7 @@ export class KnowledgeSection {
                   <span class="text-xs font-mono text-text-muted">${article.readTime}</span>
                 </div>
 
-                <h4 class="text-lg font-bold text-text-primary group-hover:text-cyan transition-colors tracking-tight leading-snug">
+                <h4 class="text-xl font-bold text-text-primary group-hover:text-cyan transition-colors tracking-tight leading-snug">
                   ${article.title}
                 </h4>
 
@@ -98,7 +106,7 @@ export class KnowledgeSection {
                 <!-- Tags -->
                 <div class="flex flex-wrap gap-1.5 mt-4">
                   ${article.tags.slice(0, 3).map(tag => `
-                    <span class="px-2 py-0.5 rounded bg-surface-elevated border border-border/60 text-[10px] font-mono text-text-muted">
+                    <span class="px-2 py-0.5 rounded-md bg-surface-elevated border border-border/60 text-[10px] font-mono text-text-muted">
                       #${tag}
                     </span>
                   `).join("")}
@@ -151,7 +159,6 @@ export class KnowledgeSection {
     const cx = this.width / 2;
     const cy = this.height / 2;
 
-    // Distribute nodes in orbit circles with spring physics
     this.nodes = KNOWLEDGE_GRAPH.nodes.map((node, i) => {
       const isCore = node.group === "core";
       const angle = (i / KNOWLEDGE_GRAPH.nodes.length) * Math.PI * 2;
@@ -182,7 +189,11 @@ export class KnowledgeSection {
       this.setupGraphNodes();
     });
 
-    // Graph Mouse Interactions
+    // Write note button
+    document.getElementById("btn-add-note")?.addEventListener("click", () => {
+      window.dispatchEvent(new CustomEvent("open-lab-studio", { detail: { type: "note" } }));
+    });
+
     const getPos = (e) => {
       const rect = this.graphCanvas.getBoundingClientRect();
       return {
@@ -214,7 +225,6 @@ export class KnowledgeSection {
       }
     });
 
-    // Article Card Click Listener
     this.container.querySelectorAll(".article-card").forEach(card => {
       card.addEventListener("click", () => {
         const artId = card.dataset.articleId;
@@ -245,7 +255,6 @@ export class KnowledgeSection {
     if (!this.graphCtx) return;
     this.graphCtx.clearRect(0, 0, this.width, this.height);
 
-    // 1. Draw Links
     for (const link of this.links) {
       const isConnected = this.hoveredNode && (link.source.id === this.hoveredNode.id || link.target.id === this.hoveredNode.id);
       
@@ -257,7 +266,6 @@ export class KnowledgeSection {
       this.graphCtx.stroke();
     }
 
-    // 2. Draw Nodes
     for (const node of this.nodes) {
       const isHovered = this.hoveredNode && this.hoveredNode.id === node.id;
       const isConnected = this.hoveredNode && this.links.some(l => 
@@ -265,26 +273,22 @@ export class KnowledgeSection {
         (l.target.id === this.hoveredNode.id && l.source.id === node.id)
       );
 
-      // Node Glow
       if (isHovered || isConnected) {
         this.graphCtx.shadowBlur = 12;
         this.graphCtx.shadowColor = node.color;
       }
 
-      // Circle
       this.graphCtx.fillStyle = node.color;
       this.graphCtx.beginPath();
       this.graphCtx.arc(node.x, node.y, isHovered ? node.radius + 3 : node.radius, 0, Math.PI * 2);
       this.graphCtx.fill();
       this.graphCtx.shadowBlur = 0;
 
-      // Label Text
       this.graphCtx.fillStyle = isHovered ? "#ffffff" : "rgba(255, 255, 255, 0.85)";
       this.graphCtx.font = isHovered ? "bold 11px JetBrains Mono, monospace" : "10px JetBrains Mono, monospace";
       this.graphCtx.textAlign = "center";
       this.graphCtx.fillText(node.label, node.x, node.y + node.radius + 13);
 
-      // Slight floating motion
       node.x += Math.sin(Date.now() * 0.001 + node.radius) * 0.15;
       node.y += Math.cos(Date.now() * 0.001 + node.radius) * 0.15;
     }
@@ -316,28 +320,26 @@ export class KnowledgeSection {
         </button>
       </div>
 
-      <!-- Article Formatted Markdown Content -->
       <div class="prose prose-invert max-w-none py-6 text-sm text-text-secondary leading-relaxed space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-        <div class="p-4 rounded-xl bg-cyan/10 border border-cyan/30 text-text-primary font-medium text-xs sm:text-sm">
+        <div class="p-4 rounded-2xl bg-cyan/10 border border-cyan/30 text-text-primary font-medium text-xs sm:text-sm">
           ${article.summary}
         </div>
 
         <div class="article-body-markdown space-y-4">
           ${article.content.replace(/### (.*?)\n/g, '<h3 class="text-base font-bold text-text-primary mt-6 mb-2 font-mono tracking-tight">$1</h3>')
-            .replace(/```python([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-emerald-400 overflow-x-auto my-3"><code>$1</code></pre>')
-            .replace(/```typescript([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-cyan overflow-x-auto my-3"><code>$1</code></pre>')
-            .replace(/```javascript([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-amber-400 overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```python([\s\S]*?)```/g, '<pre class="p-4 rounded-2xl bg-[#050810] border border-border text-xs font-mono text-emerald-400 overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```typescript([\s\S]*?)```/g, '<pre class="p-4 rounded-2xl bg-[#050810] border border-border text-xs font-mono text-cyan overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```javascript([\s\S]*?)```/g, '<pre class="p-4 rounded-2xl bg-[#050810] border border-border text-xs font-mono text-amber-400 overflow-x-auto my-3"><code>$1</code></pre>')
           }
         </div>
       </div>
 
-      <!-- Modal Footer -->
       <div class="flex items-center justify-between pt-6 border-t border-border">
         <div class="flex flex-wrap gap-1.5">
-          ${article.tags.map(t => `<span class="px-2 py-0.5 rounded bg-surface-elevated text-xs font-mono text-text-muted">#${t}</span>`).join("")}
+          ${article.tags.map(t => `<span class="px-2.5 py-0.5 rounded-md bg-surface-elevated text-xs font-mono text-text-muted">#${t}</span>`).join("")}
         </div>
 
-        <button id="btn-close-article-footer" class="px-4 py-2 rounded-xl bg-surface-elevated hover:bg-border text-text-secondary text-xs font-mono transition-all">
+        <button id="btn-close-article-footer" class="px-4 py-2 rounded-xl bg-surface-elevated hover:bg-border text-text-secondary text-xs font-mono transition-all cursor-pointer">
           Close Note
         </button>
       </div>
