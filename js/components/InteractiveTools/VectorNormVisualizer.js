@@ -44,7 +44,7 @@ export class VectorNormVisualizer {
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
           <!-- Canvas Area -->
-          <div class="md:col-span-2 relative h-[300px] sm:h-[340px] rounded-xl overflow-hidden bg-[#070a10] border border-border/70">
+          <div class="md:col-span-2 relative h-[300px] sm:h-[340px] rounded-xl overflow-hidden bg-surface-elevated border border-border/70">
             <canvas id="vector-canvas" class="w-full h-full block cursor-crosshair"></canvas>
             <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded bg-black/70 border border-border text-[11px] font-mono text-text-muted backdrop-blur-md">
               Drag vector point • Adjust $p$-value slider

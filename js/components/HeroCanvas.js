@@ -142,7 +142,8 @@ export class HeroCanvas {
 
   drawSubtleGrid() {
     const gridSize = 45;
-    this.ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
+    const isLight = document.documentElement.classList.contains("theme-light");
+    this.ctx.strokeStyle = isLight ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.02)";
     this.ctx.lineWidth = 1;
 
     for (let x = 0; x < this.width; x += gridSize) {

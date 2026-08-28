@@ -140,31 +140,31 @@ export class Navigation {
       }
     });
 
-    // Theme Switcher
+    // Theme Switcher (Defaults to Light/White theme, can toggle to Dark)
     const themeBtn = document.getElementById("btn-theme-toggle");
     const sunIcon = document.getElementById("theme-icon-sun");
     const moonIcon = document.getElementById("theme-icon-moon");
 
-    themeBtn?.addEventListener("click", () => {
-      const isDark = document.documentElement.classList.toggle("theme-light");
-      const currentTheme = isDark ? "light" : "dark";
-      localStorage.setItem("lab-theme", currentTheme);
-      if (currentTheme === "light") {
+    const updateThemeUI = (isLight) => {
+      if (isLight) {
         sunIcon?.classList.remove("hidden");
         moonIcon?.classList.add("hidden");
       } else {
         sunIcon?.classList.add("hidden");
         moonIcon?.classList.remove("hidden");
       }
-    });
+    };
 
-    // Restore saved theme
-    const savedTheme = localStorage.getItem("lab-theme");
-    if (savedTheme === "light") {
-      document.documentElement.classList.add("theme-light");
-      sunIcon?.classList.remove("hidden");
-      moonIcon?.classList.add("hidden");
-    }
+    // Initialize UI based on current theme-light class state
+    updateThemeUI(document.documentElement.classList.contains("theme-light"));
+
+    themeBtn?.addEventListener("click", () => {
+      const isLight = document.documentElement.classList.toggle("theme-light");
+      const currentTheme = isLight ? "light" : "dark";
+      localStorage.setItem("lab-theme", currentTheme);
+      updateThemeUI(isLight);
+      window.dispatchEvent(new CustomEvent("theme-change", { detail: { theme: currentTheme } }));
+    });
 
     // Command palette trigger
     document.getElementById("btn-cmd-k")?.addEventListener("click", () => {

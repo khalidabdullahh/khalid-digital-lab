@@ -63,7 +63,7 @@ export class KnowledgeSection {
           </div>
 
           <!-- Canvas Container -->
-          <div class="relative w-full h-[320px] sm:h-[380px] rounded-2xl bg-[#060810] border border-border/80 overflow-hidden cursor-crosshair">
+          <div class="relative w-full h-[320px] sm:h-[380px] rounded-2xl bg-surface-elevated border border-border/80 overflow-hidden cursor-crosshair">
             <canvas id="knowledge-graph-canvas" class="w-full h-full block"></canvas>
             <div class="absolute bottom-3 right-3 px-3 py-1 rounded-lg bg-black/70 border border-border text-[11px] font-mono text-text-muted">
               Nodes: ${KNOWLEDGE_GRAPH.nodes.length} • Links: ${KNOWLEDGE_GRAPH.links.length}
@@ -245,11 +245,13 @@ export class KnowledgeSection {
     if (!this.graphCtx) return;
     this.graphCtx.clearRect(0, 0, this.width, this.height);
 
+    const isLight = document.documentElement.classList.contains("theme-light");
+
     // 1. Draw Links
     for (const link of this.links) {
       const isConnected = this.hoveredNode && (link.source.id === this.hoveredNode.id || link.target.id === this.hoveredNode.id);
       
-      this.graphCtx.strokeStyle = isConnected ? "#00f0ff" : "rgba(255, 255, 255, 0.08)";
+      this.graphCtx.strokeStyle = isConnected ? (isLight ? "#0284c7" : "#00f0ff") : (isLight ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.08)");
       this.graphCtx.lineWidth = isConnected ? 2.0 : 0.8;
       this.graphCtx.beginPath();
       this.graphCtx.moveTo(link.source.x, link.source.y);
@@ -279,7 +281,9 @@ export class KnowledgeSection {
       this.graphCtx.shadowBlur = 0;
 
       // Label Text
-      this.graphCtx.fillStyle = isHovered ? "#ffffff" : "rgba(255, 255, 255, 0.85)";
+      this.graphCtx.fillStyle = isHovered 
+        ? (isLight ? "#0f172a" : "#ffffff") 
+        : (isLight ? "#475569" : "rgba(255, 255, 255, 0.85)");
       this.graphCtx.font = isHovered ? "bold 11px JetBrains Mono, monospace" : "10px JetBrains Mono, monospace";
       this.graphCtx.textAlign = "center";
       this.graphCtx.fillText(node.label, node.x, node.y + node.radius + 13);

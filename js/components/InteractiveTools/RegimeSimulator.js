@@ -82,7 +82,7 @@ export class RegimeSimulator {
         </div>
 
         <!-- Canvas Chart Area -->
-        <div class="relative w-full h-[280px] sm:h-[320px] rounded-xl overflow-hidden bg-[#070a10] border border-border/70">
+        <div class="relative w-full h-[280px] sm:h-[320px] rounded-xl overflow-hidden bg-surface-elevated border border-border/70">
           <canvas id="regime-canvas" class="w-full h-full block"></canvas>
           <div id="canvas-regime-pill" class="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/70 border border-border text-xs font-mono text-emerald-400 backdrop-blur-md">
             ● State 0: Low-Vol Bull Trend

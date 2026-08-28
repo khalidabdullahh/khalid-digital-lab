@@ -119,7 +119,7 @@ export class ProjectsSection {
                 </div>
 
                 <!-- Highlights Card Preview (Right) -->
-                <div class="lg:col-span-5 p-6 rounded-2xl bg-[#06080e] border border-border/80 flex flex-col justify-between space-y-4">
+                <div class="lg:col-span-5 p-6 rounded-2xl bg-surface-elevated border border-border/80 flex flex-col justify-between space-y-4">
                   <div class="flex items-center justify-between pb-3 border-b border-border/60">
                     <span class="text-xs font-mono text-cyan uppercase font-bold">Key Architectural Specs</span>
                     <span class="text-xs font-mono text-text-muted">${proj.year}</span>
