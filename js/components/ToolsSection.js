@@ -33,38 +33,38 @@ export class ToolsSection {
           <div>
             <div class="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-cyan uppercase mb-2">
               <span>🛠️</span>
-              <span>TOOLS & PRODUCTS // LIVE BENCH</span>
+              <span>TOOLS & PRODUCTS HUB // USABLE ARTIFACTS</span>
             </div>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight">
-              Interactive Tools & Software Products
+              Interactive Tools & Production Software
             </h2>
             <p class="text-base text-text-secondary mt-2 max-w-2xl">
-              «What people can actually use.» Test quantitative market simulations, audit your CV against real ATS algorithms, or launch full-scale web applications directly.
+              «What people can actually use.» Test quantitative models, analyze ATS resume keywords, and launch full-scale web applications directly from this hub.
             </p>
           </div>
         </div>
 
-        <!-- 1. Interactive Tool In-Browser Workbench (Embedded Execution) -->
+        <!-- 1. Interactive Tool In-Browser Workbench (Embedded Execution Canvas) -->
         <div class="mb-14 p-6 sm:p-8 rounded-3xl bg-surface-elevated/40 border border-cyan/30 shadow-2xl relative">
           <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
             <div class="flex items-center gap-2">
-              <span class="px-2.5 py-1 rounded-md bg-cyan/15 border border-cyan/30 text-cyan text-xs font-mono font-bold">LIVE BENCH</span>
-              <span class="text-xs font-mono text-text-muted">Select an interactive tool to test in real-time</span>
+              <span class="p-1.5 rounded-md bg-cyan/15 border border-cyan/30 text-cyan text-xs font-mono">LIVE BENCH</span>
+              <span class="text-xs font-mono text-text-muted">Direct in-browser execution with real-time state calculation</span>
             </div>
 
             <!-- Tool Switcher Tabs -->
-            <div class="flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-surface border border-border">
-              <button class="tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all active bg-cyan/15 border border-cyan/40 text-cyan font-bold" data-tool="regime">
+            <div class="flex flex-wrap gap-1.5 p-1 rounded-xl bg-surface border border-border">
+              <button class="tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all active bg-cyan/15 border border-cyan/40 text-cyan font-bold" data-tool="regime">
                 📈 Regime Simulator
               </button>
-              <button class="tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all text-text-secondary hover:text-text-primary" data-tool="ats">
-                📄 ATS Resume Analyzer
+              <button class="tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-text-secondary hover:text-text-primary" data-tool="ats">
+                📄 ATS Analyzer
               </button>
-              <button class="tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all text-text-secondary hover:text-text-primary" data-tool="kelly">
-                🎲 Kelly Position Calculator
+              <button class="tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-text-secondary hover:text-text-primary" data-tool="kelly">
+                🎲 Kelly Calculator
               </button>
-              <button class="tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all text-text-secondary hover:text-text-primary" data-tool="vector">
-                🧭 Vector Norms ($L_p$)
+              <button class="tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-text-secondary hover:text-text-primary" data-tool="vector">
+                🧭 Vector Norms
               </button>
             </div>
           </div>
@@ -83,7 +83,7 @@ export class ToolsSection {
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           ${TOOLS.map(tool => `
-            <div class="tool-card group relative p-7 rounded-3xl bg-surface border border-border hover:border-cyan/50 hover:bg-surface-elevated/70 transition-all duration-300 flex flex-col justify-between shadow-xl">
+            <div class="tool-card group relative p-6 rounded-2xl bg-surface border border-border hover:border-cyan/50 hover:bg-surface-elevated/70 transition-all duration-300 flex flex-col justify-between shadow-xl">
               <div>
                 <div class="flex items-center justify-between mb-3">
                   <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-surface-elevated border border-border text-cyan">
@@ -98,7 +98,7 @@ export class ToolsSection {
                   </span>
                 </div>
 
-                <h4 class="text-xl font-bold text-text-primary group-hover:text-cyan transition-colors tracking-tight">
+                <h4 class="text-lg font-bold text-text-primary group-hover:text-cyan transition-colors tracking-tight">
                   ${tool.name}
                 </h4>
 
@@ -139,17 +139,19 @@ export class ToolsSection {
   }
 
   bindEvents() {
+    // Tool Tab Switcher
     this.container.querySelectorAll(".tool-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         this.container.querySelectorAll(".tool-tab-btn").forEach(b => {
-          b.className = "tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all text-text-secondary hover:text-text-primary";
+          b.className = "tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-text-secondary hover:text-text-primary";
         });
-        btn.className = "tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all active bg-cyan/15 border border-cyan/40 text-cyan font-bold";
+        btn.className = "tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all active bg-cyan/15 border border-cyan/40 text-cyan font-bold";
         this.activeInteractiveTool = btn.dataset.tool;
         this.mountActiveTool();
       });
     });
 
+    // Launch into bench from card click
     this.container.querySelectorAll(".launch-bench-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const toolId = btn.dataset.bench;
@@ -158,6 +160,7 @@ export class ToolsSection {
         else if (toolId === "tool-kelly-calculator") this.switchTab("kelly");
         else if (toolId === "tool-vector-viz") this.switchTab("vector");
 
+        // Smooth scroll to bench
         const mount = document.getElementById("interactive-tool-mount");
         mount?.scrollIntoView({ behavior: "smooth", block: "center" });
       });
@@ -168,9 +171,9 @@ export class ToolsSection {
     this.activeInteractiveTool = toolKey;
     this.container.querySelectorAll(".tool-tab-btn").forEach(b => {
       if (b.dataset.tool === toolKey) {
-        b.className = "tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all active bg-cyan/15 border border-cyan/40 text-cyan font-bold";
+        b.className = "tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all active bg-cyan/15 border border-cyan/40 text-cyan font-bold";
       } else {
-        b.className = "tool-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all text-text-secondary hover:text-text-primary";
+        b.className = "tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-text-secondary hover:text-text-primary";
       }
     });
     this.mountActiveTool();

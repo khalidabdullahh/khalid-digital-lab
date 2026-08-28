@@ -3,26 +3,22 @@
  * Author: Khalid Abdullah
  */
 
-/* Modern Card Glow & Hover Mechanics */
-.experiment-card, .tool-card, .article-card, .project-card-interactive {
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.28s ease, 
-              background-color 0.28s ease, 
-              box-shadow 0.28s ease;
-  position: relative;
+/* Card Glows & Elevation */
+.experiment-card, .tool-card, .article-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.experiment-card:hover, .tool-card:hover, .article-card:hover, .project-card-interactive:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 36px -10px rgba(0, 240, 255, 0.14), 0 0 1px 1px rgba(0, 240, 255, 0.2);
+.experiment-card:hover, .tool-card:hover, .article-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px -8px rgba(0, 240, 255, 0.12);
 }
 
-/* Subtle Animated Hero Grid */
+/* Subtle Animated Grid Background */
 .hero-grid-pattern {
-  background-size: 36px 36px;
+  background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 html.theme-light .hero-grid-pattern {
@@ -31,21 +27,21 @@ html.theme-light .hero-grid-pattern {
     linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
 }
 
-/* Floating Glass Navbar & Panels */
+/* Glass Panels */
 .glass-panel {
-  background: rgba(18, 24, 36, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(13, 18, 28, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
 }
 
 html.theme-light .glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-/* Button & Active States */
+/* Button & Link States */
 .preset-btn.active, .fraction-btn.active, .p-btn.active, .lab-filter-btn.active, .log-filter-btn.active {
   background: var(--accent-cyan-glow);
   color: var(--accent-cyan);
@@ -53,14 +49,14 @@ html.theme-light .glass-panel {
   font-weight: 700;
 }
 
-/* Modal Transitions */
+/* Modal Animations */
 #experiment-modal-backdrop, #article-modal-backdrop, #cmd-palette-backdrop, #terminal-modal-backdrop {
-  animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.18s ease-out forwards;
 }
 
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Custom Range Sliders */
@@ -82,29 +78,10 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--accent-cyan);
   cursor: pointer;
-  box-shadow: 0 0 12px var(--accent-cyan-glow);
+  box-shadow: 0 0 10px var(--accent-cyan-glow);
   transition: transform 0.15s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.3);
-}
-
-/* Pulse Beacon */
-.pulse-beacon {
-  position: relative;
-}
-.pulse-beacon::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 9999px;
-  background: inherit;
-  opacity: 0.4;
-  animation: beaconPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes beaconPulse {
-  0%, 100% { transform: scale(1); opacity: 0.4; }
-  50% { transform: scale(1.6); opacity: 0; }
+  transform: scale(1.25);
 }

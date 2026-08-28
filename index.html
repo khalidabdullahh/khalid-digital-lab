@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Khalid Abdullah — Personal Digital Lab & Innovation Hub</title>
+  <title>Khalid Abdullah // Personal Digital Lab & Innovation Hub</title>
   
-  <!-- SEO & Social Meta Tags -->
+  <!-- SEO Meta Tags -->
   <meta name="description" content="Personal digital laboratory of Khalid Abdullah: builder, researcher, and computer science engineer working at the intersection of AI, quantitative finance, and high-performance software." />
   <meta name="author" content="Khalid Abdullah" />
-  <meta name="keywords" content="Khalid Abdullah, AI CV Builder, Resume Builder, Machine Learning, Quantitative Finance, Market Regime Detector, Computer Science, Algorithms" />
+  <meta name="keywords" content="Khalid Abdullah, Digital Lab, Machine Learning, Quantitative Finance, AI CV Builder, Resume Builder, HMM Market Regime, Computer Science, Algorithms, Dhaka" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Khalid Abdullah — Personal Digital Lab & Innovation Hub" />
-  <meta property="og:description" content="Who I am + What I am researching + What I am building + What people can actually use." />
+  <!-- Open Graph / Social Cards -->
+  <meta property="og:title" content="Khalid Abdullah // Personal Digital Lab & Innovation Hub" />
+  <meta property="og:description" content="Who I am + What I am researching + What I am building + What I have learned + What people can actually use." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://first-project-plum-phi.vercel.app" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -26,7 +26,7 @@
         extend: {
           colors: {
             cyan: '#00f0ff',
-            'cyan-glow': 'rgba(0, 240, 255, 0.35)',
+            'cyan-glow': 'rgba(0, 240, 255, 0.4)',
             surface: 'var(--bg-surface)',
             'surface-elevated': 'var(--bg-surface-elevated)',
             border: 'var(--border-color)',
@@ -35,26 +35,26 @@
             'text-muted': 'var(--text-muted)'
           },
           fontFamily: {
-            sans: ['Plus Jakarta Sans', 'Geist', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            sans: ['Geist', 'Space Grotesk', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
-            display: ['Plus Jakarta Sans', 'Space Grotesk', 'sans-serif']
+            display: ['Space Grotesk', 'Geist', 'sans-serif']
           }
         }
       }
     }
   </script>
 
-  <!-- KaTeX CSS for LaTeX Math Formula Rendering -->
+  <!-- Google Fonts & KaTeX CSS for LaTeX Math -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
 
-  <!-- Design System Stylesheets -->
+  <!-- Custom Design System Stylesheets -->
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/lab.css" />
   <link rel="stylesheet" href="css/graph.css" />
   <link rel="stylesheet" href="css/responsive.css" />
 </head>
-<body class="bg-[#07090e] text-[#f8fafc] min-h-screen selection:bg-cyan selection:text-black">
+<body class="bg-[#05070b] text-[#f1f5f9] min-h-screen selection:bg-cyan selection:text-black">
 
   <!-- 1. Global Navigation Header -->
   <header id="main-nav" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300"></header>
@@ -62,133 +62,101 @@
   <!-- Mobile Ergonomic Dock -->
   <div id="mobile-dock"></div>
 
-  <!-- 2. Hero Section (Welcoming, Modern, & Engaging) -->
-  <section id="hero" class="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden hero-grid-pattern">
-    <!-- Interactive Background Particle Canvas -->
+  <!-- 2. Hero Section (Digital Lab Identity & Interactive Canvas) -->
+  <section id="hero" class="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 overflow-hidden hero-grid-pattern">
+    <!-- Interactive Background Algorithmic Canvas -->
     <div class="absolute inset-0 pointer-events-none">
       <canvas id="hero-bg-canvas" class="w-full h-full block"></canvas>
     </div>
 
-    <!-- Ambient Radial Glows -->
-    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute top-1/2 right-10 w-[350px] h-[350px] bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- Center Radial Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan/5 rounded-full blur-3xl pointer-events-none"></div>
 
     <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 z-10">
-      <!-- Friendly Floating Badge -->
-      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-elevated/90 border border-cyan/40 text-xs font-mono text-cyan backdrop-blur-md shadow-lg">
+      <!-- Identity Telemetry Pill -->
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-surface-elevated/80 border border-cyan/30 text-xs font-mono text-cyan backdrop-blur-md shadow-lg">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="font-bold">👋 WELCOME TO KHALID'S DIGITAL LAB</span>
+        <span class="font-bold">SYSTEM ACTIVE</span>
         <span class="text-border">|</span>
-        <span class="text-text-secondary">DHAKA & GLOBAL</span>
+        <span>RESEARCH & INNOVATION HUB</span>
       </div>
 
-      <!-- Main Editorial Headline -->
-      <div class="space-y-4">
-        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-text-primary leading-[1.1]">
-          Building <span class="text-cyan">intelligent tools</span>, exploring AI, and researching systems.
+      <!-- Hero Name & Tagline -->
+      <div class="space-y-3">
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-text-primary uppercase">
+          KHALID ABDULLAH
         </h1>
-        <p class="max-w-2xl mx-auto text-base sm:text-lg md:text-xl font-normal text-text-secondary leading-relaxed">
-          I'm <strong class="text-text-primary font-semibold">Khalid Abdullah</strong> — a computer science student and software builder creating real products at the intersection of machine learning, quantitative finance, and web engineering.
-        </p>
+        <div class="text-sm sm:text-base font-mono text-cyan tracking-widest uppercase">
+          Builder • Researcher • Computer Science
+        </div>
       </div>
 
-      <!-- The Core Loop Badges -->
+      <!-- Powerful Core Statement -->
+      <p class="max-w-3xl mx-auto text-lg sm:text-xl md:text-2xl font-medium text-text-secondary leading-relaxed tracking-tight">
+        «I build tools, explore ideas, and research problems at the intersection of <span class="text-text-primary font-bold">software</span>, <span class="text-cyan font-bold">AI</span> and <span class="text-emerald-400 font-bold">quantitative finance</span>.»
+      </p>
+
+      <!-- Loop Philosophy Badges -->
       <div class="flex flex-wrap items-center justify-center gap-2 max-w-xl mx-auto text-xs font-mono text-text-muted">
-        <span class="px-2.5 py-1 rounded-md bg-surface-elevated border border-border text-cyan font-bold">1. Learn</span>
+        <span class="text-cyan">Learning</span>
         <span>→</span>
-        <span class="px-2.5 py-1 rounded-md bg-surface-elevated border border-border text-purple-400 font-bold">2. Research</span>
+        <span class="text-purple-400">Researching</span>
         <span>→</span>
-        <span class="px-2.5 py-1 rounded-md bg-surface-elevated border border-border text-amber-400 font-bold">3. Experiment</span>
+        <span class="text-amber-400">Experimenting</span>
         <span>→</span>
-        <span class="px-2.5 py-1 rounded-md bg-surface-elevated border border-border text-blue-400 font-bold">4. Build</span>
+        <span class="text-blue-400">Building</span>
         <span>→</span>
-        <span class="px-2.5 py-1 rounded-md bg-surface-elevated border border-border text-emerald-400 font-bold">5. Ship</span>
+        <span class="text-emerald-400">Shipping</span>
       </div>
 
-      <!-- Main Action Buttons -->
-      <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-        <a href="https://first-project-plum-phi.vercel.app" target="_blank" rel="noopener noreferrer" class="px-6 py-3.5 rounded-xl bg-cyan hover:bg-cyan-glow text-black text-xs font-mono font-bold transition-all shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5">
-          <span>🚀 Launch AI CV Builder</span>
-          <span>↗</span>
+      <!-- Action CTAs -->
+      <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+        <a href="#lab" class="px-6 py-3.5 rounded-xl bg-cyan hover:bg-cyan-glow text-black text-xs font-mono font-bold transition-all shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5">
+          <span>Explore My Lab 🧪</span>
         </a>
-        <a href="#lab" class="px-6 py-3.5 rounded-xl bg-surface-elevated hover:bg-border border border-border text-text-primary text-xs font-mono font-bold transition-all shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5">
-          <span>🧪 Explore Research Lab</span>
+        <a href="#tools" class="px-6 py-3.5 rounded-xl bg-surface-elevated hover:bg-border border border-border text-text-primary text-xs font-mono font-bold transition-all shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5">
+          <span>Explore My Tools 🛠️</span>
         </a>
-        <a href="#tools" class="px-5 py-3.5 rounded-xl bg-surface hover:bg-surface-elevated border border-border text-text-secondary hover:text-cyan text-xs font-mono transition-all flex items-center gap-2">
-          <span>🛠️ Interactive Simulators</span>
-        </a>
-      </div>
-
-      <!-- Quick Feature Pill Highlights -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 max-w-4xl mx-auto">
-        <div class="p-3 rounded-xl bg-surface/80 border border-border/80 text-left flex items-center gap-3">
-          <span class="text-xl">📄</span>
-          <div>
-            <div class="text-xs font-bold text-text-primary font-mono">AI CV Builder</div>
-            <div class="text-[10px] text-emerald-400 font-mono">10 ATS Templates • Live</div>
-          </div>
-        </div>
-
-        <div class="p-3 rounded-xl bg-surface/80 border border-border/80 text-left flex items-center gap-3">
-          <span class="text-xl">📈</span>
-          <div>
-            <div class="text-xs font-bold text-text-primary font-mono">Market Regime Sim</div>
-            <div class="text-[10px] text-cyan font-mono">HMM Monte Carlo</div>
-          </div>
-        </div>
-
-        <div class="p-3 rounded-xl bg-surface/80 border border-border/80 text-left flex items-center gap-3">
-          <span class="text-xl">🎮</span>
-          <div>
-            <div class="text-xs font-bold text-text-primary font-mono">Oops! Game</div>
-            <div class="text-[10px] text-purple-400 font-mono">150 Levels • 60 FPS</div>
-          </div>
-        </div>
-
-        <div class="p-3 rounded-xl bg-surface/80 border border-border/80 text-left flex items-center gap-3">
-          <span class="text-xl">📚</span>
-          <div>
-            <div class="text-xs font-bold text-text-primary font-mono">Knowledge Graph</div>
-            <div class="text-[10px] text-amber-400 font-mono">18+ Research Notes</div>
-          </div>
-        </div>
+        <button onclick="window.dispatchEvent(new CustomEvent('open-command-palette'))" class="px-4 py-3.5 rounded-xl bg-surface hover:bg-surface-elevated border border-border text-text-muted hover:text-cyan text-xs font-mono transition-all flex items-center gap-2 cursor-pointer">
+          <span>Search (⌘K)</span>
+        </button>
       </div>
     </div>
   </section>
 
   <!-- 3. Currently Building Live Status Radar -->
-  <section id="currently-building-container" class="reveal-item"></section>
+  <section id="currently-building-container"></section>
 
   <!-- 4. 🧪 The Lab (Research Experiments Dashboard) -->
-  <section id="lab" class="scroll-mt-20 reveal-item">
+  <section id="lab" class="scroll-mt-20">
     <div id="lab-container"></div>
   </section>
 
   <!-- 5. ⚡ Projects Showcase -->
-  <section id="projects" class="scroll-mt-20 reveal-item">
+  <section id="projects" class="scroll-mt-20">
     <div id="projects-container"></div>
   </section>
 
   <!-- 6. 🛠️ Tools & Products Hub (Interactive In-Browser Tools) -->
-  <section id="tools" class="scroll-mt-20 reveal-item">
+  <section id="tools" class="scroll-mt-20">
     <div id="tools-container"></div>
   </section>
 
   <!-- 7. 📚 Knowledge Space & Interactive Knowledge Graph -->
-  <section id="knowledge" class="scroll-mt-20 reveal-item">
+  <section id="knowledge" class="scroll-mt-20">
     <div id="knowledge-container"></div>
   </section>
 
   <!-- 8. ⏱️ Chronological Build Log -->
-  <section id="build-log" class="scroll-mt-20 reveal-item">
+  <section id="build-log" class="scroll-mt-20">
     <div id="build-log-container"></div>
   </section>
 
   <!-- 9. 📊 Live Dynamic Statistics -->
-  <section id="live-stats-container" class="reveal-item"></section>
+  <section id="live-stats-container"></section>
 
   <!-- 10. 👤 Personal Profile & Direct Transmission -->
-  <section id="about" class="scroll-mt-20 reveal-item">
+  <section id="about" class="scroll-mt-20">
     <div id="about-container"></div>
   </section>
 
