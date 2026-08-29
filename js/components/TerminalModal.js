@@ -6,6 +6,7 @@
 import { CONFIG } from "../config.js";
 import { TOOLS } from "../data/tools.js";
 import { EXPERIMENTS } from "../data/experiments.js";
+import { githubService } from "../services/GitHubService.js";
 
 export class TerminalModal {
   constructor() {
@@ -169,6 +170,7 @@ export class TerminalModal {
             <div><span class="text-emerald-400 font-bold">tools</span> - List interactive tools and production web applications</div>
             <div><span class="text-emerald-400 font-bold">lab</span> - Query ongoing research hypotheses and active experiments</div>
             <div><span class="text-emerald-400 font-bold">run [tool]</span> - Execute in-site tool (e.g. <span class="text-cyan">run regime-sim</span>, <span class="text-cyan">run ats</span>)</div>
+            <div><span class="text-emerald-400 font-bold">sync / repos</span> - Auto-sync and print live GitHub repositories</div>
             <div><span class="text-emerald-400 font-bold">theme</span> - Toggle dark / light interface theme</div>
             <div><span class="text-emerald-400 font-bold">contact</span> - Display direct communications channels & email</div>
             <div><span class="text-emerald-400 font-bold">clear</span> - Clear terminal window buffer</div>
@@ -235,7 +237,23 @@ export class TerminalModal {
             <div>GitHub: <span class="text-text-primary">${CONFIG.author.github}</span></div>
             <div>LinkedIn: <span class="text-text-primary">${CONFIG.author.linkedin}</span></div>
           </div>
-        `);
+        break;
+
+      case "sync":
+      case "repos":
+      case "github":
+        this.log(`<span class="text-cyan">Connecting to GitHub API for @${githubService.username}...</span>`);
+        githubService.sync(true).then(repos => {
+          const rows = repos.map(r => `<div>• <a href="${r.htmlUrl}" target="_blank" class="text-cyan font-bold hover:underline">${r.name}</a> [${r.language}] - ★ ${r.stars} (Updated ${githubService.getTimeAgo(r.pushedAt)})</div>`).join("");
+          this.log(`
+            <div class="space-y-1 mt-1">
+              <div class="text-emerald-400 font-bold uppercase">LIVE GITHUB REPOSITORIES (${repos.length}):</div>
+              ${rows}
+            </div>
+          `);
+        }).catch(err => {
+          this.log(`<span class="text-rose-400">Failed to sync: ${err.message}</span>`);
+        });
         break;
 
       case "clear":

@@ -17,6 +17,7 @@ import { LiveStats } from "./components/LiveStats.js";
 import { CommandPalette } from "./components/CommandPalette.js";
 import { TerminalModal } from "./components/TerminalModal.js";
 import { CustomCursor } from "./components/CustomCursor.js";
+import { githubService } from "./services/GitHubService.js";
 
 class App {
   constructor() {
@@ -26,6 +27,9 @@ class App {
 
   init() {
     console.log(`%c🧪 Khalid Abdullah // Personal Digital Lab v${CONFIG.system.version} Initialized.`, "color: #00f0ff; font-weight: bold; font-family: monospace; font-size: 14px;");
+
+    // Initialize GitHub Auto-Sync Service in background
+    githubService.init();
 
     // Initialize Navigation & Utilities
     this.components.navigation = new Navigation();

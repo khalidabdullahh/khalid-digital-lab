@@ -4,6 +4,7 @@
  */
 
 import { BUILD_LOG } from "../data/buildLog.js";
+import { githubService } from "../services/GitHubService.js";
 
 export class BuildLogSection {
   constructor(containerId) {
@@ -20,9 +21,29 @@ export class BuildLogSection {
   }
 
   render() {
-    const filtered = this.currentFilter === "all"
-      ? BUILD_LOG
-      : BUILD_LOG.filter(item => item.type === this.currentFilter);
+    let itemsToDisplay = [];
+
+    if (this.currentFilter === "github") {
+      // Map live GitHub repos into build milestones
+      itemsToDisplay = (githubService.repos || []).map(r => ({
+        id: `gh-${r.name}`,
+        date: githubService.getTimeAgo(r.pushedAt).toUpperCase(),
+        title: `GitHub Push: ${r.name}`,
+        type: "github",
+        typeLabel: "Live Repo",
+        icon: "git-commit",
+        color: "cyan",
+        commit: r.defaultBranch || "main",
+        description: r.description || "Active development repository on GitHub.",
+        metrics: `★ ${r.stars} Stars • ${r.forks} Forks`,
+        tags: [r.language, "GitHub", "OSS"],
+        url: r.htmlUrl
+      }));
+    } else if (this.currentFilter === "all") {
+      itemsToDisplay = BUILD_LOG;
+    } else {
+      itemsToDisplay = BUILD_LOG.filter(item => item.type === this.currentFilter);
+    }
 
     this.container.innerHTML = `
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -44,16 +65,16 @@ export class BuildLogSection {
           <!-- Timeline Filters -->
           <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-surface border border-border">
             <button class="log-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "all" ? "bg-cyan/15 border border-cyan/40 text-cyan font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="all">All (${BUILD_LOG.length})</button>
+            <button class="log-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "github" ? "bg-cyan/15 border border-cyan/40 text-cyan font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="github">Live GitHub 🐙</button>
             <button class="log-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "releases" ? "bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="releases">Releases 📦</button>
             <button class="log-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "experiments" ? "bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="experiments">Experiments 🧪</button>
             <button class="log-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "learning" ? "bg-blue-500/15 border border-blue-500/40 text-blue-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="learning">Learning 📚</button>
-            <button class="log-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.currentFilter === "research" ? "bg-purple-500/15 border border-purple-500/40 text-purple-300 font-bold" : "text-text-secondary hover:text-text-primary"}" data-filter="research">Research 🔬</button>
           </div>
         </div>
 
         <!-- Vertical Timeline Tree -->
         <div class="relative pl-6 sm:pl-8 border-l border-border/80 space-y-8">
-          ${filtered.map(item => `
+          ${itemsToDisplay.map(item => `
             <div class="relative group">
               <!-- Timeline Dot Node -->
               <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-surface border-2 ${
@@ -80,7 +101,7 @@ export class BuildLogSection {
                     </span>
                   </div>
 
-                  <span class="text-[11px] font-mono text-text-muted">commit #${item.commit}</span>
+                  <span class="text-[11px] font-mono text-text-muted">branch/ref #${item.commit}</span>
                 </div>
 
                 <h3 class="text-lg font-bold text-text-primary group-hover:text-cyan transition-colors tracking-tight">
@@ -95,8 +116,16 @@ export class BuildLogSection {
                 <div class="mt-4 pt-3 border-t border-border/60 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
                   <span class="text-cyan font-medium">${item.metrics}</span>
 
-                  <div class="flex flex-wrap gap-1.5">
-                    ${item.tags.map(t => `<span class="px-2 py-0.5 rounded bg-surface-elevated text-[10px] text-text-muted">#${t}</span>`).join("")}
+                  <div class="flex items-center gap-2">
+                    <div class="flex flex-wrap gap-1.5">
+                      ${item.tags.map(t => `<span class="px-2 py-0.5 rounded bg-surface-elevated text-[10px] text-text-muted">#${t}</span>`).join("")}
+                    </div>
+
+                    ${item.url ? `
+                      <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-cyan hover:underline text-[11px] font-bold">
+                        Open ↗
+                      </a>
+                    ` : ""}
                   </div>
                 </div>
               </div>
@@ -114,6 +143,13 @@ export class BuildLogSection {
         this.render();
         this.bindEvents();
       });
+    });
+
+    window.addEventListener("github-sync-complete", () => {
+      if (this.currentFilter === "github") {
+        this.render();
+        this.bindEvents();
+      }
     });
   }
 }

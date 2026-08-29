@@ -35,7 +35,8 @@ export class CommandPalette {
       { id: "nav-build-log", title: "Activity & Build Log", category: "Navigation", icon: "⏱️", action: () => this.jumpTo("#build-log") },
       { id: "nav-about", title: "About Khalid Abdullah", category: "Navigation", icon: "👤", action: () => this.jumpTo("#about") },
 
-      // Theme & Terminal Actions
+      // Theme, Sync & Terminal Actions
+      { id: "act-sync", title: "Sync Live GitHub Repositories", category: "Actions", icon: "🔄", action: () => document.getElementById("btn-sync-github")?.click() },
       { id: "act-terminal", title: "Open CLI Developer Terminal", category: "Actions", icon: "💻", action: () => window.dispatchEvent(new CustomEvent("open-terminal")) },
       { id: "act-theme", title: "Toggle Dark / Light Theme", category: "Actions", icon: "🌓", action: () => document.getElementById("btn-theme-toggle")?.click() },
 
