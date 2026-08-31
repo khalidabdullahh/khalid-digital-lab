@@ -237,6 +237,7 @@ export class TerminalModal {
             <div>GitHub: <span class="text-text-primary">${CONFIG.author.github}</span></div>
             <div>LinkedIn: <span class="text-text-primary">${CONFIG.author.linkedin}</span></div>
           </div>
+        `);
         break;
 
       case "sync":
