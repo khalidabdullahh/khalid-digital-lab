@@ -129,7 +129,11 @@ class App {
   }
 }
 
-// Bootstrap on DOM Ready
-document.addEventListener("DOMContentLoaded", () => {
+// Bootstrap on DOM Ready or immediately if DOM is already parsed
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    window.__APP__ = new App();
+  });
+} else {
   window.__APP__ = new App();
-});
+}
