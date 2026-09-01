@@ -5,6 +5,71 @@
 
 export const KNOWLEDGE_ARTICLES = [
   {
+    id: "kb-supabase-rbac",
+    title: "Architecting Role-Based Access Control (RBAC) & Row Level Security in Supabase",
+    category: "Backend & Security",
+    readTime: "7 min read",
+    date: "Aug 2026",
+    tags: ["PostgreSQL", "Supabase", "Row Level Security", "RBAC", "Next.js"],
+    summary: "How defense-in-depth authorization with Next.js Edge Middleware and PostgreSQL RLS prevents privilege escalation in multi-role platforms.",
+    content: `
+### 1. The Multi-Layer Authorization Imperative
+In modern web applications, client-side route guards and server-side action checks are necessary but insufficient on their own. A robust security model enforces authorization at three distinct boundaries:
+1. **Edge Middleware Guard:** Intercepts route requests before component rendering to redirect unauthorized requests.
+2. **Server Action Mutation Boundary:** Validates request parameters against strict schemas (e.g. Zod) and authenticates session identities.
+3. **Database Row Level Security (RLS) Layer:** Cryptographically limits which rows can be read, inserted, or mutated directly within the SQL engine.
+
+### 2. Role Taxonomy & Defense-in-Depth
+In ARENEX, users are categorized into \`USER\`, \`SUPER_ADMIN\`, and \`OWNER\`. To prevent privilege escalation (e.g. a user patching their own role column to SUPER_ADMIN), RLS update policies enforce immutable role attributes:
+\`\`\`sql
+CREATE POLICY "Users can only update safe profile fields" 
+ON public.profiles 
+FOR UPDATE 
+USING (auth.uid() = id)
+WITH CHECK (
+  auth.uid() = id AND 
+  role = (SELECT role FROM public.profiles WHERE id = auth.uid())
+);
+\`\`\`
+
+### 3. Synchronous Profile Provisioning
+To avoid race conditions where users log in via OAuth but disconnect before profile creation, an asynchronous PostgreSQL trigger on \`auth.users\` guarantees synchronous profile provisioning in the public schema with default \`USER\` privileges.
+    `,
+    relatedExperiment: "exp-cv-intelligence",
+    relatedNodeId: "node-rbac"
+  },
+  {
+    id: "kb-payment-reconciliation",
+    title: "Designing Fraud-Proof Payment Verification & Time-Gated Credential State Machines",
+    category: "Software Architecture",
+    readTime: "6 min read",
+    date: "Aug 2026",
+    tags: ["State Machines", "PostgreSQL", "Esports", "Payments", "Concurrency"],
+    summary: "Preventing transaction replay attacks, slot overbooking race conditions, and premature lobby credential leaks in tournament platforms.",
+    content: `
+### 1. Challenges in Semi-Automated Payment Systems
+When players submit transaction IDs from Mobile Financial Services (bKash, Nagad, Rocket, UPI), systems face three distinct failure modes:
+1. **Replay Attacks:** Submitting the same transaction ID multiple times across different tournaments.
+2. **Concurrent Slot Overbooking:** Two players paying when only 1 slot remains in a 48-slot lobby.
+3. **Premature Room Discovery:** Unconfirmed players discovering match room credentials before payment verification.
+
+### 2. The Anti-Replay Unique Constraint
+\`\`\`sql
+ALTER TABLE public.payment_records
+ADD CONSTRAINT unique_payment_tx_per_method 
+UNIQUE (payment_method, transaction_id);
+\`\`\`
+
+### 3. ACID Row Locking with FOR UPDATE
+When a Super Admin approves a payment, the slot allocation transaction executes an atomic \`SELECT ... FOR UPDATE\` lock on the tournament row to prevent concurrent race conditions from overbooking lobby slots.
+
+### 4. Time-Gated Credential RLS
+Room credentials remain invisible until the server timestamp exceeds the configured \`release_time\` (e.g. 15 minutes before match start), enforced directly at the SQL query layer.
+    `,
+    relatedExperiment: "exp-market-regime",
+    relatedNodeId: "node-state-machines"
+  },
+  {
     id: "kb-pca-factors",
     title: "Understanding Principal Component Analysis (PCA) in Equity Factor Models",
     category: "Quantitative Finance",

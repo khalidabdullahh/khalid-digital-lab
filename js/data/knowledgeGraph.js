@@ -10,7 +10,7 @@ export const KNOWLEDGE_GRAPH = {
     { id: "domain-ai", label: "Artificial Intelligence", group: "core", radius: 24, color: "#8b5cf6", desc: "LLMs, vector embeddings, prompt distillation & neural architectures" },
     { id: "domain-quant", label: "Quantitative Finance", group: "core", radius: 24, color: "#00f0ff", desc: "Statistical arbitrage, regime switching, volatility modeling & risk" },
     { id: "domain-math", label: "Mathematics & Statistics", group: "core", radius: 22, color: "#10b981", desc: "Linear algebra, probability theory, stochastic processes & optimization" },
-    { id: "domain-swe", label: "Software Engineering", group: "core", radius: 22, color: "#f59e0b", desc: "Modern frontend, high-performance web systems, reactive architectures" },
+    { id: "domain-swe", label: "Software Engineering", group: "core", radius: 22, color: "#f59e0b", desc: "Modern frontend, high-performance web systems, reactive architectures & databases" },
 
     // Concept Nodes
     { id: "node-regime", label: "Market Regime Detection", group: "quant", radius: 16, color: "#00f0ff", desc: "HMM-based segmentation of market states" },
@@ -23,6 +23,9 @@ export const KNOWLEDGE_GRAPH = {
     { id: "node-llm", label: "LLM Agents & Embeddings", group: "ai", radius: 16, color: "#8b5cf6", desc: "Semantic retrieval, cosine distance & structured output generation" },
     { id: "node-prompt", label: "Prompt Distillation", group: "ai", radius: 14, color: "#8b5cf6", desc: "Chain-of-verification and structured JSON schema enforcement" },
     { id: "node-ats", label: "ATS Resume Engineering", group: "swe", radius: 15, color: "#f59e0b", desc: "Lexical similarity matching & vector PDF generation" },
+    { id: "node-rbac", label: "Supabase RBAC & RLS", group: "swe", radius: 15, color: "#f59e0b", desc: "Edge middleware guards & database-level cryptographic Row Level Security" },
+    { id: "node-postgres", label: "PostgreSQL Architecture", group: "swe", radius: 14, color: "#f59e0b", desc: "ACID schema designs, anti-replay unique constraints & partial indexes" },
+    { id: "node-tournament-engine", label: "Tournament State Machine", group: "cs", radius: 14, color: "#3b82f6", desc: "Anti-overbooking locks, payment reconciliation & gated lobby access" },
     { id: "node-physics", label: "Zero-Allocation Physics", group: "cs", radius: 14, color: "#3b82f6", desc: "Pre-allocated memory pools for 60 FPS browser engines" },
     { id: "node-state-machines", label: "Finite State Machines", group: "cs", radius: 14, color: "#3b82f6", desc: "Deterministic game state transitions & gravity inversion" }
   ],
@@ -57,6 +60,12 @@ export const KNOWLEDGE_GRAPH = {
     { source: "node-prompt", target: "node-ats" },
     { source: "node-ats", target: "domain-swe" },
     { source: "node-ats", target: "node-llm" },
+    { source: "node-rbac", target: "domain-swe" },
+    { source: "node-rbac", target: "node-postgres" },
+    { source: "node-postgres", target: "domain-swe" },
+    { source: "node-tournament-engine", target: "node-rbac" },
+    { source: "node-tournament-engine", target: "node-postgres" },
+    { source: "node-tournament-engine", target: "domain-cs" },
 
     // Systems / CS Connections
     { source: "node-physics", target: "domain-cs" },

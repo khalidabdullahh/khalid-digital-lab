@@ -5,6 +5,19 @@
 
 export const BUILD_LOG = [
   {
+    id: "log-0828",
+    date: "AUG 28, 2026",
+    title: "Documented ARENEX Full-Stack Esports Architecture & RLS Security Matrix",
+    type: "builds",
+    typeLabel: "Build",
+    icon: "shield-check",
+    color: "emerald",
+    commit: "9c2d4f1",
+    description: "Completed full architectural audit and documentation of the ARENEX esports platform. Formulated Next.js Edge Middleware RBAC, PostgreSQL Row Level Security (RLS) policies, multi-step anti-replay payment workflows, and time-gated lobby credential distribution.",
+    metrics: "11 Tables • 14 RLS Policies • 3 Role Levels • Multi-Game Support",
+    tags: ["Next.js", "Supabase", "PostgreSQL", "RLS", "Esports"]
+  },
+  {
     id: "log-0826",
     date: "AUG 26, 2026",
     title: "Launched Personal Digital Lab & Innovation Hub v2.4",

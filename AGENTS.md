@@ -3,8 +3,8 @@
 ## 1. Project Identity & Philosophy
 
 **Project Name:** Khalid Abdullah — Personal Digital Lab & Innovation Hub  
-**Author:** Khalid Abdullah (Computer Science Undergraduate & Aspiring AI/ML Engineer / Quantitative Finance Enthusiast)  
-**Core Mission:** A living personal digital laboratory combining:
+**Author:** Khalid Abdullah (Computer Science Researcher, Backend Engineer & Quantitative Finance Enthusiast)  
+**Core Mission:** A living personal digital engineering laboratory, architecture showcase, and cross-project knowledge base combining:
 $$\text{Learning} \longrightarrow \text{Researching} \longrightarrow \text{Experimenting} \longrightarrow \text{Building} \longrightarrow \text{Shipping}$$
 
 > «Who I am + What I am researching + What I am building + What I have learned + What people can actually use.»
@@ -13,63 +13,87 @@ This project is **NOT a traditional resume portfolio** ("About → Skills → Pr
 
 ---
 
-## 2. System Architecture
-
-The project is built on a high-performance, modular, zero-dependency ES6+ Single Page Architecture.
+## 2. Master Two-Level GitHub Architecture
 
 ```mermaid
 graph TD
-    A["index.html (Semantic Entrypoint)"] --> B["js/app.js (Bootstrap & Router)"]
-    B --> C["js/config.js (System Metadata & Telemetry)"]
-    B --> D["js/data/ (Data Layer)"]
-    B --> E["js/components/ (UI Layer)"]
-    
-    subgraph "Data Layer"
-        D1["experiments.js"]
-        D2["projects.js"]
-        D3["tools.js"]
-        D4["knowledge.js"]
-        D5["knowledgeGraph.js"]
-        D6["buildLog.js"]
-    end
+    A["khalid-digital-lab (Central Architecture & Showcase)"] --> B["projects/ (Engineering Case Studies)"]
+    A --> C["backend/ (Auth, RBAC, Server Actions, Payments)"]
+    A --> D["databases/ (PostgreSQL DDL, Supabase RLS, Indexes)"]
+    A --> E["system-design/ (Zero-GC Loops, Multi-Tenant Queues)"]
+    A --> F["engineering/ (Storage RLS, Dynamic Avatars, Vector PDFs)"]
+    A --> G["js/ (Interactive 60 FPS Web Application)"]
 
-    subgraph "Interactive Components"
-        E1["HeroCanvas.js (Particle Grid)"]
-        E2["LabSection.js (Research Dashboard)"]
-        E3["ProjectsSection.js (Showcase)"]
-        E4["ToolsSection.js (Live Bench)"]
-        E5["KnowledgeSection.js (Graph Canvas)"]
-        E6["BuildLogSection.js (Timeline)"]
-        E7["AboutSection.js (Bio & Contact)"]
-    end
-
-    subgraph "Power Tools"
-        P1["CommandPalette.js (Cmd+K)"]
-        P2["TerminalModal.js (CLI ~)"]
-        P3["CustomCursor.js (Magnetic)"]
-        P4["InteractiveTools/ (Simulators)"]
+    subgraph "Level 1: Authoritative Project Repositories"
+        B1["ARENEX (Esports Tournament Platform)"] -.-> R1["github.com/khalidabdullahh/arenex"]
+        B2["AI CV Builder v2.0 (Career AI Platform)"] -.-> R2["github.com/khalidabdullahh/CV-Builder"]
+        B3["Trading OS (Quantitative HMM Volatility Suite)"] -.-> R3["github.com/khalidabdullahh/trading-os"]
+        B4["Oops! (Chaos Realm 2D Platformer)"] -.-> R4["github.com/khalidabdullahh/Oops"]
     end
 ```
 
-### Key Technical Specifications:
-- **Rendering & Animation:** Hardware-accelerated Canvas 2D with zero-allocation state loops to maintain 60 FPS.
-- **Styling:** Modular CSS tokens (`css/main.css`, `css/components.css`, `css/lab.css`, `css/graph.css`, `css/responsive.css`) paired with Tailwind CSS utility classes.
-- **Math Formulations:** LaTeX KaTeX notation for all mathematical and quantitative proofs.
-- **Theme Engine:** Dark-first aesthetic (`#05070b`) with a persistent, accessible Light Theme toggle.
+### Key Principles:
+1. **Level 1 (Individual Repositories):** Every project keeps its own source code, database migrations, and deployment configs. Never remove backend, database, or API docs from project repos.
+2. **Level 2 (Central Showcase - `khalid-digital-lab`):** Central engineering portfolio, technical lab, architecture showcase, and cross-project knowledge base linking to individual repositories.
+3. **No Fake Duplication:** Never copy entire project source trees into `khalid-digital-lab`. Use architecture case studies, SQL DDL schemas, Mermaid diagrams, and code snippets.
 
 ---
 
-## 3. Directory Structure Guide
+## 3. Complete Directory Structure Guide
 
 ```
 /Users/khalidabdullah/AntiGravity/Website/
 ├── index.html                                 # Master semantic HTML5 skeleton
-├── README.md                                  # Developer overview
+├── README.md                                  # Developer & architecture overview
 ├── AGENTS.md                                  # This agent instruction guide
 ├── ROADMAP.md                                 # Phased development roadmap
 ├── CHANGELOG.md                               # Version release history
 ├── .gitignore                                 # Git exclusion rules
 ├── .env.example                               # Environment variable documentation
+├── projects/                                  # Project Architecture Case Studies
+│   ├── README.md                              # Master projects registry
+│   ├── arenex/README.md                       # ARENEX full-stack esports platform
+│   ├── cv-builder/README.md                   # AI CV Builder v2.0
+│   ├── trading-os/README.md                   # Quantitative Market Regime Suite
+│   ├── oops/README.md                         # Oops! 150-stage multiverse platformer
+│   ├── findoc/README.md                       # FinDoc SEC NLP alpha extractor
+│   ├── algoviz/README.md                      # AlgoViz algorithm visualizer
+│   ├── aurex/README.md                        # AUREX game mechanics engine
+│   └── devil-door/README.md                   # Devil's Door atmospheric action
+├── backend/                                   # Backend Architecture Guides
+│   ├── README.md                              # Backend standards overview
+│   ├── authentication/
+│   │   └── supabase-auth-case-study.md        # OAuth, Edge Middleware & JWT validation
+│   ├── authorization/
+│   │   └── rbac-super-admin-matrix.md         # RBAC matrix & privilege escalation defenses
+│   ├── api-design/
+│   │   └── server-actions-and-rpc.md          # Server Actions vs REST vs PostgreSQL RPC
+│   └── server-architecture/
+│       └── payment-verification-workflow.md   # Multi-step payment state machines
+├── databases/                                 # Database & Relational Standards
+│   ├── README.md                              # Database guide overview
+│   ├── supabase/
+│   │   └── arenex-schema-and-rls.md           # Full 9-table DDL & RLS policies
+│   ├── schema-design/
+│   │   └── financial-privacy-isolation.md     # Decoupled public/private accounting
+│   └── indexing/
+│       └── performance-and-query-optimization.md # Composite & partial indexing
+├── system-design/                             # System Design & Scalability
+│   ├── README.md                              # System design overview
+│   ├── system-design-case-studies/
+│   │   └── esports-tournament-platform.md     # Multi-tenant tournament architecture
+│   ├── architecture-patterns/
+│   │   └── zero-gc-state-machines.md          # Memory pool management (60 FPS)
+│   └── scalability/
+│       └── realtime-regime-simulation.md      # In-browser stochastic simulation
+├── engineering/                               # Software Engineering Standards
+│   ├── README.md                              # Engineering standards overview
+│   ├── security/
+│   │   └── storage-bucket-rls-and-dynamic-avatars.md # Storage RLS & avatar joins
+│   ├── performance/
+│   │   └── vector-pdf-and-client-compression.md # Pure vector PDF engines
+│   └── clean-architecture/
+│       └── data-driven-ui-layering.md         # Decoupled data-driven UI triad
 ├── css/
 │   ├── main.css                               # Design tokens, typography, dark/light themes
 │   ├── components.css                         # Card glows, buttons, modals, sliders
@@ -128,30 +152,22 @@ graph TD
 
 ### Branch Strategy:
 - **`main`**: Production-ready code.
-- **`feature/<name>`**: New tools, sections, or visual enhancements (e.g. `feature/options-pricer`).
-- **`fix/<name>`**: Bug fixes (e.g. `fix/mobile-touch-target`).
+- **`feature/<name>`**: New tools, sections, or visual enhancements.
+- **`fix/<name>`**: Bug fixes.
 - **`experiment/<name>`**: New research experiments and data visualizations.
 
 ### Commit Messages:
 Follow standard semantic commit conventions:
-- `feat: add quantitative backtesting tool`
-- `fix: correct mobile dock z-index overlap`
-- `docs: update architecture documentation`
-- `refactor: optimize knowledge graph spring physics`
-- `chore: update configuration and dependencies`
+- `feat: document ARENEX full-stack esports architecture and RLS security matrix`
+- `docs: update two-level portfolio architecture and backend guides`
+- `refactor: optimize knowledge graph data nodes and relations`
+- `chore: update system configuration and build log milestones`
 
 ---
 
-## 6. Flagship Product: AI CV Builder Integration
+## 6. Flagship Products & Core Implementations
 
-- **Repository:** `https://github.com/khalidabdullahh/CV-Builder`
-- **Live Production:** `https://first-project-plum-phi.vercel.app`
-- **Key Features:** 10 ATS-optimized templates, Google Gemini AI bullet rephrasing, 1-click clean HD vector PDF generation.
-- **Integration Point:** Featured in `js/data/tools.js` as the flagship product and `js/data/experiments.js` as Experiment E-03 (ATS Embedding & Prompt Distillation).
-
----
-
-## 7. Current State & Known Issues
-
-- **Build Status:** 100% Static & Portable. Can be hosted on Vercel, GitHub Pages, Cloudflare Pages, or locally via `python3 -m http.server 8080`.
-- **Known Issues:** None. All 31 files verified and running cleanly.
+- **ARENEX:** `https://github.com/khalidabdullahh` — Next.js 15+, Supabase, PostgreSQL RLS, Server Actions, Edge RBAC, Anti-Replay Payment State Machine.
+- **AI CV Builder v2.0:** `https://github.com/khalidabdullahh/CV-Builder` — Live at `https://first-project-plum-phi.vercel.app` (10 ATS-optimized templates, Google Gemini AI prompt distillation, 100% vector PDF engine).
+- **Trading OS / Market Regime Suite:** `https://github.com/khalidabdullahh` — 3-state Gaussian HMM, Parkinson/Garman-Klass volatility, in-browser Monte Carlo simulator, Kelly Criterion.
+- **Oops! (Chaos Realm):** `https://github.com/khalidabdullahh/Oops` — Live at `https://oops-snowy-three.vercel.app/` (150 stages, zero-GC physics, synthesized Web Audio chiptunes).

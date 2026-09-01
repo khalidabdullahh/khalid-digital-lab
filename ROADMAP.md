@@ -32,21 +32,24 @@ This roadmap outlines the past milestones, active developments, and long-term vi
 
 ---
 
-## 🟡 Phase 4: Extended Research Tools (In Progress / Next)
-- [ ] **Black-Scholes Options Greeks Visualizer:** In-browser 3D surface plot for Delta, Gamma, Vega, and Theta.
-- [ ] **Order Book Depth & Market Microstructure Simulator:** Simulates limit order book queue dynamics and bid-ask spread slippage.
-- [ ] **Transformer Attention Matrix Visualizer:** Interactive visualizer displaying self-attention weight heatmaps for sample text sequences.
+## 🟢 Phase 4: Two-Level Architecture & Backend Knowledge Base (Completed)
+- [x] Master two-level portfolio architecture separating Level 1 project repositories from Level 2 central showcase.
+- [x] Documented full **ARENEX** platform architecture (Next.js 15+, Supabase, PostgreSQL RLS, Edge RBAC, multi-step payment state machine).
+- [x] Authored structured cross-project guides: Backend Engineering, PostgreSQL Schema DDL & Indexing, System Design & Zero-GC Loops, Security & Storage RLS.
+- [x] Synchronized central live web app data layer (`js/data/projects.js`, `js/data/knowledge.js`, `js/data/knowledgeGraph.js`, `js/data/buildLog.js`).
 
 ---
 
-## 🔵 Phase 5: Automation & Live Telemetry (Upcoming)
-- [ ] Direct GitHub REST API integration to fetch live repository commit feeds into the Build Log.
-- [ ] Automated RSS / Markdown parser to publish new research notes from an Obsidian / Markdown folder.
-- [ ] Client-side WebAssembly (Wasm) compiled C++ quantitative backtesting engine for high-speed portfolio simulations.
+## 🟡 Phase 5: Extended Research Tools & Automation (In Progress / Next)
+- [ ] **Black-Scholes Options Greeks Visualizer:** In-browser 3D surface plot for Delta, Gamma, Vega, and Theta.
+- [ ] **Order Book Depth & Microstructure Simulator:** Simulates limit order book queue dynamics and bid-ask spread slippage.
+- [ ] **Transformer Attention Matrix Visualizer:** Interactive visualizer displaying self-attention weight heatmaps for sample text sequences.
+- [ ] Direct GitHub REST API integration for real-time repository telemetry.
 
 ---
 
 ## ⚪ Phase 6: Long-Term Horizon
+- [ ] Client-side WebAssembly (Wasm) compiled C++ quantitative backtesting engine.
 - [ ] Optional user accounts for saving custom simulation parameters and resume templates.
 - [ ] Pro monetization tiers for premium tools (e.g. advanced AI portfolio optimization).
 - [ ] Decentralized IPFS / Arweave archiving of research papers.
