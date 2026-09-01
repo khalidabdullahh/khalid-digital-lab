@@ -3,7 +3,7 @@
 **Author:** Khalid Abdullah  
 **Category:** AI, Natural Language Processing & Financial Information Retrieval  
 **Core Technologies:** PyTorch, LangChain, Hugging Face Embeddings, ChromaDB, FastAPI, Python  
-**Authoritative Repository:** [github.com/khalidabdullahh/findoc](https://github.com/khalidabdullahh)  
+**Research Inquiry:** [Experiment E-02 (LLM Alpha Signal Extraction)](../../#lab) | [khalid-digital-lab](https://github.com/khalidabdullahh/khalid-digital-lab)  
 
 ---
 

@@ -25,10 +25,12 @@ graph TD
     A --> G["js/ (Interactive 60 FPS Web Application)"]
 
     subgraph "Level 1: Authoritative Project Repositories"
-        B1["ARENEX (Esports Tournament Platform)"] -.-> R1["github.com/khalidabdullahh/arenex"]
+        B1["ARENEX (Esports Tournament Platform)"] -.-> R1["github.com/khalidabdullahh/eSports"]
         B2["AI CV Builder v2.0 (Career AI Platform)"] -.-> R2["github.com/khalidabdullahh/CV-Builder"]
-        B3["Trading OS (Quantitative HMM Volatility Suite)"] -.-> R3["github.com/khalidabdullahh/trading-os"]
+        B3["Trading OS (Quantitative HMM Volatility Suite)"] -.-> R3["github.com/khalidabdullahh/Trading-OS"]
         B4["Oops! (Chaos Realm 2D Platformer)"] -.-> R4["github.com/khalidabdullahh/Oops"]
+        B5["AuRex (Action Combat Engine)"] -.-> R5["github.com/khalidabdullahh/AuRex"]
+        B6["DevilsDoor (Atmospheric Horror)"] -.-> R6["github.com/khalidabdullahh/DevilsDoor"]
     end
 ```
 
@@ -167,7 +169,9 @@ Follow standard semantic commit conventions:
 
 ## 6. Flagship Products & Core Implementations
 
-- **ARENEX:** `https://github.com/khalidabdullahh` — Next.js 15+, Supabase, PostgreSQL RLS, Server Actions, Edge RBAC, Anti-Replay Payment State Machine.
+- **ARENEX:** `https://github.com/khalidabdullahh/eSports` — Next.js 15+, Supabase, PostgreSQL RLS, Server Actions, Edge RBAC, Anti-Replay Payment State Machine.
 - **AI CV Builder v2.0:** `https://github.com/khalidabdullahh/CV-Builder` — Live at `https://first-project-plum-phi.vercel.app` (10 ATS-optimized templates, Google Gemini AI prompt distillation, 100% vector PDF engine).
-- **Trading OS / Market Regime Suite:** `https://github.com/khalidabdullahh` — 3-state Gaussian HMM, Parkinson/Garman-Klass volatility, in-browser Monte Carlo simulator, Kelly Criterion.
+- **Trading OS / Market Regime Suite:** `https://github.com/khalidabdullahh/Trading-OS` — 3-state Gaussian HMM, Parkinson/Garman-Klass volatility, in-browser Monte Carlo simulator, Kelly Criterion.
 - **Oops! (Chaos Realm):** `https://github.com/khalidabdullahh/Oops` — Live at `https://oops-snowy-three.vercel.app/` (150 stages, zero-GC physics, synthesized Web Audio chiptunes).
+- **AuRex:** `https://github.com/khalidabdullahh/AuRex` — Action combat engine prototype with frame-locked input buffering and spatial collision resolution.
+- **DevilsDoor:** `https://github.com/khalidabdullahh/DevilsDoor` — Atmospheric horror-action game prototype with dynamic sanity accumulation FSM.

@@ -328,9 +328,13 @@ export class KnowledgeSection {
 
         <div class="article-body-markdown space-y-4">
           ${article.content.replace(/### (.*?)\n/g, '<h3 class="text-base font-bold text-text-primary mt-6 mb-2 font-mono tracking-tight">$1</h3>')
+            .replace(/```sql([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-cyan overflow-x-auto my-3"><code>$1</code></pre>')
             .replace(/```python([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-emerald-400 overflow-x-auto my-3"><code>$1</code></pre>')
             .replace(/```typescript([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-cyan overflow-x-auto my-3"><code>$1</code></pre>')
             .replace(/```javascript([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-amber-400 overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```json([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-purple-300 overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```bash([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-emerald-300 overflow-x-auto my-3"><code>$1</code></pre>')
+            .replace(/```([\s\S]*?)```/g, '<pre class="p-4 rounded-xl bg-[#050810] border border-border text-xs font-mono text-text-secondary overflow-x-auto my-3"><code>$1</code></pre>')
           }
         </div>
       </div>

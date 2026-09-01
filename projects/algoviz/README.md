@@ -3,7 +3,7 @@
 **Author:** Khalid Abdullah  
 **Category:** Algorithms, Data Structures & Interactive Computer Science Education  
 **Core Technologies:** JavaScript ES6+, HTML5 Canvas 2D, Tailwind CSS, Data Structures  
-**Authoritative Repository:** [github.com/khalidabdullahh/algoviz](https://github.com/khalidabdullahh)  
+**Interactive Workbench:** [Interactive Tools Hub](../../#tools) | [khalid-digital-lab](https://github.com/khalidabdullahh/khalid-digital-lab)  
 
 ---
 

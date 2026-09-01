@@ -2,8 +2,7 @@
 
 **Author:** Khalid Abdullah  
 **Category:** Full-Stack Web Platform & Backend Systems  
-**Core Technologies:** Next.js (App Router), React 19, Supabase, PostgreSQL, Row Level Security (RLS), Tailwind CSS, Server Actions  
-**Authoritative Repository:** [github.com/khalidabdullahh/arenex](https://github.com/khalidabdullahh)  
+**Authoritative Repository:** [github.com/khalidabdullahh/eSports](https://github.com/khalidabdullahh/eSports)  
 
 ---
 

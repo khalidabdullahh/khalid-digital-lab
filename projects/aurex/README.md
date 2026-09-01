@@ -3,7 +3,7 @@
 **Author:** Khalid Abdullah  
 **Category:** Game Systems, Real-Time Architecture & Physics  
 **Core Technologies:** C# / Modern Engine Architecture, State Machines, Procedural Systems  
-**Authoritative Repository:** [github.com/khalidabdullahh/aurex](https://github.com/khalidabdullahh)  
+**Authoritative Repository:** [github.com/khalidabdullahh/AuRex](https://github.com/khalidabdullahh/AuRex)  
 
 ---
 

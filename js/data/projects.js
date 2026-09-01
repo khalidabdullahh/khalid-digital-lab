@@ -24,9 +24,9 @@ export const PROJECTS = [
       "Dynamic leaderboard scoring linked to real player profile avatars via Supabase Storage",
       "Multi-tournament registration capability allowing players to enter multiple active events"
     ],
-    liveUrl: "projects/arenex/",
-    githubUrl: "https://github.com/khalidabdullahh",
-    relatedExperiment: "exp-market-regime",
+    liveUrl: "#projects",
+    githubUrl: "https://github.com/khalidabdullahh/eSports",
+    relatedExperiment: "exp-cv-intelligence",
     relatedTool: "tool-cv-builder",
     badge: "Flagship Platform"
   },
@@ -77,7 +77,7 @@ export const PROJECTS = [
       "Kelly Criterion integration for regime-adjusted risk allocation"
     ],
     liveUrl: "#tools",
-    githubUrl: "https://github.com/khalidabdullahh",
+    githubUrl: "https://github.com/khalidabdullahh/Trading-OS",
     relatedExperiment: "exp-market-regime",
     relatedTool: "tool-regime-simulator",
     badge: "Core Research"
@@ -153,14 +153,14 @@ export const PROJECTS = [
       "Real-time operation counters and time complexity telemetry"
     ],
     liveUrl: "#tools",
-    githubUrl: "https://github.com/khalidabdullahh",
+    githubUrl: "https://github.com/khalidabdullahh/khalid-digital-lab",
     relatedExperiment: "exp-game-physics",
     relatedTool: "tool-vector-viz",
     badge: "Interactive"
   },
   {
     id: "proj-aurex",
-    title: "AUREX: Real-Time Game Mechanics Engine",
+    title: "AuRex: Real-Time Game Mechanics Engine",
     tagline: "Deterministic Action Combat Framework & Frame-Locked State Machines",
     category: "Game Engineering & Systems",
     featured: false,
@@ -176,15 +176,15 @@ export const PROJECTS = [
       "Decoupled movement vs combat hierarchical state machine",
       "Spatial broad-phase hitbox/hurtbox partitioner"
     ],
-    liveUrl: "projects/aurex/",
-    githubUrl: "https://github.com/khalidabdullahh",
+    liveUrl: "#projects",
+    githubUrl: "https://github.com/khalidabdullahh/AuRex",
     relatedExperiment: "exp-game-physics",
     relatedTool: "tool-vector-viz",
     badge: "Engine Core"
   },
   {
     id: "proj-devil-door",
-    title: "Devil's Door: Atmospheric Horror Systems",
+    title: "DevilsDoor: Atmospheric Horror Systems",
     tagline: "Psychological Sanity State Engine & Dynamic Shader Pipeline",
     category: "Game Engineering & Systems",
     featured: false,
@@ -200,8 +200,8 @@ export const PROJECTS = [
       "Real-time screen vignette and distortion post-processing shaders",
       "Adaptive enemy hearing perception expanding with player panic"
     ],
-    liveUrl: "projects/devil-door/",
-    githubUrl: "https://github.com/khalidabdullahh",
+    liveUrl: "#projects",
+    githubUrl: "https://github.com/khalidabdullahh/DevilsDoor",
     relatedExperiment: "exp-game-physics",
     relatedTool: "tool-vector-viz",
     badge: "Atmospheric"

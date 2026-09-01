@@ -3,7 +3,7 @@
 **Author:** Khalid Abdullah  
 **Category:** Game Engineering, Narrative State Systems & Dynamic Lighting  
 **Core Technologies:** Modern Game Frameworks, Interactive Dialogue State Graphs, Dynamic Shaders  
-**Authoritative Repository:** [github.com/khalidabdullahh/devil-door](https://github.com/khalidabdullahh)  
+**Authoritative Repository:** [github.com/khalidabdullahh/DevilsDoor](https://github.com/khalidabdullahh/DevilsDoor)  
 
 ---
 

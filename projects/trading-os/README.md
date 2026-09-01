@@ -3,7 +3,7 @@
 **Author:** Khalid Abdullah  
 **Category:** Quantitative Finance, Machine Learning & Stochastic Modeling  
 **Core Technologies:** Python, Hidden Markov Models (Gaussian HMM), NumPy, Pandas, Scikit-Learn, Canvas 2D / WebGL, FastAPI  
-**Authoritative Repository:** [github.com/khalidabdullahh/trading-os](https://github.com/khalidabdullahh)  
+**Authoritative Repository:** [github.com/khalidabdullahh/Trading-OS](https://github.com/khalidabdullahh/Trading-OS)  
 
 ---
 

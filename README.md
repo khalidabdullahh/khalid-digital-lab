@@ -23,10 +23,12 @@ graph TD
     A --> G["js/ (Interactive 60 FPS Web Application)"]
 
     subgraph "Level 1: Individual Authoritative Repositories"
-        B1["ARENEX (Esports Tournament Platform)"] -.-> R1["github.com/khalidabdullahh/arenex"]
+        B1["ARENEX (Esports Tournament Platform)"] -.-> R1["github.com/khalidabdullahh/eSports"]
         B2["AI CV Builder v2.0 (Career AI Platform)"] -.-> R2["github.com/khalidabdullahh/CV-Builder"]
-        B3["Trading OS (Quantitative HMM Volatility Suite)"] -.-> R3["github.com/khalidabdullahh/trading-os"]
+        B3["Trading OS (Quantitative HMM Volatility Suite)"] -.-> R3["github.com/khalidabdullahh/Trading-OS"]
         B4["Oops! (Chaos Realm 2D Platformer)"] -.-> R4["github.com/khalidabdullahh/Oops"]
+        B5["AuRex (Action Combat Engine)"] -.-> R5["github.com/khalidabdullahh/AuRex"]
+        B6["DevilsDoor (Atmospheric Horror)"] -.-> R6["github.com/khalidabdullahh/DevilsDoor"]
     end
 ```
 
@@ -36,14 +38,14 @@ graph TD
 
 | Project | Category | Architectural Highlights | Case Study | Authoritative Repository |
 | :--- | :--- | :--- | :--- | :--- |
-| **ARENEX** | Esports Tournament Platform & Web App | Next.js 15+, Supabase, PostgreSQL RLS, Edge RBAC, Anti-Replay Payments, Time-Gated Room Credentials, Dynamic Leaderboard Avatars | [Case Study](./projects/arenex/) | [ARENEX Repo ↗](https://github.com/khalidabdullahh) |
+| **ARENEX** | Esports Tournament Platform & Web App | Next.js 15+, Supabase, PostgreSQL RLS, Edge RBAC, Anti-Replay Payments, Time-Gated Room Credentials, Dynamic Leaderboard Avatars | [Case Study](./projects/arenex/) | [eSports Repo ↗](https://github.com/khalidabdullahh/eSports) |
 | **AI CV Builder v2.0** | Career AI & Vector PDF Platform | Next.js 16, React 19, Google Gemini 1.5 Flash Two-Pass Prompt Distillation, 10 Layout Models, 100% Vector Searchable PDF Engine | [Case Study](./projects/cv-builder/) | [CV-Builder Repo ↗](https://github.com/khalidabdullahh/CV-Builder) |
-| **Trading OS** | Quantitative Finance & ML | 3-State Gaussian HMM, Parkinson & Garman-Klass Volatility, In-Browser Monte Carlo Playground, Kelly Criterion Risk Engine | [Case Study](./projects/trading-os/) | [Trading OS Repo ↗](https://github.com/khalidabdullahh) |
+| **Trading OS** | Quantitative Finance & ML | 3-State Gaussian HMM, Parkinson & Garman-Klass Volatility, In-Browser Monte Carlo Playground, Kelly Criterion Risk Engine | [Case Study](./projects/trading-os/) | [Trading-OS Repo ↗](https://github.com/khalidabdullahh/Trading-OS) |
 | **Oops! (Chaos Realm)** | Game Systems & Physics Engine | Phaser 2D, Zero-Allocation Physics Loops (60 FPS), Procedural Web Audio Synthesis (0 KB Audio Files), 150 Handcrafted Stages | [Case Study](./projects/oops/) | [Oops Repo ↗](https://github.com/khalidabdullahh/Oops) |
-| **FinDoc** | NLP & Financial Alpha Extraction | SEC 10-K/10-Q MD&A Parser, Parent-Document Vector Retrieval, Chain-of-Verification Reasoning, PEAD Sentiment Scoring | [Case Study](./projects/findoc/) | [FinDoc Repo ↗](https://github.com/khalidabdullahh) |
-| **AlgoViz** | Algorithms & CS Education | Canvas 2D Step-Through Arena, Dijkstra/A* Pathfinding, Sorting Pointer Visualizer, 2D Memoization Grid | [Case Study](./projects/algoviz/) | [AlgoViz Repo ↗](https://github.com/khalidabdullahh) |
-| **AUREX** | Real-Time Game Mechanics Engine | Frame-Locked Input Buffering, Decoupled Combat/Movement State Machines, Spatial Hitbox/Hurtbox Indexing | [Case Study](./projects/aurex/) | [AUREX Repo ↗](https://github.com/khalidabdullahh) |
-| **Devil's Door** | Atmospheric Horror Framework | Psychological Sanity Accumulator FSM, Dynamic Vignette Shaders, Adaptive Sensory AI Perception | [Case Study](./projects/devil-door/) | [Devil's Door Repo ↗](https://github.com/khalidabdullahh) |
+| **FinDoc** | NLP & Financial Alpha Extraction | SEC 10-K/10-Q MD&A Parser, Parent-Document Vector Retrieval, Chain-of-Verification Reasoning, PEAD Sentiment Scoring | [Case Study](./projects/findoc/) | [Lab Inquiry E-02 ↗](#lab) |
+| **AlgoViz** | Algorithms & CS Education | Canvas 2D Step-Through Arena, Dijkstra/A* Pathfinding, Sorting Pointer Visualizer, 2D Memoization Grid | [Case Study](./projects/algoviz/) | [Interactive Tools ↗](#tools) |
+| **AuRex** | Real-Time Game Mechanics Engine | Frame-Locked Input Buffering, Decoupled Combat/Movement State Machines, Spatial Hitbox/Hurtbox Indexing | [Case Study](./projects/aurex/) | [AuRex Repo ↗](https://github.com/khalidabdullahh/AuRex) |
+| **DevilsDoor** | Atmospheric Horror Framework | Psychological Sanity Accumulator FSM, Dynamic Vignette Shaders, Adaptive Sensory AI Perception | [Case Study](./projects/devil-door/) | [DevilsDoor Repo ↗](https://github.com/khalidabdullahh/DevilsDoor) |
 
 ---
 

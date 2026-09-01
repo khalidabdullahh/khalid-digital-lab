@@ -37,6 +37,20 @@ export class GitHubService {
         defaultBranch: "main"
       },
       {
+        name: "eSports",
+        fullName: "khalidabdullahh/eSports",
+        htmlUrl: "https://github.com/khalidabdullahh/eSports",
+        description: "ARENEX — Full-Stack Esports Tournament Platform with Next.js, Supabase, PostgreSQL RLS & anti-replay payments.",
+        language: "TypeScript",
+        stars: 1,
+        forks: 0,
+        openIssues: 0,
+        updatedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
+        pushedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
+        isPrivate: false,
+        defaultBranch: "main"
+      },
+      {
         name: "CV-Builder",
         fullName: "khalidabdullahh/CV-Builder",
         htmlUrl: "https://github.com/khalidabdullahh/CV-Builder",
@@ -51,16 +65,58 @@ export class GitHubService {
         defaultBranch: "main"
       },
       {
+        name: "Trading-OS",
+        fullName: "khalidabdullahh/Trading-OS",
+        htmlUrl: "https://github.com/khalidabdullahh/Trading-OS",
+        description: "Quantitative finance strategy and volatility intelligence repository with technical indicators, Pine Script and state modeling.",
+        language: "JavaScript",
+        stars: 1,
+        forks: 0,
+        openIssues: 0,
+        updatedAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
+        pushedAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
+        isPrivate: false,
+        defaultBranch: "main"
+      },
+      {
         name: "Oops",
         fullName: "khalidabdullahh/Oops",
         htmlUrl: "https://github.com/khalidabdullahh/Oops",
         description: "Deceptive 2D puzzle platformer with 150 stages, real-time gravity inversion, zero-lag state-machine physics and Web Audio chiptunes.",
-        language: "JavaScript",
-        stars: 2,
+        language: "Python",
+        stars: 1,
         forks: 0,
         openIssues: 0,
-        updatedAt: new Date(Date.now() - 3600000 * 24 * 12).toISOString(),
-        pushedAt: new Date(Date.now() - 3600000 * 24 * 12).toISOString(),
+        updatedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
+        pushedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
+        isPrivate: false,
+        defaultBranch: "main"
+      },
+      {
+        name: "DevilsDoor",
+        fullName: "khalidabdullahh/DevilsDoor",
+        htmlUrl: "https://github.com/khalidabdullahh/DevilsDoor",
+        description: "Atmospheric horror-action game mechanics with dynamic psychological sanity state machines and post-processing shaders.",
+        language: "C#",
+        stars: 1,
+        forks: 0,
+        openIssues: 0,
+        updatedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
+        pushedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
+        isPrivate: false,
+        defaultBranch: "main"
+      },
+      {
+        name: "AuRex",
+        fullName: "khalidabdullahh/AuRex",
+        htmlUrl: "https://github.com/khalidabdullahh/AuRex",
+        description: "Real-time action combat engine prototype with frame-locked input buffering and spatial hitbox resolution.",
+        language: "C#",
+        stars: 1,
+        forks: 0,
+        openIssues: 0,
+        updatedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
+        pushedAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
         isPrivate: false,
         defaultBranch: "main"
       }

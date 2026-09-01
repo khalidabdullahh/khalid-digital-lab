@@ -260,9 +260,15 @@ export class CommandPalette {
   }
 
   jumpTo(hash) {
-    const target = document.querySelector(hash);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+    if (!hash) return;
+    try {
+      const selector = hash.startsWith("#") ? hash : `#${hash}`;
+      const target = document.querySelector(selector);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    } catch (e) {
+      console.warn("Could not scroll to selector:", hash);
     }
   }
 }
