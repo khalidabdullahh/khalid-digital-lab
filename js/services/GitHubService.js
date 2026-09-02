@@ -6,8 +6,8 @@
 
 import { CONFIG } from "../config.js";
 
-const CACHE_KEY = "khalid_github_repos_cache";
-const CACHE_TIME_KEY = "khalid_github_cache_time";
+const CACHE_KEY = "khalid_github_repos_cache_v3";
+const CACHE_TIME_KEY = "khalid_github_cache_time_v3";
 const CACHE_TTL_MS = 20 * 60 * 1000; // 20 minutes auto-sync cache
 
 export class GitHubService {
@@ -148,15 +148,20 @@ export class GitHubService {
       const savedTime = localStorage.getItem(CACHE_TIME_KEY);
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length >= this.defaultRepos.length) {
           this.repos = parsed;
+        } else {
+          this.repos = [...this.defaultRepos];
         }
+      } else {
+        this.repos = [...this.defaultRepos];
       }
       if (savedTime) {
         this.lastSyncTime = new Date(parseInt(savedTime, 10));
       }
     } catch (e) {
       console.warn("Could not read GitHub cache", e);
+      this.repos = [...this.defaultRepos];
     }
   }
 

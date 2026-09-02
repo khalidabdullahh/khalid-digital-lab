@@ -9,7 +9,7 @@ export const CONFIG = {
     tagline: "Builder • Researcher • Computer Science",
     statement: "I build tools, explore ideas, and research problems at the intersection of software, AI and quantitative finance.",
     bio: "Computer Science researcher, backend engineer, and quantitative enthusiast based in Dhaka. Focused on machine learning architectures, statistical regime detection in financial time series, and production-grade developer, gaming & productivity systems.",
-    email: "seamafridi123456789@gmail.com",
+    email: "seamafridi1237890@gmail.com",
     github: "https://github.com/khalidabdullahh",
     linkedin: "https://linkedin.com/in/khalid-abdullah-847724339",
     location: "Dhaka, Bangladesh",
@@ -23,7 +23,7 @@ export const CONFIG = {
     status: "ONLINE",
     uptime: "99.98%",
     latency: "14ms",
-    buildDate: "AUG 2026",
+    buildDate: "SEP 2026",
     fpsTarget: 60
   },
 
