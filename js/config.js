@@ -28,12 +28,12 @@ export const CONFIG = {
   },
 
   stats: [
-    { id: "projects", label: "Projects Built", value: 14, suffix: "+", change: "Across 4 domains" },
-    { id: "tools", label: "Tools Released", value: 6, suffix: " Live", change: "100% Free / OSS" },
-    { id: "experiments", label: "Active Experiments", value: 6, suffix: "", change: "3 in progress" },
-    { id: "notes", label: "Knowledge Notes", value: 24, suffix: "+", change: "Updated weekly" },
-    { id: "commits", label: "Code Commits", value: 920, suffix: "+", change: "Across 14 repos" },
-    { id: "simulations", label: "Simulations Run", value: 120, suffix: "k+", change: "Monte Carlo paths" }
+    { id: "repos", label: "Public Repositories", key: "repos", suffix: " Active", change: "Synced via GitHub API" },
+    { id: "stars", label: "GitHub Stars", key: "stars", suffix: " ★", change: "Real-time star count" },
+    { id: "projects", label: "Engineered Systems", key: "projects", suffix: " Case Studies", change: "Full-stack & systems" },
+    { id: "tools", label: "Interactive Tools", key: "tools", suffix: " Live", change: "In-browser execution" },
+    { id: "experiments", label: "Lab Inquiries", key: "experiments", suffix: " Inquiries", change: "Scientific research" },
+    { id: "notes", label: "Knowledge Notes", key: "notes", suffix: " Notes", change: "Math & architecture" }
   ],
 
   focusAreas: [

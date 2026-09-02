@@ -6,14 +6,17 @@
 
 import { CONFIG } from "../config.js";
 
-const CACHE_KEY = "khalid_github_repos_cache_v3";
-const CACHE_TIME_KEY = "khalid_github_cache_time_v3";
-const CACHE_TTL_MS = 20 * 60 * 1000; // 20 minutes auto-sync cache
+const CACHE_KEY = "khalid_github_repos_cache_v4";
+const CACHE_TIME_KEY = "khalid_github_cache_time_v4";
+const EVENTS_CACHE_KEY = "khalid_github_events_cache_v4";
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes auto-sync cache
 
 export class GitHubService {
   constructor() {
     this.username = "khalidabdullahh";
     this.repos = [];
+    this.events = [];
+    this.latestPush = null;
     this.isSyncing = false;
     this.lastSyncTime = null;
     this.initDefaultRepos();
@@ -146,6 +149,8 @@ export class GitHubService {
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       const savedTime = localStorage.getItem(CACHE_TIME_KEY);
+      const cachedEvents = localStorage.getItem(EVENTS_CACHE_KEY);
+
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length >= this.defaultRepos.length) {
@@ -156,6 +161,12 @@ export class GitHubService {
       } else {
         this.repos = [...this.defaultRepos];
       }
+
+      if (cachedEvents) {
+        this.events = JSON.parse(cachedEvents);
+        this.extractLatestPush(this.events);
+      }
+
       if (savedTime) {
         this.lastSyncTime = new Date(parseInt(savedTime, 10));
       }
@@ -168,6 +179,7 @@ export class GitHubService {
   saveToCache() {
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify(this.repos));
+      localStorage.setItem(EVENTS_CACHE_KEY, JSON.stringify(this.events));
       localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
       this.lastSyncTime = new Date();
     } catch (e) {
@@ -176,7 +188,7 @@ export class GitHubService {
   }
 
   /**
-   * Fetch repositories from GitHub REST API
+   * Fetch repositories & public events from GitHub REST API
    */
   async sync(force = true) {
     if (this.isSyncing) return this.repos;
@@ -192,38 +204,54 @@ export class GitHubService {
         headers["Authorization"] = `Bearer ${customToken}`;
       }
 
-      const response = await fetch(`https://api.github.com/users/${this.username}/repos?sort=updated&per_page=20`, {
-        headers
-      });
+      // 1. Fetch Repositories
+      const [reposRes, eventsRes] = await Promise.allSettled([
+        fetch(`https://api.github.com/users/${this.username}/repos?sort=updated&per_page=30`, { headers }),
+        fetch(`https://api.github.com/users/${this.username}/events/public?per_page=15`, { headers })
+      ]);
 
-      if (!response.ok) {
-        throw new Error(`GitHub API HTTP ${response.status}`);
+      if (reposRes.status === "fulfilled" && reposRes.value.ok) {
+        const data = await reposRes.value.json();
+        if (Array.isArray(data) && data.length > 0) {
+          this.repos = data.map(repo => ({
+            name: repo.name,
+            fullName: repo.full_name,
+            htmlUrl: repo.html_url,
+            description: repo.description || "No description provided.",
+            language: repo.language || "Code",
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            openIssues: repo.open_issues_count,
+            updatedAt: repo.updated_at,
+            pushedAt: repo.pushed_at,
+            createdAt: repo.created_at,
+            isPrivate: repo.private,
+            isArchived: repo.archived,
+            defaultBranch: repo.default_branch
+          }));
+        }
       }
 
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        this.repos = data.map(repo => ({
-          name: repo.name,
-          fullName: repo.full_name,
-          htmlUrl: repo.html_url,
-          description: repo.description || "No description provided.",
-          language: repo.language || "Code",
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          openIssues: repo.open_issues_count,
-          updatedAt: repo.updated_at,
-          pushedAt: repo.pushed_at,
-          createdAt: repo.created_at,
-          isPrivate: repo.private,
-          isArchived: repo.archived,
-          defaultBranch: repo.default_branch
-        }));
-
-        this.saveToCache();
+      // 2. Fetch Public Events (Push, Create, Release)
+      if (eventsRes.status === "fulfilled" && eventsRes.value.ok) {
+        const eventsData = await eventsRes.value.json();
+        if (Array.isArray(eventsData)) {
+          this.events = eventsData;
+          this.extractLatestPush(eventsData);
+        }
       }
+
+      this.saveToCache();
 
       window.dispatchEvent(new CustomEvent("github-sync-complete", { 
-        detail: { repos: this.repos, lastSyncTime: this.lastSyncTime } 
+        detail: { 
+          repos: this.repos, 
+          events: this.events,
+          latestPush: this.latestPush,
+          totalStars: this.getTotalStars(),
+          repoCount: this.repos.length,
+          lastSyncTime: this.lastSyncTime 
+        } 
       }));
     } catch (error) {
       console.warn("GitHub live sync notice (using cached/fallback repos):", error.message);
@@ -233,6 +261,43 @@ export class GitHubService {
     }
 
     return this.repos;
+  }
+
+  extractLatestPush(events) {
+    if (!Array.isArray(events) || events.length === 0) return;
+    const pushEvent = events.find(e => e.type === "PushEvent" || e.type === "CreateEvent");
+    if (pushEvent) {
+      const repoName = pushEvent.repo?.name || "khalidabdullahh/khalid-digital-lab";
+      const shortName = repoName.split("/")[1] || repoName;
+      const ref = pushEvent.payload?.ref ? pushEvent.payload.ref.replace("refs/heads/", "") : "main";
+      const commitCount = pushEvent.payload?.commits?.length || 1;
+      const headCommit = pushEvent.payload?.commits?.[0]?.message || "Updated repository";
+
+      this.latestPush = {
+        repoName,
+        shortName,
+        branch: ref,
+        commitMessage: headCommit.split("\n")[0],
+        commitCount,
+        timeAgo: this.getTimeAgo(pushEvent.created_at),
+        createdAt: pushEvent.created_at,
+        url: `https://github.com/${repoName}`
+      };
+    }
+  }
+
+  /**
+   * Total stars across all public repositories
+   */
+  getTotalStars() {
+    return this.repos.reduce((sum, r) => sum + (r.stars || 0), 0);
+  }
+
+  /**
+   * Total public repository count
+   */
+  getRepoCount() {
+    return this.repos.length;
   }
 
   /**
@@ -265,6 +330,15 @@ export class GitHubService {
   }
 
   /**
+   * Find matching repository by name
+   */
+  findRepoByName(name) {
+    if (!name || !this.repos.length) return null;
+    const search = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return this.repos.find(r => r.name.toLowerCase().replace(/[^a-z0-9]/g, "").includes(search));
+  }
+
+  /**
    * Return language color token
    */
   getLanguageColor(lang) {
@@ -275,6 +349,7 @@ export class GitHubService {
       "HTML": "#e34c26",
       "CSS": "#563d7c",
       "C++": "#f34b7d",
+      "C#": "#178600",
       "C": "#555555",
       "Rust": "#dea584",
       "Go": "#00ADD8"

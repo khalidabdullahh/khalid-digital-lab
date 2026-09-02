@@ -1,5 +1,5 @@
 /**
- * Currently Building - Live Status Radar
+ * Currently Building - Live Status Radar & GitHub Activity Stream
  * Author: Khalid Abdullah
  */
 
@@ -25,12 +25,12 @@ export class CurrentlyBuilding {
       },
       {
         num: "02",
-        name: "HMM Market Regime Detector",
-        repoMatch: null,
+        name: "HMM Market Regime Suite",
+        repoMatch: "Trading-OS",
         tagline: "Unsupervised statistical segmentation of asset volatility and trend regimes.",
         status: "Experimenting",
         statusColor: "amber",
-        progress: 72,
+        progress: 78,
         tech: ["Python", "HMMlearn", "NumPy", "Canvas 2D"],
         metric: "3-State Gaussian Markov Engine",
         actionUrl: "#tools",
@@ -39,21 +39,21 @@ export class CurrentlyBuilding {
       },
       {
         num: "03",
-        name: "LLM Financial Alpha Extractor",
-        repoMatch: null,
-        tagline: "Quantitative sentiment and forward-looking guidance parsing from SEC 10-K filings.",
-        status: "Research",
-        statusColor: "blue",
-        progress: 48,
-        tech: ["PyTorch", "ChromaDB", "LangChain", "FastAPI"],
-        metric: "SEC Item 7 MD&A Parser",
-        actionUrl: "#lab",
-        actionLabel: "View Experiment",
+        name: "ARENEX Esports Engine",
+        repoMatch: "eSports",
+        tagline: "Production-grade tournament platform with anti-replay payments & Edge RBAC.",
+        status: "Active / Live",
+        statusColor: "emerald",
+        progress: 95,
+        tech: ["Next.js 15+", "Supabase", "PostgreSQL RLS", "Server Actions"],
+        metric: "11 Tables • 14 RLS Policies",
+        actionUrl: "#projects",
+        actionLabel: "View Case Study",
         isExternal: false
       },
       {
         num: "04",
-        name: "Oops! (Chaos Realm) Game Engine",
+        name: "Oops! (Chaos Realm) Game",
         repoMatch: "Oops",
         tagline: "Zero-allocation state-machine physics and procedural chiptune audio in browser.",
         status: "Shipped",
@@ -77,9 +77,35 @@ export class CurrentlyBuilding {
   }
 
   render() {
+    const latestPush = githubService.latestPush;
+
     this.container.innerHTML = `
       <div class="relative py-12 border-y border-border/80 bg-surface/40 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <!-- Live Real-Time Activity Stream Pill Banner -->
+          ${latestPush ? `
+            <div class="mb-8 p-3 sm:p-4 rounded-2xl bg-surface-elevated border border-cyan/30 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+              <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                <div class="text-xs font-mono">
+                  <span class="text-text-muted">LIVE GITHUB ACTIVITY:</span>
+                  <a href="${latestPush.url}" target="_blank" rel="noopener noreferrer" class="font-bold text-cyan hover:underline ml-1">
+                    ${latestPush.repoName}
+                  </a>
+                  <span class="text-text-secondary ml-1 hidden sm:inline">(${latestPush.branch}) — "${latestPush.commitMessage}"</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 text-[11px] font-mono text-text-muted">
+                <span class="px-2 py-0.5 rounded bg-surface border border-border text-emerald-300">● ${latestPush.timeAgo}</span>
+                <a href="${latestPush.url}" target="_blank" rel="noopener noreferrer" class="text-cyan hover:underline font-bold">
+                  View Commit ↗
+                </a>
+              </div>
+            </div>
+          ` : ""}
+
           <!-- Section Header -->
           <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
             <div class="flex items-center gap-3">
@@ -88,7 +114,7 @@ export class CurrentlyBuilding {
               </div>
               <div>
                 <h2 class="text-xs font-mono font-bold tracking-widest text-cyan uppercase">CURRENTLY BUILDING // LIVE PIPELINE</h2>
-                <p class="text-sm text-text-secondary mt-0.5">Real-time status of active tools, experiments, and shipped systems</p>
+                <p class="text-sm text-text-secondary mt-0.5">Real-time telemetry and status across active systems</p>
               </div>
             </div>
 
