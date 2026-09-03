@@ -39,14 +39,14 @@
       --shadow-node-hover: 0 10px 28px rgba(0, 0, 0, 0.65);
     }
 
-    /* High-Contrast Light Theme */
+    /* High-Contrast Light Theme (Deep Black text, Pure White cards, Crisp Borders) */
     [data-theme="light"] {
-      --bg-canvas: #f4f6f9;
+      --bg-canvas: #f1f5f9;
       --bg-header: #ffffff;
       --bg-panel: #ffffff;
       --bg-node: #ffffff;
       --bg-node-hover: #f8fafc;
-      --bg-input: #f1f5f9;
+      --bg-input: #f8fafc;
       --border-subtle: #cbd5e1;
       --border-active: #2563eb;
       --text-primary: #0f172a;
@@ -67,10 +67,10 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: background-color 0.2s, color 0.2s;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Top Studio Header (n8n style) */
+    /* Top Studio Header */
     header {
       background: var(--bg-header);
       border-bottom: 1px solid var(--border-subtle);
@@ -81,6 +81,7 @@
       justify-content: space-between;
       z-index: 100;
       flex-shrink: 0;
+      transition: background-color 0.25s ease;
     }
 
     .brand {
@@ -162,7 +163,7 @@
       background: transparent;
       color: var(--text-secondary);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -170,13 +171,14 @@
 
     .nav-pill:hover {
       color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .nav-pill.active {
       background: var(--border-subtle);
       color: var(--text-primary);
       box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      transform: scale(1.02);
     }
 
     .btn-header {
@@ -189,7 +191,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.15s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-add-lead {
@@ -201,6 +203,7 @@
     .btn-add-lead:hover {
       border-color: var(--accent-blue);
       color: var(--accent-blue);
+      transform: translateY(-1px);
     }
 
     .btn-sender-cfg {
@@ -211,6 +214,7 @@
 
     .btn-sender-cfg:hover {
       color: var(--text-primary);
+      transform: translateY(-1px);
     }
 
     .btn-run-workflow {
@@ -236,12 +240,13 @@
       cursor: pointer;
       font-size: 16px;
       color: var(--text-secondary);
-      transition: all 0.15s;
+      transition: all 0.2s ease;
     }
 
     .btn-theme-toggle:hover {
       color: var(--text-primary);
       border-color: var(--accent-blue);
+      transform: rotate(15deg);
     }
 
     /* Main Workspace Container */
@@ -261,6 +266,7 @@
       background-size: 24px 24px;
       overflow: auto;
       user-select: none;
+      animation: fadeInView 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     /* SVG Connector Overlay */
@@ -317,7 +323,7 @@
     .n8n-node:hover {
       background: var(--bg-node-hover);
       border-color: var(--accent-blue);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       box-shadow: var(--shadow-node-hover);
     }
 
@@ -329,6 +335,12 @@
     .n8n-node.running {
       border-color: var(--accent-cyan);
       box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3);
+      animation: nodePulse 0.8s infinite alternate;
+    }
+
+    @keyframes nodePulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.03); }
     }
 
     .node-header {
@@ -430,7 +442,7 @@
       bottom: 0;
       z-index: 50;
       transform: translateX(100%);
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: -8px 0 24px rgba(0,0,0,0.3);
     }
 
@@ -463,6 +475,7 @@
       cursor: pointer;
       padding: 4px;
       line-height: 1;
+      transition: color 0.2s;
     }
 
     .btn-close-drawer:hover { color: var(--text-primary); }
@@ -512,10 +525,21 @@
       flex: 1;
       overflow-y: auto;
       padding: 32px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
     .panel-view.active {
       display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeInView 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .data-container {
@@ -558,6 +582,12 @@
       flex-direction: column;
       gap: 16px;
       box-shadow: var(--shadow-node);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .approval-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-node-hover);
     }
 
     .approval-lead-info {
@@ -586,7 +616,7 @@
     .actions-bar { display: flex; gap: 10px; margin-top: auto; }
     .btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-approve { background: var(--accent-emerald); color: #fff; }
-    .btn-approve:hover { background: #059669; }
+    .btn-approve:hover { background: #059669; transform: translateY(-1px); }
     .btn-reject { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
     .btn-edit { background: var(--bg-canvas); color: var(--text-primary); border: 1px solid var(--border-subtle); }
 
@@ -611,7 +641,7 @@
     .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
     .data-table th { background: var(--bg-canvas); color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); }
     .data-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
-    .data-table tr:hover td { background: rgba(255, 255, 255, 0.02); color: var(--text-primary); }
+    .data-table tr:hover td { background: rgba(255, 255, 255, 0.04); color: var(--text-primary); }
 
     /* Modal Backdrop & Popup */
     .modal-overlay {
@@ -630,6 +660,12 @@
 
     .modal-overlay.open {
       display: flex;
+      animation: fadeInOverlay 0.2s ease forwards;
+    }
+
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-card {
@@ -642,6 +678,12 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      animation: popInModal 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes popInModal {
+      from { transform: scale(0.92) translateY(12px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
     }
 
     .modal-header {
@@ -675,6 +717,7 @@
       color: var(--text-primary);
       font-size: 13px;
       font-family: inherit;
+      transition: border-color 0.2s;
     }
 
     .form-input:focus {
@@ -1075,6 +1118,8 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <!-- Absolute Script path with fallback -->
+  <script src="/apps/dashboard/app.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>

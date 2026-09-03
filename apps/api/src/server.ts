@@ -27,12 +27,20 @@ export async function buildServer() {
   });
 
   // Serve Dashboard Static Files
-  const dashboardDir = path.resolve(__dirname, '../../dashboard');
   const projectRootDir = path.resolve(__dirname, '../../../');
 
   await fastify.register(fastifyStatic, {
     root: projectRootDir,
     prefix: '/',
+  });
+
+  // Direct script serving routes to prevent any 404
+  fastify.get('/app.js', async (request, reply) => {
+    return reply.sendFile('apps/dashboard/app.js');
+  });
+
+  fastify.get('/dashboard/app.js', async (request, reply) => {
+    return reply.sendFile('apps/dashboard/app.js');
   });
 
   // Redirect root and /dashboard to dashboard UI
@@ -49,6 +57,8 @@ export async function buildServer() {
         request.url.startsWith('/api/v1/webhooks') ||
         request.url.startsWith('/apps/dashboard') ||
         request.url === '/dashboard' ||
+        request.url === '/app.js' ||
+        request.url === '/dashboard/app.js' ||
         request.url.endsWith('.css') ||
         request.url.endsWith('.js') ||
         request.url.endsWith('.html') ||
