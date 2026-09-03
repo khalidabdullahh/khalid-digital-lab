@@ -308,14 +308,26 @@ window.selectNode = function (nodeKey) {
 
   if (drawer) {
     drawer.classList.add('open');
+    const backdrop = document.getElementById('drawer-backdrop');
+    if (backdrop) backdrop.classList.add('active');
   }
 };
 
 window.closeDrawer = function () {
   const drawer = document.getElementById('node-drawer');
+  const backdrop = document.getElementById('drawer-backdrop');
   if (drawer) drawer.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('active');
   document.querySelectorAll('.n8n-node').forEach((el) => el.classList.remove('selected'));
 };
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    window.closeDrawer();
+    window.closeAddLeadModal();
+    window.closeSenderModal();
+  }
+});
 
 // -----------------------------------------------------------------------------
 // 5. Workflow Execution Animation & API Run

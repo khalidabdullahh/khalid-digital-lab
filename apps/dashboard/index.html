@@ -429,6 +429,26 @@
     .pin-in { left: -7px; top: 50%; transform: translateY(-50%); }
     .pin-out { right: -7px; top: 50%; transform: translateY(-50%); }
 
+    /* Backdrop for Drawer */
+    .drawer-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(2px);
+      z-index: 490;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .drawer-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     /* Fixed Slide-Over Drawer on Desktop / Bottom Sheet on Mobile */
     .node-drawer {
       position: fixed;
@@ -440,7 +460,7 @@
       border-left: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
-      z-index: 300;
+      z-index: 500;
       transform: translateX(100%);
       transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: -10px 0 30px rgba(0, 0, 0, 0.35);
@@ -1067,26 +1087,8 @@
             Campaign: <strong>Alpha Cohort 1 (Quant & Pine)</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-success">Bearer Auth Active</span>
-            <span>Sync Ready</span>
-          </div>
         </div>
 
-      </div>
-
-      <!-- Slide-Over Drawer on Desktop / Bottom Sheet on Mobile -->
-      <div class="node-drawer" id="node-drawer">
-        <div class="drawer-header">
-          <div class="drawer-title" id="drawer-title">
-            <span id="drawer-icon">🎯</span>
-            <span id="drawer-name">Node Inspector</span>
-          </div>
-          <button class="btn-close-drawer" onclick="closeDrawer()">&times;</button>
-        </div>
-
-        <div class="drawer-content" id="drawer-content">
-          <!-- Dynamic Inspector Details populated by JS -->
-        </div>
       </div>
     </div>
 
@@ -1264,6 +1266,22 @@
       <div class="modal-footer">
         <button class="btn btn-approve" onclick="closeSenderModal()">Done</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Slide-Over Node Inspector Drawer (Desktop right slide / Mobile bottom sheet) -->
+  <div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+  <div class="node-drawer" id="node-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title" id="drawer-title">
+        <span id="drawer-icon">🎯</span>
+        <span id="drawer-name">Node Inspector</span>
+      </div>
+      <button class="btn-close-drawer" onclick="closeDrawer()">&times;</button>
+    </div>
+
+    <div class="drawer-content" id="drawer-content">
+      <!-- Dynamic Inspector Details populated by JS -->
     </div>
   </div>
 
