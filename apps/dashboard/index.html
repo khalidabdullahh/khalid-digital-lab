@@ -3,21 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trading OS // n8n Growth Automation Workflow Studio</title>
+  <title>Trading OS // Growth Automation & Workflow Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* ==========================================================================
+       CSS Variables: Dark Theme (Default) & High-Contrast Light Theme
+       ========================================================================== */
     :root {
-      --bg-canvas: #0b0d14;
-      --bg-panel: #111420;
+      --bg-canvas: #090b10;
+      --bg-header: #0e111a;
+      --bg-panel: #121522;
       --bg-node: #161a29;
       --bg-node-hover: #1c2236;
+      --bg-input: #0b0d14;
       --border-subtle: #232a42;
       --border-active: #3b82f6;
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
       --text-muted: #64748b;
+      --grid-dot: #1e2438;
       
       --n8n-orange: #ff6d5a;
       --accent-blue: #3b82f6;
@@ -29,9 +35,30 @@
       
       --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+      --shadow-node: 0 6px 20px rgba(0, 0, 0, 0.45);
+      --shadow-node-hover: 0 10px 28px rgba(0, 0, 0, 0.65);
+    }
+
+    /* High-Contrast Light Theme */
+    [data-theme="light"] {
+      --bg-canvas: #f4f6f9;
+      --bg-header: #ffffff;
+      --bg-panel: #ffffff;
+      --bg-node: #ffffff;
+      --bg-node-hover: #f8fafc;
+      --bg-input: #f1f5f9;
+      --border-subtle: #cbd5e1;
+      --border-active: #2563eb;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --grid-dot: #cbd5e1;
+      --shadow-node: 0 4px 16px rgba(15, 23, 42, 0.08);
+      --shadow-node-hover: 0 8px 24px rgba(15, 23, 42, 0.14);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       background-color: var(--bg-canvas);
       color: var(--text-primary);
@@ -40,14 +67,15 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      transition: background-color 0.2s, color 0.2s;
     }
 
     /* Top Studio Header (n8n style) */
     header {
-      background: #0d101a;
+      background: var(--bg-header);
       border-bottom: 1px solid var(--border-subtle);
       height: 60px;
-      padding: 0 24px;
+      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -58,7 +86,7 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .brand-logo {
@@ -113,20 +141,20 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .nav-pill-group {
       display: flex;
-      background: #151928;
+      background: var(--bg-panel);
       padding: 4px;
       border-radius: 9px;
       border: 1px solid var(--border-subtle);
-      gap: 4px;
+      gap: 3px;
     }
 
     .nav-pill {
-      padding: 7px 14px;
+      padding: 7px 12px;
       font-size: 12px;
       font-weight: 600;
       border-radius: 7px;
@@ -134,7 +162,7 @@
       background: transparent;
       color: var(--text-secondary);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -142,28 +170,53 @@
 
     .nav-pill:hover {
       color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .nav-pill.active {
-      background: #242c44;
-      color: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      background: var(--border-subtle);
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
     }
 
-    .btn-run-workflow {
-      background: linear-gradient(135deg, var(--n8n-orange), #f97316);
-      color: #fff;
+    .btn-header {
       font-weight: 700;
-      font-size: 13px;
-      padding: 8px 18px;
+      font-size: 12px;
+      padding: 8px 14px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-add-lead {
+      background: var(--bg-panel);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-add-lead:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .btn-sender-cfg {
+      background: var(--bg-panel);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-sender-cfg:hover {
+      color: var(--text-primary);
+    }
+
+    .btn-run-workflow {
+      background: linear-gradient(135deg, var(--n8n-orange), #f97316);
+      color: #fff;
       box-shadow: 0 2px 10px rgba(255, 109, 90, 0.3);
-      transition: all 0.2s;
     }
 
     .btn-run-workflow:hover {
@@ -171,8 +224,24 @@
       box-shadow: 0 4px 14px rgba(255, 109, 90, 0.45);
     }
 
-    .btn-run-workflow:active {
-      transform: translateY(0);
+    .btn-theme-toggle {
+      width: 36px;
+      height: 36px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+
+    .btn-theme-toggle:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-blue);
     }
 
     /* Main Workspace Container */
@@ -188,15 +257,10 @@
       flex: 1;
       position: relative;
       background-color: var(--bg-canvas);
-      background-image: radial-gradient(#242a40 1.2px, transparent 1.2px);
+      background-image: radial-gradient(var(--grid-dot) 1.3px, transparent 1.3px);
       background-size: 24px 24px;
       overflow: auto;
-      cursor: grab;
       user-select: none;
-    }
-
-    #view-canvas:active {
-      cursor: grabbing;
     }
 
     /* SVG Connector Overlay */
@@ -204,7 +268,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 2400px;
+      width: 2500px;
       height: 1200px;
       pointer-events: none;
       z-index: 1;
@@ -212,7 +276,7 @@
 
     .wire-path {
       fill: none;
-      stroke: #333d5e;
+      stroke: var(--border-subtle);
       stroke-width: 3px;
       stroke-linecap: round;
       transition: stroke 0.3s;
@@ -231,7 +295,7 @@
     /* Workflow Nodes Container */
     .canvas-content {
       position: absolute;
-      width: 2400px;
+      width: 2500px;
       height: 1200px;
       z-index: 2;
     }
@@ -239,26 +303,27 @@
     /* n8n Node Card */
     .n8n-node {
       position: absolute;
-      width: 250px;
+      width: 260px;
       background: var(--bg-node);
       border: 1.5px solid var(--border-subtle);
       border-radius: 12px;
       padding: 16px;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      box-shadow: var(--shadow-node);
+      pointer-events: auto;
     }
 
     .n8n-node:hover {
       background: var(--bg-node-hover);
       border-color: var(--accent-blue);
       transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+      box-shadow: var(--shadow-node-hover);
     }
 
     .n8n-node.selected {
       border-color: var(--n8n-orange);
-      box-shadow: 0 0 0 2px rgba(255, 109, 90, 0.3), 0 10px 24px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 0 2px rgba(255, 109, 90, 0.35), var(--shadow-node-hover);
     }
 
     .n8n-node.running {
@@ -284,22 +349,18 @@
       flex-shrink: 0;
     }
 
-    .icon-apollo { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
-    .icon-neon { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); }
-    .icon-gemini { background: rgba(168, 85, 247, 0.2); color: var(--accent-purple); }
-    .icon-scoring { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
-    .icon-outreach { background: rgba(255, 109, 90, 0.2); color: var(--n8n-orange); }
-    .icon-gate { background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); }
-    .icon-instantly { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); }
-    .icon-replies { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
-
-    .node-title-group {
-      overflow: hidden;
-    }
+    .icon-apollo { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+    .icon-neon { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); }
+    .icon-gemini { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); }
+    .icon-scoring { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+    .icon-outreach { background: rgba(255, 109, 90, 0.15); color: var(--n8n-orange); }
+    .icon-gate { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); }
+    .icon-instantly { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
 
     .node-title {
       font-weight: 700;
       font-size: 13px;
+      color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -315,10 +376,10 @@
       font-size: 11px;
       color: var(--text-secondary);
       line-height: 1.4;
-      background: rgba(0, 0, 0, 0.25);
+      background: var(--bg-input);
       padding: 8px 10px;
       border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
     }
 
     .node-status {
@@ -328,24 +389,25 @@
       margin-top: 10px;
       font-size: 10px;
       font-family: var(--font-mono);
+      color: var(--text-muted);
     }
 
     .node-tag {
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 4px;
       font-weight: 600;
     }
 
-    .tag-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
-    .tag-pending { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
-    .tag-idle { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); }
+    .tag-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.25); }
+    .tag-pending { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.25); }
+    .tag-idle { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid var(--border-subtle); }
 
     /* Node Connection Pins */
     .pin {
       position: absolute;
       width: 12px;
       height: 12px;
-      background: #242c44;
+      background: var(--bg-panel);
       border: 2px solid var(--accent-cyan);
       border-radius: 50%;
       top: 50%;
@@ -355,7 +417,7 @@
     .pin-in { left: -7px; }
     .pin-out { right: -7px; }
 
-    /* Node Inspector Drawer (Slide-over panel) */
+    /* Node Inspector Drawer */
     .node-drawer {
       width: 440px;
       background: var(--bg-panel);
@@ -369,7 +431,7 @@
       z-index: 50;
       transform: translateX(100%);
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: -8px 0 24px rgba(0,0,0,0.5);
+      box-shadow: -8px 0 24px rgba(0,0,0,0.3);
     }
 
     .node-drawer.open {
@@ -377,7 +439,7 @@
     }
 
     .drawer-header {
-      padding: 20px 24px;
+      padding: 18px 24px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
@@ -385,20 +447,22 @@
     }
 
     .drawer-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       display: flex;
       align-items: center;
       gap: 10px;
+      color: var(--text-primary);
     }
 
     .btn-close-drawer {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
       padding: 4px;
+      line-height: 1;
     }
 
     .btn-close-drawer:hover { color: var(--text-primary); }
@@ -406,14 +470,14 @@
     .drawer-content {
       flex: 1;
       overflow-y: auto;
-      padding: 24px;
+      padding: 20px 24px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
     .inspector-section {
-      background: #151928;
+      background: var(--bg-canvas);
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
       padding: 16px;
@@ -425,18 +489,18 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .json-preview {
-      background: #0b0d14;
+      background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: 6px;
       padding: 12px;
       font-family: var(--font-mono);
       font-size: 11px;
       color: var(--accent-cyan);
-      max-height: 240px;
+      max-height: 220px;
       overflow-y: auto;
       white-space: pre-wrap;
       word-break: break-all;
@@ -459,7 +523,7 @@
       margin: 0 auto;
     }
 
-    /* KPI Grid inside View */
+    /* KPI Row */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -493,6 +557,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      box-shadow: var(--shadow-node);
     }
 
     .approval-lead-info {
@@ -507,7 +572,7 @@
     .lead-title { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
     .email-box {
-      background: #161a29;
+      background: var(--bg-canvas);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
       padding: 16px;
@@ -523,7 +588,7 @@
     .btn-approve { background: var(--accent-emerald); color: #fff; }
     .btn-approve:hover { background: #059669; }
     .btn-reject { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
-    .btn-edit { background: #232a42; color: #fff; }
+    .btn-edit { background: var(--bg-canvas); color: var(--text-primary); border: 1px solid var(--border-subtle); }
 
     /* Tables */
     .card-panel {
@@ -531,6 +596,7 @@
       border: 1px solid var(--border-subtle);
       border-radius: 14px;
       overflow: hidden;
+      box-shadow: var(--shadow-node);
     }
 
     .panel-header {
@@ -541,43 +607,87 @@
       justify-content: space-between;
     }
 
-    .panel-title { font-size: 15px; font-weight: 700; }
+    .panel-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
     .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-    .data-table th { background: #151928; color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); }
+    .data-table th { background: var(--bg-canvas); color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); }
     .data-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
     .data-table tr:hover td { background: rgba(255, 255, 255, 0.02); color: var(--text-primary); }
 
-    /* Floating Canvas Zoom Controls */
-    .canvas-controls {
-      position: absolute;
-      bottom: 24px;
-      left: 24px;
-      background: #151928;
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 4px;
-      display: flex;
-      gap: 4px;
-      z-index: 10;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-
-    .btn-canvas {
-      width: 32px;
-      height: 32px;
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
+    /* Modal Backdrop & Popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      display: none;
       align-items: center;
       justify-content: center;
+      z-index: 200;
     }
 
-    .btn-canvas:hover { background: #232a42; color: #fff; }
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 520px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
@@ -596,23 +706,38 @@
     </div>
 
     <div class="header-actions">
+      <!-- Theme Toggle -->
+      <button class="btn-theme-toggle" id="theme-toggle-btn" title="Toggle Light / Dark Theme" onclick="toggleTheme()">
+        <span id="theme-icon">☀️</span>
+      </button>
+
+      <!-- Add Prospect Button -->
+      <button class="btn-header btn-add-lead" onclick="openAddLeadModal()">
+        <span>➕ Add Prospect</span>
+      </button>
+
+      <!-- Sender Config Button -->
+      <button class="btn-header btn-sender-cfg" onclick="openSenderModal()">
+        <span>✉️ Sender Config</span>
+      </button>
+
       <div class="nav-pill-group">
-        <button class="nav-pill active" onclick="switchView('canvas')">
+        <button class="nav-pill active" id="pill-canvas" onclick="switchView('canvas')">
           <span>🔀 Workflow Canvas</span>
         </button>
-        <button class="nav-pill" onclick="switchView('approvals')">
+        <button class="nav-pill" id="pill-approvals" onclick="switchView('approvals')">
           <span>🛡️ Approvals (<span id="pending-count">4</span>)</span>
         </button>
-        <button class="nav-pill" onclick="switchView('leads')">
+        <button class="nav-pill" id="pill-leads" onclick="switchView('leads')">
           <span>👥 Leads Directory</span>
         </button>
-        <button class="nav-pill" onclick="switchView('replies')">
+        <button class="nav-pill" id="pill-replies" onclick="switchView('replies')">
           <span>💬 Replies & AI</span>
         </button>
       </div>
 
-      <button class="btn-run-workflow" id="btn-execute-flow" onclick="executeWorkflow()">
-        <span>▶ Execute Workflow</span>
+      <button class="btn-header btn-run-workflow" id="btn-execute-flow" onclick="executeWorkflow()">
+        <span>▶ Run Workflow</span>
       </button>
     </div>
   </header>
@@ -627,7 +752,7 @@
       <div class="canvas-content" id="canvas-content">
 
         <!-- Node 1: Apollo Lead Discovery -->
-        <div class="n8n-node" id="node-apollo" style="top: 240px; left: 60px;" onclick="selectNode('apollo')">
+        <div class="n8n-node" id="node-apollo" style="top: 240px; left: 50px;" onclick="selectNode('apollo')">
           <div class="pin pin-out"></div>
           <div class="node-header">
             <div class="node-icon icon-apollo">🎯</div>
@@ -640,13 +765,13 @@
             Target: <strong>Quant Traders & Pine Script Devs</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-success">4 Discovered</span>
-            <span>Trigger Node</span>
+            <span class="node-tag tag-success" id="tag-apollo">4 Discovered</span>
+            <span>Click to Inspect</span>
           </div>
         </div>
 
         <!-- Node 2: Neon PostgreSQL Storage -->
-        <div class="n8n-node" id="node-neon" style="top: 240px; left: 380px;" onclick="selectNode('neon')">
+        <div class="n8n-node" id="node-neon" style="top: 240px; left: 370px;" onclick="selectNode('neon')">
           <div class="pin pin-in"></div>
           <div class="pin pin-out"></div>
           <div class="node-header">
@@ -660,13 +785,13 @@
             Table: <strong>public.leads</strong> (UUID Primary Key)
           </div>
           <div class="node-status">
-            <span class="node-tag tag-success">4 Saved</span>
-            <span>SSL Pool Active</span>
+            <span class="node-tag tag-success">PostgreSQL 18.6</span>
+            <span>SSL Active</span>
           </div>
         </div>
 
         <!-- Node 3: Gemini AI Fact Extraction -->
-        <div class="n8n-node" id="node-gemini" style="top: 240px; left: 700px;" onclick="selectNode('gemini')">
+        <div class="n8n-node" id="node-gemini" style="top: 240px; left: 690px;" onclick="selectNode('gemini')">
           <div class="pin pin-in"></div>
           <div class="pin pin-out"></div>
           <div class="node-header">
@@ -680,13 +805,13 @@
             Extracts: <strong>Verified facts, HMM regime pain</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-success">4 Researched</span>
+            <span class="node-tag tag-success">Live Key Active</span>
             <span>Temp: 0.2</span>
           </div>
         </div>
 
         <!-- Node 4: ICP Scoring Engine -->
-        <div class="n8n-node" id="node-scoring" style="top: 240px; left: 1020px;" onclick="selectNode('scoring')">
+        <div class="n8n-node" id="node-scoring" style="top: 240px; left: 1010px;" onclick="selectNode('scoring')">
           <div class="pin pin-in"></div>
           <div class="pin pin-out"></div>
           <div class="node-header">
@@ -700,13 +825,13 @@
             Rules: <strong>Score ≥ 70 → Qualified</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-success">4 Qualified (Avg: 88)</span>
+            <span class="node-tag tag-success">4 Qualified</span>
             <span>Deterministic</span>
           </div>
         </div>
 
         <!-- Node 5: Gemini Cold Outreach Writer -->
-        <div class="n8n-node" id="node-outreach" style="top: 240px; left: 1340px;" onclick="selectNode('outreach')">
+        <div class="n8n-node" id="node-outreach" style="top: 240px; left: 1330px;" onclick="selectNode('outreach')">
           <div class="pin pin-in"></div>
           <div class="pin pin-out"></div>
           <div class="node-header">
@@ -720,13 +845,13 @@
             Format: <strong>&lt;100 words, Zero-fluff, HMM hook</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-pending">4 Drafts Ready</span>
-            <span>Status: PENDING</span>
+            <span class="node-tag tag-pending" id="tag-outreach">4 Drafts Ready</span>
+            <span>Pending Review</span>
           </div>
         </div>
 
         <!-- Node 6: Human Approval Gate (HITL) -->
-        <div class="n8n-node" id="node-gate" style="top: 240px; left: 1660px;" onclick="selectNode('gate')">
+        <div class="n8n-node" id="node-gate" style="top: 240px; left: 1650px;" onclick="selectNode('gate')">
           <div class="pin pin-in"></div>
           <div class="pin pin-out"></div>
           <div class="node-header">
@@ -737,16 +862,16 @@
             </div>
           </div>
           <div class="node-body">
-            Safety Gate: <strong>Blocks automated delivery</strong>
+            Safety Gate: <strong>Mandatory manual approval</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-pending">Awaiting Review (4)</span>
+            <span class="node-tag tag-pending" id="tag-gate">Awaiting Review</span>
             <span>MANDATORY</span>
           </div>
         </div>
 
         <!-- Node 7: Instantly Delivery Engine -->
-        <div class="n8n-node" id="node-instantly" style="top: 240px; left: 1980px;" onclick="selectNode('instantly')">
+        <div class="n8n-node" id="node-instantly" style="top: 240px; left: 1970px;" onclick="selectNode('instantly')">
           <div class="pin pin-in"></div>
           <div class="pin pin-out"></div>
           <div class="node-header">
@@ -760,18 +885,11 @@
             Campaign: <strong>Alpha Cohort 1 (Quant & Pine)</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-idle">Bearer Auth Active</span>
+            <span class="node-tag tag-success">Bearer Auth Active</span>
             <span>Sync Ready</span>
           </div>
         </div>
 
-      </div>
-
-      <!-- Canvas Navigation Controls -->
-      <div class="canvas-controls">
-        <button class="btn-canvas" onclick="zoomCanvas(1.1)">➕</button>
-        <button class="btn-canvas" onclick="zoomCanvas(0.9)">➖</button>
-        <button class="btn-canvas" onclick="resetCanvasZoom()">🎯</button>
       </div>
 
       <!-- Node Inspector Slide-over Drawer -->
@@ -796,7 +914,7 @@
         <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">Human-in-the-Loop Approval Queue</h2>
-            <p style="color: var(--text-muted); font-size: 13px;">Review personalized cold email drafts generated by Gemini 3.6 Flash before authorizing delivery.</p>
+            <p style="color: var(--text-muted); font-size: 13px;">Review personalized cold emails drafted by Gemini 3.6 Flash. Only clicking Approve allows synchronization to Instantly.</p>
           </div>
         </div>
         <div class="approval-grid" id="approval-grid">
@@ -808,12 +926,11 @@
     <!-- VIEW 3: Leads Directory View -->
     <div id="view-leads" class="panel-view">
       <div class="data-container">
-        <!-- KPI Row -->
         <div class="kpi-grid">
           <div class="kpi-card">
             <div class="kpi-label">Total Leads Discovered</div>
             <div class="kpi-value" id="kpi-discovered">4</div>
-            <div class="kpi-subtext">Apollo & Search Ingested</div>
+            <div class="kpi-subtext">Stored in Neon PostgreSQL</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Qualified Leads (Score ≥ 70)</div>
@@ -834,7 +951,8 @@
 
         <div class="card-panel">
           <div class="panel-header">
-            <div class="panel-title">Prospect Relational Records (Neon PostgreSQL)</div>
+            <div class="panel-title">Prospect Database Records</div>
+            <button class="btn btn-approve" onclick="openAddLeadModal()">➕ Add New Lead</button>
           </div>
           <table class="data-table">
             <thead>
@@ -882,6 +1000,79 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- MODAL: Add / Import Prospect -->
+  <div class="modal-overlay" id="modal-add-lead">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title"><span>➕</span> Add Target Customer Prospect</div>
+        <button class="btn-close-drawer" onclick="closeAddLeadModal()">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Name *</label>
+        <input class="form-input" id="inp-lead-name" placeholder="e.g. David Cohen" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input class="form-input" id="inp-lead-email" type="email" placeholder="e.g. david@cohencapital.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Company / Fund Name *</label>
+        <input class="form-input" id="inp-lead-company" placeholder="e.g. Cohen Quantitative Labs" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Job Title / Role *</label>
+        <input class="form-input" id="inp-lead-title" placeholder="e.g. Quantitative Trader & Pine Script Dev" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">LinkedIn Profile URL (Optional)</label>
+        <input class="form-input" id="inp-lead-linkedin" placeholder="https://linkedin.com/in/..." />
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+        <input type="checkbox" id="chk-auto-process" checked />
+        <label for="chk-auto-process" style="font-size:12px; color:var(--accent-cyan); font-weight:600; cursor:pointer;">
+          ⚡ Run Gemini 3.6 Flash Research & Draft Cold Email Immediately
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-edit" onclick="closeAddLeadModal()">Cancel</button>
+        <button class="btn btn-approve" id="btn-save-lead" onclick="submitNewLead()">Save & Run AI</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Sender & Outbound Email Config -->
+  <div class="modal-overlay" id="modal-sender-cfg">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title"><span>✉️</span> Outbound Email & Sender Configuration</div>
+        <button class="btn-close-drawer" onclick="closeSenderModal()">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sender Name</label>
+        <input class="form-input" value="Khalid Abdullah" readonly />
+      </div>
+      <div class="form-group">
+        <label class="form-label">From / Reply-To Address</label>
+        <input class="form-input" value="khalid@trading-os.com (or your Instantly connected domain)" readonly />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Instantly Sending Pool</label>
+        <input class="form-input" value="Instantly.ai v2 API Active (Key Verified)" readonly />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Instantly Target Campaign</label>
+        <input class="form-input" value="Trading OS — Alpha Cohort 1 (Quant & Pine Developers)" readonly />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Safety Throttling & Deliverability</label>
+        <input class="form-input" value="Max 25 emails / day (Anti-Spam & Domain Warmup Protected)" readonly />
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-approve" onclick="closeSenderModal()">Done</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
