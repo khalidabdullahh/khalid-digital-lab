@@ -492,18 +492,29 @@
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      color: var(--text-muted);
-      font-size: 20px;
+      color: var(--text-primary);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1;
       cursor: pointer;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.15s;
+      user-select: none;
+      -webkit-user-select: none;
+      pointer-events: auto;
+      z-index: 510;
     }
 
-    .btn-close-drawer:hover { color: var(--text-primary); border-color: var(--accent-rose); }
+    .btn-close-drawer:hover {
+      background: rgba(244, 63, 94, 0.15);
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+      transform: scale(1.08);
+    }
 
     .drawer-content {
       flex: 1;
@@ -1270,14 +1281,14 @@
   </div>
 
   <!-- Slide-Over Node Inspector Drawer (Desktop right slide / Mobile bottom sheet) -->
-  <div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
   <div class="node-drawer" id="node-drawer">
     <div class="drawer-header">
       <div class="drawer-title" id="drawer-title">
         <span id="drawer-icon">🎯</span>
         <span id="drawer-name">Node Inspector</span>
       </div>
-      <button class="btn-close-drawer" onclick="closeDrawer()">&times;</button>
+      <button type="button" class="btn-close-drawer" id="btn-close-drawer" aria-label="Close Inspector">&times;</button>
     </div>
 
     <div class="drawer-content" id="drawer-content">
@@ -1285,7 +1296,37 @@
     </div>
   </div>
 
-  <script src="/apps/dashboard/app.js"></script>
-  <script src="/app.js"></script>
+  <script>
+    // Resilient inline drawer closer
+    function closeNodeInspector() {
+      const drawer = document.getElementById('node-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      if (drawer) {
+        drawer.classList.remove('open');
+        drawer.style.transform = window.innerWidth <= 768 ? 'translateY(100%)' : 'translateX(100%)';
+      }
+      if (backdrop) backdrop.classList.remove('active');
+      document.querySelectorAll('.n8n-node').forEach(el => el.classList.remove('selected'));
+    }
+
+    window.closeDrawer = closeNodeInspector;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('btn-close-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); closeNodeInspector(); });
+      if (backdrop) backdrop.addEventListener('click', closeNodeInspector);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeNodeInspector();
+          if (window.closeAddLeadModal) window.closeAddLeadModal();
+          if (window.closeSenderModal) window.closeSenderModal();
+        }
+      });
+    });
+  </script>
+  <script src="/apps/dashboard/app.js?v=2.6.0"></script>
+  <script src="/app.js?v=2.6.0"></script>
 </body>
 </html>
