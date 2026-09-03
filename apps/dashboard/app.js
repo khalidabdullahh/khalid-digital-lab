@@ -160,7 +160,7 @@ const nodeMeta = {
       deduplication: 'Active on (email, source_id)',
     },
     getOutput: () => (state.leads.length > 0 ? state.leads.map((l) => ({ name: l.full_name, title: l.job_title, company: l.company, email: l.email })) : [
-      { name: 'Marcus Vance', title: 'Quantitative Strategy Developer', company: 'Apex Alpha Research', email: 'marcus.vance@apexalpha.io' },
+      { name: 'Khalid Abdullah', title: 'Founder & Quantitative Systems Architect', company: 'Trading OS Labs', email: 'khalid@trading-os.com' },
       { name: 'Elena Rostova', title: 'Pine Script V5 & Algorithmic Trader', company: 'QuantSignals FX', email: 'elena.rostova@quantsignals.io' },
       { name: 'David Chen', title: 'Managing Partner & Quant Lead', company: 'Chen Quantitative Fund', email: 'david.chen@chenquant.com' },
       { name: 'Sarah Jenkins', title: 'Lead Quantitative Analyst', company: 'Systematic Capital Group', email: 'sarah.jenkins@systematiccap.com' }
@@ -194,14 +194,14 @@ const nodeMeta = {
       evidence_types: ['verified_fact', 'reasonable_inference', 'unknown'],
     },
     getOutput: () => ({
-      sample_target: 'Marcus Vance (Apex Alpha Research)',
+      sample_target: 'Khalid Abdullah (Trading OS Labs)',
       extracted_facts: [
-        'Specializes in systematic futures & intraday trend models',
-        'Suffered drawdowns during high volatility regime transitions in 2025'
+        'Founder & architect building Trading OS market regime analytics',
+        'Specializes in 3-state Gaussian HMM volatility & Monte Carlo modeling'
       ],
       trading_related: true,
       quant_fit: true,
-      confidence_score: 0.96,
+      confidence_score: 0.98,
     }),
   },
   scoring: {
@@ -214,7 +214,7 @@ const nodeMeta = {
       qualification_threshold: 70,
     },
     getOutput: () => (state.leads.length > 0 ? state.leads.map((l) => ({ name: l.full_name, score: l.lead_score, qualification: l.qualification_status, priority: l.priority })) : [
-      { name: 'Marcus Vance', score: 92, qualification: 'QUALIFIED', priority: 'URGENT' },
+      { name: 'Khalid Abdullah', score: 98, qualification: 'QUALIFIED', priority: 'URGENT' },
       { name: 'Elena Rostova', score: 88, qualification: 'QUALIFIED', priority: 'HIGH' },
       { name: 'David Chen', score: 85, qualification: 'QUALIFIED', priority: 'HIGH' },
       { name: 'Sarah Jenkins', score: 80, qualification: 'QUALIFIED', priority: 'MEDIUM' }
@@ -233,9 +233,9 @@ const nodeMeta = {
     },
     getOutput: () => (state.pendingApprovals.length > 0 ? state.pendingApprovals.map((a) => ({ to: a.lead?.full_name, subject: a.subject, body: a.body_text })) : [
       {
-        to: 'Marcus Vance',
+        to: 'Khalid Abdullah',
         subject: 'Stress-testing systematic models against HMM volatility shifts',
-        body_snippet: 'Marcus — noticed your focus on systematic futures at Apex Alpha. We built Trading OS to validate strategy fragility under Gaussian HMM market regimes before deploying capital. Open to testing your models on our free beta?'
+        body_snippet: 'Khalid — noticed your work on quantitative regime analytics at Trading OS Labs. We built in-browser Monte Carlo & Gaussian HMM validation to stress-test systematic strategies before deploying capital. Open to testing your models on our free beta?'
       }
     ]),
   },
@@ -517,9 +517,9 @@ function renderApprovalGrid(approvals) {
     approvals = [
       {
         id: 'sample-1',
-        lead: { full_name: 'Marcus Vance', job_title: 'Quantitative Strategy Developer', company: 'Apex Alpha Research', lead_score: 92 },
+        lead: { full_name: 'Khalid Abdullah', job_title: 'Founder & Quantitative Systems Architect', company: 'Trading OS Labs', lead_score: 98 },
         subject: 'Stress-testing systematic models against HMM volatility shifts',
-        body_text: 'Marcus — noticed your focus on systematic futures at Apex Alpha. We built Trading OS to validate strategy fragility under Gaussian HMM market regimes before deploying capital. Open to testing your models on our free beta?'
+        body_text: 'Khalid — noticed your work on quantitative regime analytics at Trading OS Labs. We built in-browser Monte Carlo & Gaussian HMM validation to stress-test systematic strategies before deploying capital. Open to testing your models on our free beta?'
       },
       {
         id: 'sample-2',
@@ -540,7 +540,7 @@ function renderApprovalGrid(approvals) {
             <div class="lead-name">${escapeHtml(lead.full_name || 'Prospect')}</div>
             <div class="lead-title">${escapeHtml(lead.job_title || '')} &bull; ${escapeHtml(lead.company || '')}</div>
           </div>
-          <span class="node-tag tag-success" style="font-size:12px;">Score: ${lead.lead_score ?? 88}</span>
+          <span class="node-tag tag-success" style="font-size:12px;">Score: ${lead.lead_score ?? 98}</span>
         </div>
 
         <div class="email-box">
@@ -571,7 +571,7 @@ function renderDirectoryTable(leads) {
 
   if (leads.length === 0) {
     leads = [
-      { full_name: 'Marcus Vance', company: 'Apex Alpha Research', job_title: 'Quantitative Strategy Developer', lead_score: 92, qualification_status: 'QUALIFIED', priority: 'URGENT', status: 'RESEARCHED' },
+      { full_name: 'Khalid Abdullah', company: 'Trading OS Labs', job_title: 'Founder & Quantitative Systems Architect', lead_score: 98, qualification_status: 'QUALIFIED', priority: 'URGENT', status: 'RESEARCHED' },
       { full_name: 'Elena Rostova', company: 'QuantSignals FX', job_title: 'Pine Script V5 Developer', lead_score: 88, qualification_status: 'QUALIFIED', priority: 'HIGH', status: 'RESEARCHED' },
       { full_name: 'David Chen', company: 'Chen Quantitative Fund', job_title: 'Managing Partner & Quant Lead', lead_score: 85, qualification_status: 'QUALIFIED', priority: 'HIGH', status: 'RESEARCHED' },
       { full_name: 'Sarah Jenkins', company: 'Systematic Capital Group', job_title: 'Lead Quantitative Analyst', lead_score: 80, qualification_status: 'QUALIFIED', priority: 'MEDIUM', status: 'RESEARCHED' }
@@ -600,11 +600,11 @@ function renderRepliesTable(replies) {
   if (replies.length === 0) {
     replies = [
       {
-        lead: { full_name: 'Marcus Vance', company: 'Apex Alpha Research' },
+        lead: { full_name: 'Khalid Abdullah', company: 'Trading OS Labs' },
         classification: 'INTERESTED_IN_BETA',
-        confidence: 0.95,
-        summary: 'Expressed interest in testing the 3-state Gaussian HMM volatility model on futures intraday data.',
-        suggested_action: 'Send VIP beta access link & schedule 15-min walkthrough.'
+        confidence: 0.98,
+        summary: 'Expressed strong interest in testing the 3-state Gaussian HMM volatility model on intraday systematic strategies.',
+        suggested_action: 'Send VIP beta access link & schedule 15-min product walkthrough.'
       }
     ];
   }
