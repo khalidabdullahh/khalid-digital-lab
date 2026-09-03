@@ -469,11 +469,26 @@ async function fetchLeads() {
     const res = await fetch(`${API_BASE}/leads?limit=100`, { headers: getHeaders() });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    state.leads = data.leads || [];
-    renderDirectoryTable(state.leads);
+    state.leads = (data.leads && data.leads.length > 0) ? data.leads : [];
   } catch (err) {
     console.warn('API leads fetch failed:', err);
   }
+
+  if (state.leads.length === 0) {
+    state.leads = [
+      {
+        full_name: 'David Vance',
+        company: 'Apex Alpha Research',
+        job_title: 'Quantitative Strategy Developer',
+        lead_score: 94,
+        qualification_status: 'QUALIFIED',
+        priority: 'URGENT',
+        status: 'RESEARCHED'
+      }
+    ];
+  }
+
+  renderDirectoryTable(state.leads);
 }
 
 async function fetchPendingApprovals() {
@@ -481,18 +496,35 @@ async function fetchPendingApprovals() {
     const res = await fetch(`${API_BASE}/outreach/pending`, { headers: getHeaders() });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    state.pendingApprovals = data.pending || [];
-    renderApprovalGrid(state.pendingApprovals);
-    const countEl = document.getElementById('pending-count');
-    const dockBadge = document.getElementById('dock-badge-count');
-    const kpiCount = document.getElementById('kpi-pending-count');
-    
-    if (countEl) countEl.innerText = state.pendingApprovals.length;
-    if (dockBadge) dockBadge.innerText = state.pendingApprovals.length;
-    if (kpiCount) kpiCount.innerText = state.pendingApprovals.length;
+    state.pendingApprovals = (data.pending && data.pending.length > 0) ? data.pending : [];
   } catch (err) {
     console.warn('API pending outreach fetch failed:', err);
   }
+
+  if (state.pendingApprovals.length === 0 && !sessionStorage.getItem('sample_lead_approved')) {
+    state.pendingApprovals = [
+      {
+        id: 'sample-lead-1',
+        lead: {
+          full_name: 'David Vance',
+          job_title: 'Quantitative Strategy Developer',
+          company: 'Apex Alpha Research',
+          lead_score: 94
+        },
+        subject: 'Stress-testing systematic models against HMM volatility shifts',
+        body_text: 'David — noticed your focus on systematic futures and regime shifts at Apex Alpha. We built Trading OS to validate strategy fragility under Gaussian HMM volatility regimes before deploying capital. Open to testing your models on our free beta?'
+      }
+    ];
+  }
+
+  renderApprovalGrid(state.pendingApprovals);
+  const countEl = document.getElementById('pending-count');
+  const dockBadge = document.getElementById('dock-badge-count');
+  const kpiCount = document.getElementById('kpi-pending-count');
+  
+  if (countEl) countEl.innerText = state.pendingApprovals.length;
+  if (dockBadge) dockBadge.innerText = state.pendingApprovals.length;
+  if (kpiCount) kpiCount.innerText = state.pendingApprovals.length;
 }
 
 async function fetchReplies() {
