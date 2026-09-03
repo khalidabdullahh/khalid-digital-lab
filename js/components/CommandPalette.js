@@ -5,8 +5,6 @@
 
 import { TOOLS } from "../data/tools.js";
 import { PROJECTS } from "../data/projects.js";
-import { EXPERIMENTS } from "../data/experiments.js";
-import { KNOWLEDGE_ARTICLES } from "../data/knowledge.js";
 
 export class CommandPalette {
   constructor() {
@@ -28,14 +26,12 @@ export class CommandPalette {
     this.searchItems = [
       // Navigation Actions
       { id: "nav-hero", title: "Home / Overview", category: "Navigation", icon: "🏠", action: () => this.jumpTo("#hero") },
-      { id: "nav-lab", title: "The Lab (Experiments)", category: "Navigation", icon: "🧪", action: () => this.jumpTo("#lab") },
       { id: "nav-projects", title: "Projects Showcase", category: "Navigation", icon: "⚡", action: () => this.jumpTo("#projects") },
       { id: "nav-tools", title: "Tools & Products Hub", category: "Navigation", icon: "🛠️", action: () => this.jumpTo("#tools") },
-      { id: "nav-knowledge", title: "Knowledge Garden & Graph", category: "Navigation", icon: "📚", action: () => this.jumpTo("#knowledge") },
       { id: "nav-build-log", title: "Activity & Build Log", category: "Navigation", icon: "⏱️", action: () => this.jumpTo("#build-log") },
       { id: "nav-about", title: "About Khalid Abdullah", category: "Navigation", icon: "👤", action: () => this.jumpTo("#about") },
 
-      // Theme, Sync & Terminal Actions
+      // Actions
       { id: "act-sync", title: "Sync Live GitHub Repositories", category: "Actions", icon: "🔄", action: () => document.getElementById("btn-sync-github")?.click() },
       { id: "act-terminal", title: "Open CLI Developer Terminal", category: "Actions", icon: "💻", action: () => window.dispatchEvent(new CustomEvent("open-terminal")) },
       { id: "act-theme", title: "Toggle Dark / Light Theme", category: "Actions", icon: "🌓", action: () => document.getElementById("btn-theme-toggle")?.click() },
@@ -56,16 +52,6 @@ export class CommandPalette {
         }
       })),
 
-      // Experiments
-      ...EXPERIMENTS.map(e => ({
-        id: e.id,
-        title: e.title,
-        subtitle: e.category,
-        category: "Lab Experiments",
-        icon: "🧪",
-        action: () => this.jumpTo("#lab")
-      })),
-
       // Projects
       ...PROJECTS.map(p => ({
         id: p.id,
@@ -77,16 +63,6 @@ export class CommandPalette {
           if (p.liveUrl.startsWith("http")) window.open(p.liveUrl, "_blank");
           else this.jumpTo(p.liveUrl);
         }
-      })),
-
-      // Knowledge
-      ...KNOWLEDGE_ARTICLES.map(a => ({
-        id: a.id,
-        title: a.title,
-        subtitle: a.category,
-        category: "Knowledge Notes",
-        icon: "📖",
-        action: () => this.jumpTo("#knowledge")
       }))
     ];
   }
@@ -101,7 +77,7 @@ export class CommandPalette {
           <!-- Input Header -->
           <div class="flex items-center px-4 py-3.5 border-b border-border gap-3">
             <svg class="w-4 h-4 text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="cmd-search-input" placeholder="Type a command, project, tool, or research topic..." class="w-full bg-transparent text-sm font-mono text-text-primary placeholder:text-text-muted focus:outline-none" autocomplete="off" spellcheck="false" />
+            <input type="text" id="cmd-search-input" placeholder="Type a command, project, tool, or repository..." class="w-full bg-transparent text-sm font-mono text-text-primary placeholder:text-text-muted focus:outline-none" autocomplete="off" spellcheck="false" />
             <kbd class="px-2 py-0.5 text-[10px] font-mono rounded bg-surface-elevated border border-border text-text-muted">ESC</kbd>
           </div>
 
@@ -111,12 +87,12 @@ export class CommandPalette {
           </div>
 
           <!-- Footer Shortcut Hints -->
-          <div class="px-4 py-2.5 bg-surface-elevated/40 border-t border-border flex items-center justify-between text-[11px] font-mono text-text-muted">
+          <div class="px-4 py-2.5 bg-surface-elevated/80 border-t border-border flex items-center justify-between text-[11px] font-mono text-text-muted">
             <div class="flex items-center gap-3">
-              <span><kbd class="px-1.5 py-0.5 rounded bg-surface border border-border">↑</kbd> <kbd class="px-1.5 py-0.5 rounded bg-surface border border-border">↓</kbd> Navigate</span>
-              <span><kbd class="px-1.5 py-0.5 rounded bg-surface border border-border">↵</kbd> Select</span>
+              <span><kbd class="px-1.5 py-0.5 rounded bg-surface border border-border">↑</kbd> <kbd class="px-1.5 py-0.5 rounded bg-surface border border-border">↓</kbd> to navigate</span>
+              <span><kbd class="px-1.5 py-0.5 rounded bg-surface border border-border">↵</kbd> to select</span>
             </div>
-            <span>Antigravity Palette</span>
+            <span>${this.searchItems.length} indexed items</span>
           </div>
         </div>
       </div>
@@ -126,59 +102,64 @@ export class CommandPalette {
   }
 
   bindEvents() {
+    const backdrop = document.getElementById("cmd-palette-backdrop");
+    const input = document.getElementById("cmd-search-input");
+
     window.addEventListener("keydown", (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         this.toggle();
-      } else if (e.key === "Escape" && this.isOpen) {
+      }
+      if (e.key === "Escape" && this.isOpen) {
         this.close();
-      } else if (this.isOpen) {
-        if (e.key === "ArrowDown") {
-          e.preventDefault();
-          this.moveSelection(1);
-        } else if (e.key === "ArrowUp") {
-          e.preventDefault();
-          this.moveSelection(-1);
-        } else if (e.key === "Enter") {
-          e.preventDefault();
-          this.executeSelected();
-        }
       }
     });
 
-    window.addEventListener("open-command-palette", () => this.open());
+    window.addEventListener("open-command-palette", () => {
+      this.open();
+    });
 
-    const backdrop = document.getElementById("cmd-palette-backdrop");
     backdrop?.addEventListener("click", (e) => {
       if (e.target === backdrop) this.close();
     });
 
-    const input = document.getElementById("cmd-search-input");
     input?.addEventListener("input", (e) => {
-      this.filterResults(e.target.value);
+      this.search(e.target.value);
+    });
+
+    input?.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        this.selectedIndex = Math.min(this.selectedIndex + 1, this.results.length - 1);
+        this.renderResults();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
+        this.renderResults();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        this.executeSelected();
+      }
     });
   }
 
   open() {
-    this.isOpen = true;
     const backdrop = document.getElementById("cmd-palette-backdrop");
     const input = document.getElementById("cmd-search-input");
-    if (backdrop && input) {
-      backdrop.classList.remove("hidden");
-      backdrop.classList.add("flex");
-      input.value = "";
-      this.filterResults("");
-      setTimeout(() => input.focus(), 50);
-    }
+    this.isOpen = true;
+    backdrop?.classList.remove("hidden");
+    backdrop?.classList.add("flex");
+    input?.focus();
+    this.search("");
   }
 
   close() {
-    this.isOpen = false;
     const backdrop = document.getElementById("cmd-palette-backdrop");
-    if (backdrop) {
-      backdrop.classList.add("hidden");
-      backdrop.classList.remove("flex");
-    }
+    const input = document.getElementById("cmd-search-input");
+    this.isOpen = false;
+    backdrop?.classList.add("hidden");
+    backdrop?.classList.remove("flex");
+    if (input) input.value = "";
   }
 
   toggle() {
@@ -186,16 +167,17 @@ export class CommandPalette {
     else this.open();
   }
 
-  filterResults(query) {
-    const q = query.toLowerCase().trim();
-    if (!q) {
-      this.results = this.searchItems.slice(0, 8);
+  search(query) {
+    const cleanQuery = query.toLowerCase().trim();
+    if (!cleanQuery) {
+      this.results = this.searchItems;
     } else {
-      this.results = this.searchItems.filter(item => 
-        item.title.toLowerCase().includes(q) ||
-        (item.subtitle && item.subtitle.toLowerCase().includes(q)) ||
-        item.category.toLowerCase().includes(q)
-      ).slice(0, 10);
+      this.results = this.searchItems.filter(item => {
+        const titleMatch = item.title.toLowerCase().includes(cleanQuery);
+        const subMatch = item.subtitle ? item.subtitle.toLowerCase().includes(cleanQuery) : false;
+        const catMatch = item.category.toLowerCase().includes(cleanQuery);
+        return titleMatch || subMatch || catMatch;
+      });
     }
 
     this.selectedIndex = 0;
@@ -203,72 +185,71 @@ export class CommandPalette {
   }
 
   renderResults() {
-    const listEl = document.getElementById("cmd-results-list");
-    if (!listEl) return;
+    const list = document.getElementById("cmd-results-list");
+    if (!list) return;
 
     if (this.results.length === 0) {
-      listEl.innerHTML = `
-        <div class="p-6 text-center text-xs font-mono text-text-muted">
-          No matches found for this query.
+      list.innerHTML = `
+        <div class="p-8 text-center text-xs font-mono text-text-muted">
+          No matches found for your query. Try searching for "ARENEX", "CV Builder", "Trading", or "Tools".
         </div>
       `;
       return;
     }
 
-    listEl.innerHTML = this.results.map((item, idx) => `
-      <div class="cmd-item p-3 rounded-xl flex items-center justify-between cursor-pointer transition-all ${
-        idx === this.selectedIndex ? "bg-cyan/15 border border-cyan/40 text-cyan" : "hover:bg-surface-elevated text-text-secondary"
-      }" data-idx="${idx}">
-        <div class="flex items-center gap-3">
-          <span class="text-base">${item.icon}</span>
-          <div>
-            <div class="text-xs font-mono font-bold text-text-primary ${idx === this.selectedIndex ? "text-cyan" : ""}">${item.title}</div>
-            ${item.subtitle ? `<div class="text-[10px] font-mono text-text-muted line-clamp-1">${item.subtitle}</div>` : ""}
+    list.innerHTML = this.results.map((item, idx) => {
+      const isSelected = idx === this.selectedIndex;
+      return `
+        <div class="cmd-item p-3 rounded-xl flex items-center justify-between cursor-pointer transition-all ${
+          isSelected ? "bg-cyan/15 border border-cyan/30 text-cyan" : "hover:bg-surface-elevated text-text-primary"
+        }" data-index="${idx}">
+          <div class="flex items-center gap-3">
+            <span class="text-base">${item.icon}</span>
+            <div>
+              <div class="text-xs font-mono font-bold">${item.title}</div>
+              ${item.subtitle ? `<div class="text-[10px] text-text-muted mt-0.5 line-clamp-1">${item.subtitle}</div>` : ""}
+            </div>
           </div>
+          <span class="px-2 py-0.5 rounded text-[9px] font-mono bg-surface-elevated border border-border text-text-muted uppercase">
+            ${item.category}
+          </span>
         </div>
+      `;
+    }).join("");
 
-        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-surface border border-border text-text-muted">
-          ${item.category}
-        </span>
-      </div>
-    `).join("");
-
-    listEl.querySelectorAll(".cmd-item").forEach(itemEl => {
-      itemEl.addEventListener("click", () => {
-        const idx = parseInt(itemEl.dataset.idx, 10);
+    list.querySelectorAll(".cmd-item").forEach(item => {
+      item.addEventListener("click", () => {
+        const idx = parseInt(item.dataset.index, 10);
         this.selectedIndex = idx;
         this.executeSelected();
       });
     });
-  }
 
-  moveSelection(delta) {
-    if (this.results.length === 0) return;
-    this.selectedIndex = (this.selectedIndex + delta + this.results.length) % this.results.length;
-    this.renderResults();
-
-    const activeEl = document.querySelector(`.cmd-item[data-idx="${this.selectedIndex}"]`);
-    activeEl?.scrollIntoView({ block: "nearest" });
-  }
-
-  executeSelected() {
-    const selected = this.results[this.selectedIndex];
-    if (selected && selected.action) {
-      this.close();
-      selected.action();
+    // Auto-scroll selected element into view
+    const selectedEl = list.children[this.selectedIndex];
+    if (selectedEl) {
+      selectedEl.scrollIntoView({ block: "nearest" });
     }
   }
 
-  jumpTo(hash) {
-    if (!hash) return;
+  executeSelected() {
+    const item = this.results[this.selectedIndex];
+    if (item && item.action) {
+      this.close();
+      item.action();
+    }
+  }
+
+  jumpTo(selector) {
+    if (!selector) return;
     try {
-      const selector = hash.startsWith("#") ? hash : `#${hash}`;
       const target = document.querySelector(selector);
       if (target) {
         target.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", selector);
       }
     } catch (e) {
-      console.warn("Could not scroll to selector:", hash);
+      console.warn("Invalid selector jump:", selector);
     }
   }
 }

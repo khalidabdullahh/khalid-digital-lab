@@ -9,7 +9,7 @@ export class Navigation {
   constructor() {
     this.navEl = document.getElementById("main-nav");
     this.mobileDockEl = document.getElementById("mobile-dock");
-    this.sections = ["hero", "currently-building", "lab", "projects", "tools", "knowledge", "build-log", "about"];
+    this.sections = ["hero", "currently-building", "projects", "tools", "build-log", "about"];
     this.activeSection = "hero";
     
     this.init();
@@ -47,19 +47,15 @@ export class Navigation {
         <!-- Desktop Navigation Links -->
         <nav class="hidden md:flex items-center gap-1 lg:gap-2">
           <a href="#hero" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all" data-section="hero">Home</a>
-          <a href="#lab" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="lab">
-            <span>🧪</span> Lab
-          </a>
           <a href="#projects" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="projects">
             <span>⚡</span> Projects
           </a>
           <a href="#tools" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="tools">
-            <span>🛠️</span> Tools
+            <span>🛠️</span> Tools & Products
           </a>
-          <a href="#knowledge" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="knowledge">
-            <span>📚</span> Knowledge
+          <a href="#build-log" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="build-log">
+            <span>⏱️</span> Activity Log
           </a>
-          <a href="#build-log" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all" data-section="build-log">Build Log</a>
           <a href="#about" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all" data-section="about">About</a>
         </nav>
 
@@ -106,10 +102,6 @@ export class Navigation {
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
           <span class="text-[10px] font-mono">Home</span>
         </a>
-        <a href="#lab" class="mobile-dock-btn p-2 rounded-xl text-text-secondary hover:text-cyan flex flex-col items-center gap-0.5" data-section="lab">
-          <span class="text-sm">🧪</span>
-          <span class="text-[10px] font-mono">Lab</span>
-        </a>
         <a href="#projects" class="mobile-dock-btn p-2 rounded-xl text-text-secondary hover:text-cyan flex flex-col items-center gap-0.5" data-section="projects">
           <span class="text-sm">⚡</span>
           <span class="text-[10px] font-mono">Projects</span>
@@ -118,9 +110,9 @@ export class Navigation {
           <span class="text-sm">🛠️</span>
           <span class="text-[10px] font-mono">Tools</span>
         </a>
-        <a href="#knowledge" class="mobile-dock-btn p-2 rounded-xl text-text-secondary hover:text-cyan flex flex-col items-center gap-0.5" data-section="knowledge">
-          <span class="text-sm">📚</span>
-          <span class="text-[10px] font-mono">Notes</span>
+        <a href="#build-log" class="mobile-dock-btn p-2 rounded-xl text-text-secondary hover:text-cyan flex flex-col items-center gap-0.5" data-section="build-log">
+          <span class="text-sm">⏱️</span>
+          <span class="text-[10px] font-mono">Log</span>
         </a>
         <button id="mobile-cmd-btn" class="p-2 rounded-xl text-cyan bg-cyan/15 flex flex-col items-center gap-0.5">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -155,26 +147,25 @@ export class Navigation {
       }
     };
 
-    // Initialize UI based on current theme-light class state
     updateThemeUI(document.documentElement.classList.contains("theme-light"));
 
     themeBtn?.addEventListener("click", () => {
       const isLight = document.documentElement.classList.toggle("theme-light");
-      const currentTheme = isLight ? "light" : "dark";
-      localStorage.setItem("lab-theme", currentTheme);
+      localStorage.setItem("lab-theme", isLight ? "light" : "dark");
       updateThemeUI(isLight);
-      window.dispatchEvent(new CustomEvent("theme-change", { detail: { theme: currentTheme } }));
+      window.dispatchEvent(new CustomEvent("theme-changed", { detail: { isLight } }));
     });
 
-    // Command palette trigger
+    // Command Palette Open Buttons
     document.getElementById("btn-cmd-k")?.addEventListener("click", () => {
       window.dispatchEvent(new CustomEvent("open-command-palette"));
     });
+
     document.getElementById("mobile-cmd-btn")?.addEventListener("click", () => {
       window.dispatchEvent(new CustomEvent("open-command-palette"));
     });
 
-    // Terminal trigger
+    // Terminal Open Button
     document.getElementById("btn-open-terminal")?.addEventListener("click", () => {
       window.dispatchEvent(new CustomEvent("open-terminal"));
     });
@@ -184,36 +175,37 @@ export class Navigation {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-          this.setActiveLink(sectionId);
+          this.activeSection = entry.target.id;
+          this.updateActiveNavState();
         }
       });
-    }, { rootMargin: "-20% 0px -60% 0px" });
+    }, { threshold: 0.3 });
 
     this.sections.forEach(id => {
-      const el = document.getElementById(id);
+      const el = document.getElementById(id) || document.getElementById(`${id}-container`);
       if (el) observer.observe(el);
     });
   }
 
-  setActiveLink(sectionId) {
-    this.activeSection = sectionId;
+  updateActiveNavState() {
     document.querySelectorAll(".nav-link").forEach(link => {
-      if (link.dataset.section === sectionId) {
-        link.classList.add("text-cyan", "bg-surface-elevated", "font-bold");
+      const sec = link.dataset.section;
+      if (sec === this.activeSection) {
+        link.classList.add("text-cyan", "font-bold", "bg-surface-elevated");
         link.classList.remove("text-text-secondary");
       } else {
-        link.classList.remove("text-cyan", "bg-surface-elevated", "font-bold");
+        link.classList.remove("text-cyan", "font-bold", "bg-surface-elevated");
         link.classList.add("text-text-secondary");
       }
     });
 
     document.querySelectorAll(".mobile-dock-btn").forEach(btn => {
-      if (btn.dataset.section === sectionId) {
-        btn.classList.add("text-cyan", "bg-surface-elevated");
+      const sec = btn.dataset.section;
+      if (sec === this.activeSection) {
+        btn.classList.add("text-cyan", "font-bold");
         btn.classList.remove("text-text-secondary");
       } else {
-        btn.classList.remove("text-cyan", "bg-surface-elevated");
+        btn.classList.remove("text-cyan", "font-bold");
         btn.classList.add("text-text-secondary");
       }
     });

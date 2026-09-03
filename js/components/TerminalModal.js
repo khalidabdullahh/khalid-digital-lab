@@ -5,7 +5,7 @@
 
 import { CONFIG } from "../config.js";
 import { TOOLS } from "../data/tools.js";
-import { EXPERIMENTS } from "../data/experiments.js";
+import { PROJECTS } from "../data/projects.js";
 import { githubService } from "../services/GitHubService.js";
 
 export class TerminalModal {
@@ -36,7 +36,7 @@ export class TerminalModal {
                 <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
               </div>
-              <span class="text-[11px] text-text-secondary font-bold pl-2">khalid@antigravity-lab:~ (zsh)</span>
+              <span class="text-[11px] text-text-secondary font-bold pl-2">khalid@digital-lab:~ (zsh)</span>
             </div>
 
             <div class="flex items-center gap-3">
@@ -47,8 +47,8 @@ export class TerminalModal {
 
           <!-- Terminal Output Log -->
           <div id="terminal-output" class="flex-1 p-4 overflow-y-auto space-y-2 text-text-secondary leading-relaxed">
-            <div class="text-cyan font-bold">ANTIGRAVITY DIGITAL LAB OS v${CONFIG.system.version} [Build ${CONFIG.system.buildDate}]</div>
-            <div class="text-text-muted">Type <span class="text-emerald-400 font-bold">'help'</span> to see all available commands, or <span class="text-amber-400 font-bold">'run regime-sim'</span> to simulate market states.</div>
+            <div class="text-cyan font-bold">DIGITAL LAB CLI v${CONFIG.system.version} [Build ${CONFIG.system.buildDate}]</div>
+            <div class="text-text-muted">Type <span class="text-emerald-400 font-bold">'help'</span> to see all available commands, or <span class="text-amber-400 font-bold">'run ats'</span> to test the keyword scanner.</div>
             <div class="h-1"></div>
           </div>
 
@@ -166,15 +166,14 @@ export class TerminalModal {
         this.log(`
           <div class="space-y-1 text-xs">
             <div><span class="text-emerald-400 font-bold">help</span> - Display list of available system commands</div>
-            <div><span class="text-emerald-400 font-bold">whoami / bio</span> - Print Khalid Abdullah's researcher background</div>
+            <div><span class="text-emerald-400 font-bold">whoami / bio</span> - Print Khalid Abdullah's developer background</div>
+            <div><span class="text-emerald-400 font-bold">projects</span> - List engineered software case studies</div>
             <div><span class="text-emerald-400 font-bold">tools</span> - List interactive tools and production web applications</div>
-            <div><span class="text-emerald-400 font-bold">lab</span> - Query ongoing research hypotheses and active experiments</div>
-            <div><span class="text-emerald-400 font-bold">run [tool]</span> - Execute in-site tool (e.g. <span class="text-cyan">run regime-sim</span>, <span class="text-cyan">run ats</span>)</div>
+            <div><span class="text-emerald-400 font-bold">run [tool]</span> - Execute in-site tool (<span class="text-cyan">run ats</span>, <span class="text-cyan">run regime-sim</span>)</div>
             <div><span class="text-emerald-400 font-bold">sync / repos</span> - Auto-sync and print live GitHub repositories</div>
             <div><span class="text-emerald-400 font-bold">theme</span> - Toggle dark / light interface theme</div>
-            <div><span class="text-emerald-400 font-bold">contact</span> - Display direct communications channels & email</div>
+            <div><span class="text-emerald-400 font-bold">contact</span> - Display direct email & socials</div>
             <div><span class="text-emerald-400 font-bold">clear</span> - Clear terminal window buffer</div>
-            <div><span class="text-emerald-400 font-bold">matrix</span> - Stream digital phosphor rain simulation</div>
           </div>
         `);
         break;
@@ -192,6 +191,15 @@ export class TerminalModal {
         `);
         break;
 
+      case "projects":
+        this.log(`
+          <div class="space-y-1.5">
+            <div class="text-cyan font-bold uppercase">FEATURED PROJECTS & SYSTEMS:</div>
+            ${PROJECTS.map(p => `<div>• <span class="text-text-primary font-bold">${p.title}</span> - ${p.tagline}</div>`).join("")}
+          </div>
+        `);
+        break;
+
       case "tools":
         this.log(`
           <div class="space-y-1.5">
@@ -201,81 +209,65 @@ export class TerminalModal {
         `);
         break;
 
-      case "lab":
-      case "experiments":
-        this.log(`
-          <div class="space-y-1.5">
-            <div class="text-cyan font-bold uppercase">ACTIVE LAB EXPERIMENTS:</div>
-            ${EXPERIMENTS.map(e => `<div>[${e.status.toUpperCase()}] <span class="text-text-primary font-bold">${e.title}</span> (${e.progress}% complete)</div>`).join("")}
-          </div>
-        `);
-        break;
-
       case "run":
-        if (arg.includes("regime") || arg.includes("sim")) {
-          this.log(`<span class="text-emerald-400 font-bold">✓ Initializing Market Regime Simulator...</span>`);
+        if (arg === "ats" || arg === "resume") {
+          this.log(`<div class="text-cyan">Launching ATS Resume Keyword Scanner workbench...</div>`);
           this.close();
-          document.querySelector("#tools")?.scrollIntoView({ behavior: "smooth" });
-        } else if (arg.includes("ats")) {
-          this.log(`<span class="text-emerald-400 font-bold">✓ Initializing ATS Resume Keyword Scanner...</span>`);
+          const target = document.querySelector("#tools");
+          target?.scrollIntoView({ behavior: "smooth" });
+          document.querySelector('button[data-tool="ats"]')?.click();
+        } else if (arg === "regime-sim" || arg === "regime" || arg === "hmm") {
+          this.log(`<div class="text-cyan">Launching Market Regime & Volatility Simulator...</div>`);
           this.close();
-          document.querySelector("#tools")?.scrollIntoView({ behavior: "smooth" });
+          const target = document.querySelector("#tools");
+          target?.scrollIntoView({ behavior: "smooth" });
+          document.querySelector('button[data-tool="regime"]')?.click();
         } else {
-          this.log(`<span class="text-amber-400">Specify tool: 'run regime-sim' or 'run ats'</span>`);
+          this.log(`<div class="text-rose-400">Unknown tool '${arg}'. Available tools to run: <span class="text-cyan font-bold">run ats</span>, <span class="text-cyan font-bold">run regime-sim</span></div>`);
         }
-        break;
-
-      case "theme":
-        document.getElementById("btn-theme-toggle")?.click();
-        this.log(`<span class="text-emerald-400 font-bold">✓ Toggled theme mode.</span>`);
-        break;
-
-      case "contact":
-        this.log(`
-          <div class="space-y-1">
-            <div>Email: <span class="text-cyan font-bold">${CONFIG.author.email}</span></div>
-            <div>GitHub: <span class="text-text-primary">${CONFIG.author.github}</span></div>
-            <div>LinkedIn: <span class="text-text-primary">${CONFIG.author.linkedin}</span></div>
-          </div>
-        `);
         break;
 
       case "sync":
       case "repos":
-      case "github":
-        this.log(`<span class="text-cyan">Connecting to GitHub API for @${githubService.username}...</span>`);
+      case "git":
+        this.log(`<div class="text-cyan">Fetching real-time repository telemetry from GitHub API (@${githubService.username})...</div>`);
         githubService.sync(true).then(repos => {
-          const rows = repos.map(r => `<div>• <a href="${r.htmlUrl}" target="_blank" class="text-cyan font-bold hover:underline">${r.name}</a> [${r.language}] - ★ ${r.stars} (Updated ${githubService.getTimeAgo(r.pushedAt)})</div>`).join("");
+          const repoList = repos.map(r => `<div>• <span class="text-text-primary font-bold">${r.name}</span> (${r.language}) - ★ ${r.stars} | ${githubService.getTimeAgo(r.pushedAt)}</div>`).join("");
           this.log(`
             <div class="space-y-1 mt-1">
-              <div class="text-emerald-400 font-bold uppercase">LIVE GITHUB REPOSITORIES (${repos.length}):</div>
-              ${rows}
+              <div class="text-emerald-400 font-bold">✓ Successfully synced ${repos.length} public repositories:</div>
+              ${repoList}
             </div>
           `);
-        }).catch(err => {
-          this.log(`<span class="text-rose-400">Failed to sync: ${err.message}</span>`);
         });
         break;
 
+      case "theme":
+        document.getElementById("btn-theme-toggle")?.click();
+        this.log(`<div class="text-cyan">Interface theme toggled successfully.</div>`);
+        break;
+
+      case "contact":
+      case "email":
+        this.log(`
+          <div class="space-y-1">
+            <div class="text-cyan font-bold">Direct Channels:</div>
+            <div>• Email: <a href="mailto:${CONFIG.author.email}" class="text-emerald-400 underline">${CONFIG.author.email}</a></div>
+            <div>• GitHub: <a href="${CONFIG.author.github}" target="_blank" class="text-emerald-400 underline">${CONFIG.author.github}</a></div>
+            <div>• LinkedIn: <a href="${CONFIG.author.linkedin}" target="_blank" class="text-emerald-400 underline">${CONFIG.author.linkedin}</a></div>
+          </div>
+        `);
+        break;
+
       case "clear":
+      case "cls":
         const output = document.getElementById("terminal-output");
         if (output) output.innerHTML = "";
         break;
 
-      case "matrix":
-        this.log(`<span class="text-emerald-400 font-mono font-bold animate-pulse">01000001 01001110 01010100 01001001 01000111 01010010 01000001 01010110 01001001 01010100 01011001</span><br><span class="text-cyan">"Wake up, Neo... The Matrix has you."</span>`);
-        break;
-
-      case "sudo":
-        if (arg.includes("rm")) {
-          this.log(`<span class="text-rose-400 font-bold">Permission Denied: Nice try! Khalid's Digital Lab is immutable. 🛡️</span>`);
-        } else {
-          this.log(`<span class="text-amber-400">khalid is not in the sudoers file. This incident will be reported.</span>`);
-        }
-        break;
-
       default:
-        this.log(`<span class="text-rose-400">Command not found: '${cmdText}'. Type <span class="text-cyan font-bold">'help'</span> for instructions.</span>`);
+        this.log(`<div class="text-rose-400">Command not found: '${cmd}'. Type <span class="text-emerald-400 font-bold">'help'</span> to see available commands.</div>`);
+        break;
     }
   }
 }

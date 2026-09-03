@@ -7,10 +7,8 @@ import { CONFIG } from "./config.js";
 import { Navigation } from "./components/Navigation.js";
 import { HeroCanvas } from "./components/HeroCanvas.js";
 import { CurrentlyBuilding } from "./components/CurrentlyBuilding.js";
-import { LabSection } from "./components/LabSection.js";
 import { ProjectsSection } from "./components/ProjectsSection.js";
 import { ToolsSection } from "./components/ToolsSection.js";
-import { KnowledgeSection } from "./components/KnowledgeSection.js";
 import { BuildLogSection } from "./components/BuildLogSection.js";
 import { AboutSection } from "./components/AboutSection.js";
 import { LiveStats } from "./components/LiveStats.js";
@@ -26,24 +24,22 @@ class App {
   }
 
   init() {
-    console.log(`%c🧪 Khalid Abdullah // Personal Digital Lab v${CONFIG.system.version} Initialized.`, "color: #00f0ff; font-weight: bold; font-family: monospace; font-size: 14px;");
+    console.log(`%c⚡ Khalid Abdullah // Personal Digital Lab v${CONFIG.system.version} Initialized.`, "color: #00f0ff; font-weight: bold; font-family: monospace; font-size: 14px;");
 
     // Initialize GitHub Auto-Sync Service in background
     githubService.init();
 
-    // Initialize Navigation & Utilities
+    // Initialize Navigation & Core Interactive Showcases
     this.components.navigation = new Navigation();
     this.components.heroCanvas = new HeroCanvas("hero-bg-canvas");
     this.components.currentlyBuilding = new CurrentlyBuilding("currently-building-container");
-    this.components.lab = new LabSection("lab-container");
     this.components.projects = new ProjectsSection("projects-container");
     this.components.tools = new ToolsSection("tools-container");
-    this.components.knowledge = new KnowledgeSection("knowledge-container");
     this.components.buildLog = new BuildLogSection("build-log-container");
     this.components.stats = new LiveStats("live-stats-container");
     this.components.about = new AboutSection("about-container");
 
-    // Power Features
+    // Power Features & Utilities
     this.components.commandPalette = new CommandPalette();
     this.components.terminal = new TerminalModal();
     this.components.cursor = new CustomCursor();
@@ -86,7 +82,7 @@ class App {
               «Who I am + What I am researching + What I am building + What I have learned + What people can actually use.»
             </p>
             <div class="text-[11px] font-mono text-text-muted">
-              Built with curiosity, mathematical rigor, and high-performance frontend architecture.
+              Built with clean software engineering, real-time GitHub sync, and high-performance frontend architecture.
             </div>
           </div>
 
@@ -95,18 +91,16 @@ class App {
             <div class="text-xs font-mono font-bold text-cyan uppercase">SYSTEM SITEMAP</div>
             <ul class="space-y-2 text-xs font-mono text-text-secondary">
               <li><a href="#hero" class="hover:text-cyan transition-colors">00 // Home</a></li>
-              <li><a href="#lab" class="hover:text-cyan transition-colors">01 // The Lab 🧪</a></li>
-              <li><a href="#projects" class="hover:text-cyan transition-colors">02 // Projects ⚡</a></li>
-              <li><a href="#tools" class="hover:text-cyan transition-colors">03 // Tools Hub 🛠️</a></li>
-              <li><a href="#knowledge" class="hover:text-cyan transition-colors">04 // Knowledge 📚</a></li>
-              <li><a href="#build-log" class="hover:text-cyan transition-colors">05 // Build Log ⏱️</a></li>
-              <li><a href="#about" class="hover:text-cyan transition-colors">06 // Profile 👤</a></li>
+              <li><a href="#projects" class="hover:text-cyan transition-colors">01 // Projects ⚡</a></li>
+              <li><a href="#tools" class="hover:text-cyan transition-colors">02 // Tools & Products 🛠️</a></li>
+              <li><a href="#build-log" class="hover:text-cyan transition-colors">03 // Activity Log ⏱️</a></li>
+              <li><a href="#about" class="hover:text-cyan transition-colors">04 // Profile & Contact 👤</a></li>
             </ul>
           </div>
 
           <!-- Direct Links -->
           <div class="space-y-3">
-            <div class="text-xs font-mono font-bold text-cyan uppercase">EXTERNAL PRODUCTS</div>
+            <div class="text-xs font-mono font-bold text-cyan uppercase">EXTERNAL PRODUCTS & SOCIALS</div>
             <ul class="space-y-2 text-xs font-mono text-text-secondary">
               <li><a href="https://first-project-plum-phi.vercel.app" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>AI CV Builder</span><span>↗</span></a></li>
               <li><a href="https://oops-snowy-three.vercel.app/" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>Oops! Game</span><span>↗</span></a></li>
@@ -118,10 +112,9 @@ class App {
 
         <div class="pt-8 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-text-muted">
           <div>© ${new Date().getFullYear()} Khalid Abdullah. All rights reserved.</div>
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3">
+            <span class="text-emerald-400">● Real-Time GitHub Synced</span>
             <span>v${CONFIG.system.version}</span>
-            <span>•</span>
-            <span class="text-emerald-400 font-bold">ALL SYSTEMS OPERATIONAL</span>
           </div>
         </div>
       </div>
@@ -129,11 +122,7 @@ class App {
   }
 }
 
-// Bootstrap on DOM Ready or immediately if DOM is already parsed
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    window.__APP__ = new App();
-  });
-} else {
-  window.__APP__ = new App();
-}
+// Global bootstrap
+document.addEventListener("DOMContentLoaded", () => {
+  window.app = new App();
+});

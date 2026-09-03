@@ -30,10 +30,8 @@ export const CONFIG = {
   stats: [
     { id: "repos", label: "Public Repositories", key: "repos", suffix: " Active", change: "Synced via GitHub API" },
     { id: "stars", label: "GitHub Stars", key: "stars", suffix: " ★", change: "Real-time star count" },
-    { id: "projects", label: "Engineered Systems", key: "projects", suffix: " Case Studies", change: "Full-stack & systems" },
-    { id: "tools", label: "Interactive Tools", key: "tools", suffix: " Live", change: "In-browser execution" },
-    { id: "experiments", label: "Lab Inquiries", key: "experiments", suffix: " Inquiries", change: "Scientific research" },
-    { id: "notes", label: "Knowledge Notes", key: "notes", suffix: " Notes", change: "Math & architecture" }
+    { id: "projects", label: "Engineered Systems", key: "projects", suffix: " Systems", change: "Full-stack & games" },
+    { id: "tools", label: "Tools & Products", key: "tools", suffix: " Live", change: "Production software" }
   ],
 
   focusAreas: [
