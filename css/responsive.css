@@ -3,9 +3,13 @@
  * Author: Khalid Abdullah
  */
 
+html, body {
+  overflow-x: hidden;
+}
+
 @media (max-width: 768px) {
   body {
-    padding-bottom: 80px; /* Space for mobile dock */
+    padding-bottom: 85px; /* Space for mobile dock */
   }
 
   .simulator-wrapper, .ats-wrapper, .kelly-wrapper, .vector-wrapper {
@@ -14,6 +18,11 @@
 
   #cursor-follower, #cursor-dot {
     display: none !important;
+  }
+
+  /* Prevent text wrapping in mobile dock buttons */
+  .mobile-dock-btn span {
+    white-space: nowrap;
   }
 }
 
