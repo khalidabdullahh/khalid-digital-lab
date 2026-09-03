@@ -1,0 +1,15 @@
+[
+  {
+    "id": "post-welcome-digital-lab",
+    "slug": "welcome-to-digital-lab",
+    "title": "Welcome to My Digital Lab & Engineering Space",
+    "tagline": "Why I built a living personal laboratory instead of a traditional portfolio.",
+    "category": "Announcement",
+    "categoryColor": "cyan",
+    "date": "2026-09-03",
+    "readTime": "3 min read",
+    "tags": ["Digital Lab", "Engineering", "Architecture", "Open Source"],
+    "file": "posts/welcome-to-digital-lab.json",
+    "published": true
+  }
+]

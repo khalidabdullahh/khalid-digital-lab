@@ -5,6 +5,7 @@
 
 import { TOOLS } from "../data/tools.js";
 import { PROJECTS } from "../data/projects.js";
+import { postService } from "../services/PostService.js";
 
 export class CommandPalette {
   constructor() {
@@ -27,11 +28,13 @@ export class CommandPalette {
       // Navigation Actions
       { id: "nav-hero", title: "Home / Overview", category: "Navigation", icon: "🏠", action: () => this.jumpTo("#hero") },
       { id: "nav-projects", title: "Projects Showcase", category: "Navigation", icon: "⚡", action: () => this.jumpTo("#projects") },
+      { id: "nav-posts", title: "Engineering Posts & Updates", category: "Navigation", icon: "📝", action: () => this.jumpTo("#posts") },
       { id: "nav-tools", title: "Tools & Products Hub", category: "Navigation", icon: "🛠️", action: () => this.jumpTo("#tools") },
       { id: "nav-build-log", title: "Activity & Build Log", category: "Navigation", icon: "⏱️", action: () => this.jumpTo("#build-log") },
       { id: "nav-about", title: "About Khalid Abdullah", category: "Navigation", icon: "👤", action: () => this.jumpTo("#about") },
 
       // Actions
+      { id: "act-admin", title: "Launch Admin Studio (CMS)", category: "Actions", icon: "⚙️", action: () => window.location.href = "admin.html" },
       { id: "act-sync", title: "Sync Live GitHub Repositories", category: "Actions", icon: "🔄", action: () => document.getElementById("btn-sync-github")?.click() },
       { id: "act-terminal", title: "Open CLI Developer Terminal", category: "Actions", icon: "💻", action: () => window.dispatchEvent(new CustomEvent("open-terminal")) },
       { id: "act-theme", title: "Toggle Dark / Light Theme", category: "Actions", icon: "🌓", action: () => document.getElementById("btn-theme-toggle")?.click() },
@@ -63,6 +66,20 @@ export class CommandPalette {
           if (p.liveUrl.startsWith("http")) window.open(p.liveUrl, "_blank");
           else this.jumpTo(p.liveUrl);
         }
+      })),
+
+      // Published Posts
+      ...(postService.posts || []).map(post => ({
+        id: post.id,
+        title: post.title,
+        subtitle: `${post.category} • ${post.date}`,
+        category: "Posts & Articles",
+        icon: "📄",
+        action: () => {
+          this.jumpTo("#posts");
+          const card = document.querySelector(`.post-card[data-slug="${post.slug}"]`);
+          card?.click();
+        }
       }))
     ];
   }
@@ -77,7 +94,7 @@ export class CommandPalette {
           <!-- Input Header -->
           <div class="flex items-center px-4 py-3.5 border-b border-border gap-3">
             <svg class="w-4 h-4 text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="cmd-search-input" placeholder="Type a command, project, tool, or repository..." class="w-full bg-transparent text-sm font-mono text-text-primary placeholder:text-text-muted focus:outline-none" autocomplete="off" spellcheck="false" />
+            <input type="text" id="cmd-search-input" placeholder="Type a command, post, project, tool, or action..." class="w-full bg-transparent text-sm font-mono text-text-primary placeholder:text-text-muted focus:outline-none" autocomplete="off" spellcheck="false" />
             <kbd class="px-2 py-0.5 text-[10px] font-mono rounded bg-surface-elevated border border-border text-text-muted">ESC</kbd>
           </div>
 
@@ -119,6 +136,10 @@ export class CommandPalette {
       this.open();
     });
 
+    window.addEventListener("posts-updated", () => {
+      this.buildSearchIndex();
+    });
+
     backdrop?.addEventListener("click", (e) => {
       if (e.target === backdrop) this.close();
     });
@@ -144,6 +165,7 @@ export class CommandPalette {
   }
 
   open() {
+    this.buildSearchIndex();
     const backdrop = document.getElementById("cmd-palette-backdrop");
     const input = document.getElementById("cmd-search-input");
     this.isOpen = true;
@@ -191,7 +213,7 @@ export class CommandPalette {
     if (this.results.length === 0) {
       list.innerHTML = `
         <div class="p-8 text-center text-xs font-mono text-text-muted">
-          No matches found for your query. Try searching for "ARENEX", "CV Builder", "Trading", or "Tools".
+          No matches found for your query. Try searching for "ARENEX", "Posts", "Admin", or "Tools".
         </div>
       `;
       return;
@@ -225,7 +247,6 @@ export class CommandPalette {
       });
     });
 
-    // Auto-scroll selected element into view
     const selectedEl = list.children[this.selectedIndex];
     if (selectedEl) {
       selectedEl.scrollIntoView({ block: "nearest" });

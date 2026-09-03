@@ -8,6 +8,7 @@ import { Navigation } from "./components/Navigation.js";
 import { HeroCanvas } from "./components/HeroCanvas.js";
 import { CurrentlyBuilding } from "./components/CurrentlyBuilding.js";
 import { ProjectsSection } from "./components/ProjectsSection.js";
+import { PostsSection } from "./components/PostsSection.js";
 import { ToolsSection } from "./components/ToolsSection.js";
 import { BuildLogSection } from "./components/BuildLogSection.js";
 import { AboutSection } from "./components/AboutSection.js";
@@ -34,6 +35,7 @@ class App {
     this.components.heroCanvas = new HeroCanvas("hero-bg-canvas");
     this.components.currentlyBuilding = new CurrentlyBuilding("currently-building-container");
     this.components.projects = new ProjectsSection("projects-container");
+    this.components.posts = new PostsSection("posts-container");
     this.components.tools = new ToolsSection("tools-container");
     this.components.buildLog = new BuildLogSection("build-log-container");
     this.components.stats = new LiveStats("live-stats-container");
@@ -92,20 +94,21 @@ class App {
             <ul class="space-y-2 text-xs font-mono text-text-secondary">
               <li><a href="#hero" class="hover:text-cyan transition-colors">00 // Home</a></li>
               <li><a href="#projects" class="hover:text-cyan transition-colors">01 // Projects ⚡</a></li>
-              <li><a href="#tools" class="hover:text-cyan transition-colors">02 // Tools & Products 🛠️</a></li>
-              <li><a href="#build-log" class="hover:text-cyan transition-colors">03 // Activity Log ⏱️</a></li>
-              <li><a href="#about" class="hover:text-cyan transition-colors">04 // Profile & Contact 👤</a></li>
+              <li><a href="#posts" class="hover:text-cyan transition-colors">02 // Engineering Posts 📝</a></li>
+              <li><a href="#tools" class="hover:text-cyan transition-colors">03 // Tools & Products 🛠️</a></li>
+              <li><a href="#build-log" class="hover:text-cyan transition-colors">04 // Activity Log ⏱️</a></li>
+              <li><a href="#about" class="hover:text-cyan transition-colors">05 // Profile & Contact 👤</a></li>
             </ul>
           </div>
 
-          <!-- Direct Links -->
+          <!-- Direct Links & Admin Studio -->
           <div class="space-y-3">
-            <div class="text-xs font-mono font-bold text-cyan uppercase">EXTERNAL PRODUCTS & SOCIALS</div>
+            <div class="text-xs font-mono font-bold text-cyan uppercase">EXTERNAL PRODUCTS & CMS</div>
             <ul class="space-y-2 text-xs font-mono text-text-secondary">
               <li><a href="https://first-project-plum-phi.vercel.app" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>AI CV Builder</span><span>↗</span></a></li>
               <li><a href="https://oops-snowy-three.vercel.app/" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>Oops! Game</span><span>↗</span></a></li>
               <li><a href="${CONFIG.author.github}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>GitHub Repos</span><span>↗</span></a></li>
-              <li><a href="${CONFIG.author.linkedin}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan transition-colors flex items-center gap-1"><span>LinkedIn</span><span>↗</span></a></li>
+              <li><a href="admin.html" class="hover:text-cyan transition-colors flex items-center gap-1 text-cyan font-bold"><span>⚙️ Admin Studio (CMS)</span><span>↗</span></a></li>
             </ul>
           </div>
         </div>
@@ -113,7 +116,10 @@ class App {
         <div class="pt-8 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-text-muted">
           <div>© ${new Date().getFullYear()} Khalid Abdullah. All rights reserved.</div>
           <div class="flex items-center gap-3">
+            <a href="admin.html" class="text-cyan hover:underline">CMS Studio</a>
+            <span class="text-border">•</span>
             <span class="text-emerald-400">● Real-Time GitHub Synced</span>
+            <span class="text-border">•</span>
             <span>v${CONFIG.system.version}</span>
           </div>
         </div>

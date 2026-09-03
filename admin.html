@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth theme-light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Studio (CMS) // Khalid Abdullah Digital Lab</title>
+
+  <!-- Early Theme Initialization -->
+  <script>
+    (function() {
+      try {
+        const saved = localStorage.getItem("lab-theme");
+        if (saved === "dark") {
+          document.documentElement.classList.remove("theme-light");
+        } else {
+          document.documentElement.classList.add("theme-light");
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyan: '#00f0ff',
+            'cyan-glow': 'rgba(0, 240, 255, 0.4)',
+            surface: 'var(--bg-surface)',
+            'surface-elevated': 'var(--bg-surface-elevated)',
+            border: 'var(--border-color)',
+            'text-primary': 'var(--text-primary)',
+            'text-secondary': 'var(--text-secondary)',
+            'text-muted': 'var(--text-muted)'
+          },
+          fontFamily: {
+            sans: ['Geist', 'Space Grotesk', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            display: ['Space Grotesk', 'Geist', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Design System Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body class="min-h-screen bg-surface text-text-primary selection:bg-cyan selection:text-black">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-elevated hover:bg-border border border-border text-xs font-mono text-cyan transition-all">
+          <span>← Back to Website</span>
+        </a>
+        <span class="text-border">|</span>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-mono font-bold tracking-wider text-text-primary uppercase">ADMIN STUDIO (CMS)</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" class="p-2 rounded-lg bg-surface-elevated border border-border text-text-secondary hover:text-amber-400 transition-all cursor-pointer" title="Toggle Theme">
+          🌓
+        </button>
+
+        <div id="user-pill" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-elevated border border-border text-xs font-mono">
+          <img id="user-avatar" class="w-5 h-5 rounded-full bg-border" src="" alt="avatar" />
+          <span id="user-name" class="font-bold text-cyan">@khalidabdullahh</span>
+          <button id="btn-auth-logout" class="ml-2 text-[10px] text-rose-400 hover:underline cursor-pointer">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- 1. AUTHENTICATION VIEW (Shown when not logged in) -->
+    <div id="auth-view" class="max-w-md mx-auto my-16 p-8 rounded-3xl bg-surface-elevated border border-cyan/30 shadow-2xl space-y-6">
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-cyan/15 border border-cyan/40 flex items-center justify-center text-xl text-cyan font-mono">
+          🔐
+        </div>
+        <h2 class="text-xl font-bold text-text-primary">Admin Studio Authorization</h2>
+        <p class="text-xs text-text-secondary">
+          Enter your GitHub Personal Access Token (PAT) to authorize direct publishing to <code class="text-cyan">khalidabdullahh/khalid-digital-lab</code>.
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-mono font-bold text-text-primary mb-1">GitHub Personal Access Token</label>
+          <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxx" class="w-full px-4 py-2.5 rounded-xl bg-surface border border-border focus:border-cyan text-sm font-mono text-text-primary placeholder:text-text-muted focus:outline-none" />
+          <p class="text-[10px] font-mono text-text-muted mt-1.5">
+            Token requires <code class="text-cyan">repo</code> or <code class="text-cyan">public_repo</code> write scope.
+          </p>
+        </div>
+
+        <button id="btn-auth-login" class="w-full py-3 rounded-xl bg-cyan hover:bg-cyan-glow text-black text-xs font-mono font-bold transition-all shadow-xl cursor-pointer">
+          Authorize & Launch Studio →
+        </button>
+
+        <div id="auth-status-text" class="text-xs font-mono text-center text-cyan"></div>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-surface border border-border text-[11px] font-mono text-text-muted space-y-1">
+        <div class="font-bold text-text-primary">🔒 Client-Side Security:</div>
+        <p>Your token stays 100% in your local browser and talks directly to <code class="text-cyan">api.github.com</code>. No third-party server ever sees your credentials.</p>
+      </div>
+    </div>
+
+    <!-- 2. DASHBOARD VIEW (Shown after authentication) -->
+    <div id="dashboard-view" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left Column: Posts List & Actions (4 cols) -->
+      <div class="lg:col-span-4 space-y-6">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-mono font-bold tracking-widest text-cyan uppercase">PUBLISHED POSTS</h3>
+          <button id="btn-new-post" class="px-3 py-1.5 rounded-lg bg-cyan text-black text-xs font-mono font-bold hover:bg-cyan-glow transition-all cursor-pointer">
+            + New Post
+          </button>
+        </div>
+
+        <!-- Scrollable Posts List -->
+        <div id="admin-posts-list" class="space-y-2.5 max-h-[720px] overflow-y-auto pr-1">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Right Column: Post Editor & Live Preview (8 cols) -->
+      <div class="lg:col-span-8 space-y-6">
+        <div class="p-6 rounded-3xl bg-surface-elevated/80 border border-border shadow-xl space-y-6">
+          <div class="flex items-center justify-between pb-4 border-b border-border">
+            <span id="editor-mode-label" class="text-xs font-mono font-bold text-cyan uppercase">New Post</span>
+            <span class="text-[11px] font-mono text-text-muted">Direct GitHub API Publisher</span>
+          </div>
+
+          <form id="post-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-mono font-bold text-text-primary mb-1">Post Title *</label>
+                <input type="text" id="post-title" placeholder="e.g., Designing Zero-Lag State Machines" required class="w-full px-3.5 py-2 rounded-xl bg-surface border border-border focus:border-cyan text-xs font-mono text-text-primary focus:outline-none" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-mono font-bold text-text-primary mb-1">Category</label>
+                <select id="post-category" class="w-full px-3.5 py-2 rounded-xl bg-surface border border-border focus:border-cyan text-xs font-mono text-text-primary focus:outline-none">
+                  <option value="Engineering">Engineering</option>
+                  <option value="Release">Release</option>
+                  <option value="Architecture">Architecture</option>
+                  <option value="Research">Research</option>
+                  <option value="Announcement">Announcement</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-mono font-bold text-text-primary mb-1">URL Slug</label>
+                <input type="text" id="post-slug" placeholder="designing-zero-lag-state-machines" class="w-full px-3.5 py-2 rounded-xl bg-surface border border-border focus:border-cyan text-xs font-mono text-text-primary focus:outline-none" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-mono font-bold text-text-primary mb-1">Tags (Comma-separated)</label>
+                <input type="text" id="post-tags" placeholder="Next.js, PostgreSQL, Architecture" class="w-full px-3.5 py-2 rounded-xl bg-surface border border-border focus:border-cyan text-xs font-mono text-text-primary focus:outline-none" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono font-bold text-text-primary mb-1">Tagline / Short Summary</label>
+              <input type="text" id="post-tagline" placeholder="Brief 1-sentence summary of the article..." class="w-full px-3.5 py-2 rounded-xl bg-surface border border-border focus:border-cyan text-xs font-mono text-text-primary focus:outline-none" />
+            </div>
+
+            <!-- Editor Split: Textarea + Live Preview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label class="block text-xs font-mono font-bold text-text-primary mb-1">Markdown Content *</label>
+                <textarea id="post-content" rows="16" placeholder="Write in Markdown (supports ## Headers, **bold**, `code`, ```snippets, > quotes)..." class="w-full p-3.5 rounded-xl bg-[#06090f] text-cyan border border-border focus:border-cyan text-xs font-mono leading-relaxed focus:outline-none resize-y"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-xs font-mono font-bold text-text-primary mb-1">Live Side-by-Side Preview</label>
+                <div id="live-markdown-preview" class="p-4 rounded-xl bg-surface border border-border/80 h-[320px] sm:h-[350px] overflow-y-auto text-xs leading-relaxed">
+                  <!-- Live Preview -->
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 flex items-center justify-between border-t border-border">
+              <span class="text-[11px] font-mono text-text-muted">Commits directly to branch <code class="text-cyan">main</code></span>
+              <button type="submit" id="btn-submit-post" class="px-6 py-2.5 rounded-xl bg-cyan hover:bg-cyan-glow text-black text-xs font-mono font-bold transition-all shadow-xl cursor-pointer">
+                Publish & Commit to GitHub 🚀
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/admin/AdminStudio.js"></script>
+</body>
+</html>

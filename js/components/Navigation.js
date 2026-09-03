@@ -9,7 +9,7 @@ export class Navigation {
   constructor() {
     this.navEl = document.getElementById("main-nav");
     this.mobileDockEl = document.getElementById("mobile-dock");
-    this.sections = ["hero", "currently-building", "projects", "tools", "build-log", "about"];
+    this.sections = ["hero", "currently-building", "projects", "posts", "tools", "build-log", "about"];
     this.activeSection = "hero";
     
     this.init();
@@ -49,6 +49,9 @@ export class Navigation {
           <a href="#hero" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all" data-section="hero">Home</a>
           <a href="#projects" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="projects">
             <span>⚡</span> Projects
+          </a>
+          <a href="#posts" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="posts">
+            <span>📝</span> Posts
           </a>
           <a href="#tools" class="nav-link px-3 py-1.5 rounded-lg text-xs font-mono text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-all flex items-center gap-1" data-section="tools">
             <span>🛠️</span> Tools & Products
@@ -105,6 +108,10 @@ export class Navigation {
         <a href="#projects" class="mobile-dock-btn p-2 rounded-xl text-text-secondary hover:text-cyan flex flex-col items-center gap-0.5" data-section="projects">
           <span class="text-sm">⚡</span>
           <span class="text-[10px] font-mono">Projects</span>
+        </a>
+        <a href="#posts" class="mobile-dock-btn p-2 rounded-xl text-text-secondary hover:text-cyan flex flex-col items-center gap-0.5" data-section="posts">
+          <span class="text-sm">📝</span>
+          <span class="text-[10px] font-mono">Posts</span>
         </a>
         <a href="#tools" class="mobile-dock-btn p-2 rounded-xl text-text-secondary hover:text-cyan flex flex-col items-center gap-0.5" data-section="tools">
           <span class="text-sm">🛠️</span>

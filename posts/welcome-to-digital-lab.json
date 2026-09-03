@@ -1,0 +1,14 @@
+{
+  "id": "post-welcome-digital-lab",
+  "slug": "welcome-to-digital-lab",
+  "title": "Welcome to My Digital Lab & Engineering Space",
+  "tagline": "Why I built a living personal laboratory instead of a traditional portfolio.",
+  "category": "Announcement",
+  "categoryColor": "cyan",
+  "date": "2026-09-03",
+  "readTime": "3 min read",
+  "author": "Khalid Abdullah",
+  "tags": ["Digital Lab", "Engineering", "Architecture", "Open Source"],
+  "published": true,
+  "content": "## Why a Digital Lab?\n\nMost software engineering portfolios follow a predictable, static formula: *About &rarr; Skills &rarr; Projects &rarr; Contact*.\n\nWhile functional, traditional portfolios often fail to capture how real software engineering happens: the iterative process of **learning, researching, building, and shipping**.\n\n> «Who I am + What I am researching + What I am building + What I have learned + What people can actually use.»\n\n---\n\n### 🚀 The Core Philosophy\n\nThis platform is engineered as an active, living engineering laboratory:\n\n1. **Authentic System Architecture:** Every project showcases real production engineering—from PostgreSQL Row Level Security (RLS) in ARENEX to client-side vector PDF compilation in AI CV Builder.\n2. **Direct In-Browser Tools:** Interactive playgrounds where you can test algorithms, simulators, and keyword density scanners with zero installations.\n3. **Real-Time Git Synchronization:** Direct telemetry from GitHub repositories, ensuring that every commit and system update is reflected live.\n\n---\n\n### 🛠️ What's Next?\n\nI will be publishing regular engineering briefs, post-mortems, and technical case studies directly to this space. Stay tuned for deep dives into distributed systems, AI agent workflows, and quantitative modeling!"
+}

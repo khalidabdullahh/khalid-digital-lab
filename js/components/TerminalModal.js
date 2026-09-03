@@ -6,6 +6,7 @@
 import { CONFIG } from "../config.js";
 import { TOOLS } from "../data/tools.js";
 import { PROJECTS } from "../data/projects.js";
+import { postService } from "../services/PostService.js";
 import { githubService } from "../services/GitHubService.js";
 
 export class TerminalModal {
@@ -48,7 +49,7 @@ export class TerminalModal {
           <!-- Terminal Output Log -->
           <div id="terminal-output" class="flex-1 p-4 overflow-y-auto space-y-2 text-text-secondary leading-relaxed">
             <div class="text-cyan font-bold">DIGITAL LAB CLI v${CONFIG.system.version} [Build ${CONFIG.system.buildDate}]</div>
-            <div class="text-text-muted">Type <span class="text-emerald-400 font-bold">'help'</span> to see all available commands, or <span class="text-amber-400 font-bold">'run ats'</span> to test the keyword scanner.</div>
+            <div class="text-text-muted">Type <span class="text-emerald-400 font-bold">'help'</span> to see all available commands, or <span class="text-amber-400 font-bold">'posts'</span> to read engineering briefs.</div>
             <div class="h-1"></div>
           </div>
 
@@ -168,6 +169,8 @@ export class TerminalModal {
             <div><span class="text-emerald-400 font-bold">help</span> - Display list of available system commands</div>
             <div><span class="text-emerald-400 font-bold">whoami / bio</span> - Print Khalid Abdullah's developer background</div>
             <div><span class="text-emerald-400 font-bold">projects</span> - List engineered software case studies</div>
+            <div><span class="text-emerald-400 font-bold">posts / blog</span> - List published engineering posts & articles</div>
+            <div><span class="text-emerald-400 font-bold">admin / cms</span> - Launch the Git-Based Admin Studio</div>
             <div><span class="text-emerald-400 font-bold">tools</span> - List interactive tools and production web applications</div>
             <div><span class="text-emerald-400 font-bold">run [tool]</span> - Execute in-site tool (<span class="text-cyan">run ats</span>, <span class="text-cyan">run regime-sim</span>)</div>
             <div><span class="text-emerald-400 font-bold">sync / repos</span> - Auto-sync and print live GitHub repositories</div>
@@ -198,6 +201,27 @@ export class TerminalModal {
             ${PROJECTS.map(p => `<div>• <span class="text-text-primary font-bold">${p.title}</span> - ${p.tagline}</div>`).join("")}
           </div>
         `);
+        break;
+
+      case "posts":
+      case "blog":
+      case "articles":
+        const posts = postService.posts || [];
+        this.log(`
+          <div class="space-y-1.5">
+            <div class="text-cyan font-bold uppercase">PUBLISHED ENGINEERING POSTS (${posts.length}):</div>
+            ${posts.map(p => `<div>• <span class="text-text-primary font-bold">${p.title}</span> [${p.category}] - ${p.date} (${p.readTime})</div>`).join("")}
+            <div class="text-[11px] text-text-muted mt-2">Type <span class="text-cyan font-bold">'admin'</span> to create or edit posts.</div>
+          </div>
+        `);
+        break;
+
+      case "admin":
+      case "cms":
+        this.log(`<div class="text-cyan">Launching Admin Studio (/admin.html)...</div>`);
+        setTimeout(() => {
+          window.location.href = "admin.html";
+        }, 500);
         break;
 
       case "tools":
