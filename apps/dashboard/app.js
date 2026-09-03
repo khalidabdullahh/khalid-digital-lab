@@ -160,7 +160,7 @@ const nodeMeta = {
       deduplication: 'Active on (email, source_id)',
     },
     getOutput: () => (state.leads.length > 0 ? state.leads.map((l) => ({ name: l.full_name, title: l.job_title, company: l.company, email: l.email })) : [
-      { name: 'Khalid Abdullah', title: 'Founder & Quantitative Systems Architect', company: 'Trading OS Labs', email: 'khalid@trading-os.com' },
+      { name: 'Khalid Abdullah', title: 'Founder & Quantitative Systems Architect', company: 'Trading OS Labs', email: 'seamafridi1237890@gmail.com' },
       { name: 'Elena Rostova', title: 'Pine Script V5 & Algorithmic Trader', company: 'QuantSignals FX', email: 'elena.rostova@quantsignals.io' },
       { name: 'David Chen', title: 'Managing Partner & Quant Lead', company: 'Chen Quantitative Fund', email: 'david.chen@chenquant.com' },
       { name: 'Sarah Jenkins', title: 'Lead Quantitative Analyst', company: 'Systematic Capital Group', email: 'sarah.jenkins@systematiccap.com' }
