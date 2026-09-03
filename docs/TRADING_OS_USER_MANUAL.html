@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading OS // Business Automation Engine — Operator Field Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090b10;
+      --card-bg: #111420;
+      --card-hover: #161a29;
+      --border: #232a42;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --n8n-orange: #ff6d5a;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .manual-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Print / PDF Button */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .btn-pdf {
+      background: linear-gradient(135deg, var(--n8n-orange), #ea580c);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(255, 109, 90, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-pdf:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 109, 90, 0.5);
+    }
+
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    /* Header */
+    .title-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .title-section h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* Visual Workflow Map */
+    .map-card {
+      background: #0b0d14;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+
+    .map-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-cyan);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      position: relative;
+    }
+
+    .flow-step {
+      background: #161a29;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .flow-step-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--n8n-orange);
+      font-weight: 700;
+    }
+
+    .flow-step-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .flow-step-desc {
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    /* Step-by-Step Sections */
+    .step-block {
+      margin-bottom: 32px;
+      border-left: 3px solid var(--accent-blue);
+      padding-left: 20px;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .step-badge {
+      background: var(--accent-blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .step-content {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .step-content strong {
+      color: var(--text);
+    }
+
+    .tip-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    /* Interactive Checklist */
+    .checklist-card {
+      background: #0b0d14;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 40px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-emerald);
+      cursor: pointer;
+    }
+
+    /* Print Styles for Perfect PDF Export */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding: 0 !important;
+      }
+      .manual-container {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .toolbar, .btn-pdf {
+        display: none !important;
+      }
+      .map-card, .flow-step, .checklist-card {
+        background: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+        color: #0f172a !important;
+      }
+      .flow-step-title, .title-section h1, .step-title {
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+      }
+      .step-content, .flow-step-desc, .subtitle {
+        color: #475569 !important;
+      }
+      .step-block {
+        border-color: #2563eb !important;
+      }
+      .tip-box {
+        background: #f0fdf4 !important;
+        border-color: #86efac !important;
+        color: #166534 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="manual-container">
+    
+    <!-- Top Toolbar -->
+    <div class="toolbar">
+      <span class="badge">VERSION 2.0 &bull; LIVE PRODUCTION BLUEPRINT</span>
+      <button class="btn-pdf" onclick="window.print()">
+        <span>🖨️ Save as Vector PDF / Print</span>
+      </button>
+    </div>
+
+    <!-- Title Section -->
+    <div class="title-section">
+      <h1>Trading OS // Automation Engine</h1>
+      <div class="subtitle">Operator Field Manual & Step-by-Step Acquisition Blueprint</div>
+    </div>
+
+    <!-- Interactive Visual Workflow Map -->
+    <div class="map-card">
+      <div class="map-title">
+        <span>🗺️</span> 8-Stage Automation Architecture Map
+      </div>
+
+      <div class="flow-grid">
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 01</div>
+          <div class="flow-step-title">🎯 Discovery</div>
+          <div class="flow-step-desc">Target Pine Script & Quant Traders via Apollo / Add Lead.</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 02</div>
+          <div class="flow-step-title">🐘 Neon DB</div>
+          <div class="flow-step-desc">Deduplicate email and persist raw records in PostgreSQL.</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 03</div>
+          <div class="flow-step-title">🧠 Gemini 3.6</div>
+          <div class="flow-step-desc">Deep fact extraction and volatility pain point detection.</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 04</div>
+          <div class="flow-step-title">📊 ICP Scoring</div>
+          <div class="flow-step-desc">Composite 0-100 matrix. Scores &ge; 70 qualify for outreach.</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 05</div>
+          <div class="flow-step-title">✍️ Copywriting</div>
+          <div class="flow-step-desc">Gemini writes tailored cold email in &lt;100 words.</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 06</div>
+          <div class="flow-step-title">🛡️ Approval Gate</div>
+          <div class="flow-step-desc">Mandatory human check. Zero emails sent without approval.</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 07</div>
+          <div class="flow-step-title">🚀 Instantly v2</div>
+          <div class="flow-step-desc">Outbound delivery throttled at 25/day with inbox warmup.</div>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STAGE 08</div>
+          <div class="flow-step-title">💬 Reply AI</div>
+          <div class="flow-step-desc">Classifies intent (Demo / Interested) and drafts reply.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step-by-Step Operator Guide -->
+    <div class="step-block">
+      <div class="step-header">
+        <span class="step-badge">STEP 1</span>
+        <div class="step-title">Prospect Ingestion & Adding Leads</div>
+      </div>
+      <div class="step-content">
+        Open the Studio at <strong>http://localhost:4000/dashboard</strong> or your live Cloudflare URL. Click the <strong>➕ Add Prospect</strong> button on the header. Fill in the prospect's full name, email, company, and role (e.g. <em>Pine Script Strategy Developer</em>). Keep <strong>⚡ Run Gemini 3.6 Flash</strong> checked to immediately generate their custom outreach draft.
+        <div class="tip-box">
+          <span>💡</span>
+          <div><strong>Pro Tip:</strong> Search LinkedIn, Twitter/X, and TradingView for creators with keywords like "HMM", "Pine Script v5", "Algo Trader", or "Systematic Futures".</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header">
+        <span class="step-badge">STEP 2</span>
+        <div class="step-title">Reviewing & Authorizing Cold Outreach (Approvals)</div>
+      </div>
+      <div class="step-content">
+        Navigate to the <strong>🛡️ Approvals</strong> tab. Here you will see cards generated by Gemini 3.6 Flash. Read the subject line and the ultra-concise body copy. You have 3 options:
+        <ul style="margin-left: 20px; margin-top: 8px;">
+          <li><strong>✅ Approve & Authorize:</strong> Pushes the lead into the queue for safe Instantly delivery.</li>
+          <li><strong>✏️ Edit Copy:</strong> Allows modifying any line in the email before sending.</li>
+          <li><strong>❌ Reject:</strong> Drops the draft so it is never contacted.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header">
+        <span class="step-badge">STEP 3</span>
+        <div class="step-title">Safe Delivery & Anti-Spam Throttling</div>
+      </div>
+      <div class="step-content">
+        Once approved, the system automatically synchronizes with your <strong>Instantly.ai</strong> account. It enforces a strict limit of <strong>15–25 emails per day</strong> per mailbox to preserve 100% inbox placement and domain reputation.
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header">
+        <span class="step-badge">STEP 4</span>
+        <div class="step-title">Inbound Reply Classification & Closing Users</div>
+      </div>
+      <div class="step-content">
+        When a recipient replies, the webhook logs the response directly to Neon DB. Gemini 3.6 analyzes their sentiment inside the <strong>💬 Replies & AI</strong> tab. When an objection or demo request is detected, Gemini drafts the optimal reply to onboard them into Trading OS beta!
+      </div>
+    </div>
+
+    <!-- Interactive Execution Checklist -->
+    <div class="checklist-card">
+      <div class="map-title" style="color: var(--accent-emerald);">
+        <span>✅</span> Operator Daily Checklist
+      </div>
+      
+      <label class="checklist-item">
+        <input type="checkbox" checked />
+        <span>Add 5-10 target Quant / Pine Script prospects daily</span>
+      </label>
+
+      <label class="checklist-item">
+        <input type="checkbox" checked />
+        <span>Review & Approve cold email drafts in the Approvals Queue</span>
+      </label>
+
+      <label class="checklist-item">
+        <input type="checkbox" />
+        <span>Check Replies & AI tab for inbound responses and demo bookings</span>
+      </label>
+
+      <label class="checklist-item">
+        <input type="checkbox" />
+        <span>Onboard 1st cohort of 25 active Trading OS power users</span>
+      </label>
+    </div>
+
+  </div>
+
+</body>
+</html>
