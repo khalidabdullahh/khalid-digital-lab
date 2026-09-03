@@ -1,0 +1,8 @@
+name = "marketing"
+main = "apps/api/src/worker.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "apps/dashboard"
+binding = "ASSETS"

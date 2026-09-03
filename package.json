@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "Production-grade AI-powered customer acquisition, lead qualification, and cold outreach engine for Trading OS",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "apps/api/src/worker.ts",
   "scripts": {
     "build": "tsc --noEmit",
     "start": "tsx apps/api/src/server.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
+    "deploy:cf": "wrangler deploy",
     "pipeline": "tsx workers/orchestrator.ts",
     "worker:discovery": "tsx workers/lead-discovery/index.ts",
     "worker:research": "tsx workers/lead-research/index.ts",
@@ -38,7 +39,8 @@
     "@types/pg": "^8.11.11",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.7"
+    "vitest": "^3.0.7",
+    "wrangler": "^3.109.2"
   },
   "keywords": [
     "trading-os",
@@ -47,8 +49,7 @@
     "gemini-ai",
     "apollo",
     "instantly",
-    "lead-qualification",
-    "cold-outreach"
+    "cloudflare-workers"
   ],
   "author": "Khalid Abdullah",
   "license": "MIT"
