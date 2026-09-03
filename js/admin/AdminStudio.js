@@ -19,6 +19,17 @@ export class AdminStudio {
 
   async init() {
     this.bindEvents();
+
+    // 1. Check if token returned from 1-Click OAuth Callback in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get("token");
+    if (urlToken) {
+      this.token = urlToken;
+      localStorage.setItem("khalid_github_admin_token", urlToken);
+      // Clean query string from browser address bar
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     if (this.token) {
       await this.verifyAuth();
     } else {
@@ -27,7 +38,12 @@ export class AdminStudio {
   }
 
   bindEvents() {
-    // Login form
+    // 1-Click GitHub OAuth Login Button
+    document.getElementById("btn-github-oauth")?.addEventListener("click", () => {
+      window.location.href = "/api/auth/login";
+    });
+
+    // Manual PAT Login Form
     document.getElementById("btn-auth-login")?.addEventListener("click", async () => {
       const input = document.getElementById("pat-input");
       const token = input?.value.trim();
