@@ -24,22 +24,23 @@ function getHeaders() {
 }
 
 // -----------------------------------------------------------------------------
-// 1. Theme Engine: OS Auto-Detection + Manual Toggle + High Contrast
+// 1. Theme Engine: Real-Time OS Auto-Detection + Manual Toggle
 // -----------------------------------------------------------------------------
 function initTheme() {
   const savedTheme = localStorage.getItem('growth_theme');
-  if (savedTheme) {
-    setTheme(savedTheme);
-  } else {
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(prefersDark ? 'dark' : 'light');
-  }
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  // Use saved theme if explicitly set by user, otherwise follow device preference
+  const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+  setTheme(activeTheme);
 
+  // Live real-time listener: phone switching between Dark Mode & Light Mode
   if (window.matchMedia) {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('growth_theme')) {
-        setTheme(e.matches ? 'dark' : 'light');
-      }
+      // Automatically follow device mode change
+      const newSystemTheme = e.matches ? 'dark' : 'light';
+      localStorage.removeItem('growth_theme'); // reset override to follow system
+      setTheme(newSystemTheme);
     });
   }
 }
@@ -51,7 +52,9 @@ function setTheme(theme) {
   if (icon) {
     icon.innerText = theme === 'dark' ? '☀️' : '🌙';
   }
-  setTimeout(drawWires, 50);
+  if (typeof drawWires === 'function') {
+    setTimeout(drawWires, 50);
+  }
 }
 
 window.toggleTheme = function () {
