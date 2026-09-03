@@ -817,35 +817,62 @@
        ========================================================================== */
     @media (max-width: 768px) {
       header {
-        height: 54px;
-        padding: 0 12px;
+        height: 56px;
+        padding: 0 14px;
+        position: sticky;
+        top: 0;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .brand {
+        gap: 8px;
+      }
+
+      .brand-logo {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+        border-radius: 8px;
       }
 
       .brand-title {
         font-size: 13px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
       }
 
       .workflow-badge, .btn-sender-cfg, .nav-pill-group {
         display: none !important;
       }
 
+      .header-actions {
+        gap: 6px;
+      }
+
       .btn-header {
         padding: 6px 10px;
         font-size: 11px;
+        border-radius: 7px;
       }
 
       .btn-theme-toggle {
         width: 32px;
         height: 32px;
         font-size: 14px;
+        border-radius: 7px;
       }
 
       #mobile-dock {
         display: flex;
+        height: calc(58px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
       }
 
       .workspace {
-        margin-bottom: 62px;
+        margin-bottom: calc(58px + env(safe-area-inset-bottom, 0px));
       }
 
       .canvas-content {
