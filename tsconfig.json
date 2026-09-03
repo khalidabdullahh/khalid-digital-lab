@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@growth/shared": ["./packages/shared/src/index.ts"],
+      "@growth/shared/*": ["./packages/shared/src/*"],
+      "@growth/logging": ["./packages/logging/src/index.ts"],
+      "@growth/logging/*": ["./packages/logging/src/*"],
+      "@growth/database": ["./packages/database/src/index.ts"],
+      "@growth/database/*": ["./packages/database/src/*"],
+      "@growth/gemini": ["./packages/gemini/src/index.ts"],
+      "@growth/gemini/*": ["./packages/gemini/src/*"],
+      "@growth/apollo": ["./packages/apollo/src/index.ts"],
+      "@growth/apollo/*": ["./packages/apollo/src/*"],
+      "@growth/instantly": ["./packages/instantly/src/index.ts"],
+      "@growth/instantly/*": ["./packages/instantly/src/*"],
+      "@growth/scoring": ["./packages/scoring/src/index.ts"],
+      "@growth/scoring/*": ["./packages/scoring/src/*"],
+      "@growth/prompts": ["./prompts/index.ts"],
+      "@growth/prompts/*": ["./prompts/*"],
+      "@growth/workers/*": ["./workers/*"]
+    }
+  },
+  "include": [
+    "packages/**/*.ts",
+    "workers/**/*.ts",
+    "apps/**/*.ts",
+    "database/**/*.ts",
+    "prompts/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage"
+  ]
+}

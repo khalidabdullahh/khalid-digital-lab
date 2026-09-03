@@ -9,9 +9,137 @@ $$\text{Learning} \longrightarrow \text{Researching} \longrightarrow \text{Exper
 
 ---
 
+## ⚡ Private Growth OS: Trading OS Business Automation Engine
+
+A private, internal AI-powered customer acquisition, lead qualification, and cold outreach management system designed specifically for **[Trading OS](https://trading-os-blue.vercel.app)**.
+
+```text
+                    PRIVATE GROWTH OS
+                           │
+                           ▼
+                  ┌────────────────┐
+                  │ Web Dashboard  │
+                  │ Private Access │
+                  └───────┬────────┘
+                          │
+                          ▼
+                  ┌────────────────┐
+                  │ Backend API    │
+                  │ Fastify + TS   │
+                  └───────┬────────┘
+                          │
+          ┌───────────────┼────────────────┐
+          ▼               ▼                ▼
+      Neon PostgreSQL    Gemini           Apollo
+      Source of Truth    AI Brain       Lead Source
+          │
+          │
+          ▼
+      Outreach Drafts
+          │
+          ▼
+   HUMAN APPROVAL REQUIRED
+          │
+          ▼
+       Instantly
+          │
+          ▼
+        Replies
+          │
+          ▼
+       Gemini AI
+          │
+          ▼
+       Neon DB
+          │
+          ▼
+       Dashboard
+```
+
+### Core Architecture & Production Rules:
+1. **Neon PostgreSQL is the sole production source of truth.** No production lead data depends on memory stores.
+2. **Mandatory Human Approval Gate:** Outbound emails are NEVER sent automatically. Outreach drafts halt strictly in `PENDING_APPROVAL` status until explicitly reviewed and approved in the private dashboard.
+3. **Anti-Hallucination AI Research:** Google Gemini categorizes evidence into `verified_fact`, `reasonable_inference`, or `unknown`.
+4. **Independent & Deployable:** Operates independently of Antigravity on standard Node.js servers or serverless runtimes.
+
+---
+
+## 🛠️ Quickstart & Local Execution
+
+### 1. Environment Configuration
+Copy `.env.example` to `.env.local` and set your credentials:
+
+```bash
+cp .env.example .env.local
+```
+
+Key environment variables:
+```bash
+# Environment Mode (development | production | test)
+APP_ENV=development
+
+# Neon PostgreSQL Connection URL
+DATABASE_URL=postgresql://user:password@ep-xyz.region.aws.neon.tech/neondb?sslmode=require
+
+# Google Gemini API Key
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+
+# Apollo API Key
+APOLLO_API_KEY=your_apollo_api_key_here
+
+# Instantly API Key
+INSTANTLY_API_KEY=your_instantly_api_key_here
+
+# Mock Modes (set false when live API keys are provided)
+MOCK_APOLLO=false
+MOCK_GEMINI=false
+MOCK_INSTANTLY=true
+```
+
+### 2. Run Database Migrations (Neon PostgreSQL)
+To apply the 8-table schema and indexes to Neon:
+```bash
+npm run db:migrate
+```
+
+### 3. Run the Controlled Acquisition Pipeline
+Executes Discovery $\rightarrow$ AI Research $\rightarrow$ Lead Scoring $\rightarrow$ Outreach Drafting $\rightarrow$ `PENDING_APPROVAL` (stops safely without sending):
+```bash
+npm run pipeline
+```
+
+### 4. Start Backend REST API
+Starts the Fastify REST API on port `4000`:
+```bash
+npm run api:dev
+```
+
+### 5. Launch Private Operator Dashboard
+Serve the dashboard interface locally:
+```bash
+python3 -m http.server 8080
+```
+Open `http://localhost:8080/apps/dashboard/index.html` to review generated drafts, inspect lead scores, and click **Approve** to authorize delivery.
+
+### 6. Run Automated Test Suite
+```bash
+npm test
+```
+
+---
+
+## 📚 Technical Specifications & Audit Docs
+
+- **[Neon Migration Audit](./docs/NEON_MIGRATION_AUDIT.md):** Detailed reality audit of all components, database migration plan, and production risk analysis.
+- **[System Architecture](./docs/ARCHITECTURE.md):** Complete technical architecture, 4 ICP definitions, mathematical scoring equations, and relational schema models.
+- **[Implementation Plan](./docs/IMPLEMENTATION_PLAN.md):** Phased delivery roadmap and data contracts.
+
+---
+
 ## 🏛️ Master Portfolio Architecture
 
-This central repository (`khalid-digital-lab`) acts as my **Digital Engineering Portfolio, Technical Lab, Architecture Showcase, and Cross-Project Knowledge Base**.
+This central repository acts as my **Digital Engineering Portfolio, Technical Lab, Architecture Showcase, and Cross-Project Knowledge Base**.
 
 ```mermaid
 graph TD
@@ -21,6 +149,7 @@ graph TD
     A --> E["system-design/ (Zero-GC Loops, Multi-Tenant Queues)"]
     A --> F["engineering/ (Storage RLS, Dynamic Avatars, Vector PDFs)"]
     A --> G["js/ (Interactive 60 FPS Web Application)"]
+    A --> H["Business Automation Engine (Neon + Gemini + Apollo Growth Infrastructure)"]
 
     subgraph "Level 1: Individual Authoritative Repositories"
         B1["ARENEX (Esports Tournament Platform)"] -.-> R1["github.com/khalidabdullahh/eSports"]
@@ -31,69 +160,6 @@ graph TD
         B6["DevilsDoor (Atmospheric Horror)"] -.-> R6["github.com/khalidabdullahh/DevilsDoor"]
     end
 ```
-
----
-
-## ⚡ Engineered Projects & Technical Case Studies
-
-| Project | Category | Architectural Highlights | Case Study | Authoritative Repository |
-| :--- | :--- | :--- | :--- | :--- |
-| **ARENEX** | Esports Tournament Platform & Web App | Next.js 15+, Supabase, PostgreSQL RLS, Edge RBAC, Anti-Replay Payments, Time-Gated Room Credentials, Dynamic Leaderboard Avatars | [Case Study](./projects/arenex/) | [eSports Repo ↗](https://github.com/khalidabdullahh/eSports) |
-| **AI CV Builder v2.0** | Career AI & Vector PDF Platform | Next.js 16, React 19, Google Gemini 1.5 Flash Two-Pass Prompt Distillation, 10 Layout Models, 100% Vector Searchable PDF Engine | [Case Study](./projects/cv-builder/) | [CV-Builder Repo ↗](https://github.com/khalidabdullahh/CV-Builder) |
-| **Trading OS** | Quantitative Finance & ML | 3-State Gaussian HMM, Parkinson & Garman-Klass Volatility, In-Browser Monte Carlo Playground, Kelly Criterion Risk Engine | [Case Study](./projects/trading-os/) | [Trading-OS Repo ↗](https://github.com/khalidabdullahh/Trading-OS) |
-| **Oops! (Chaos Realm)** | Game Systems & Physics Engine | Phaser 2D, Zero-Allocation Physics Loops (60 FPS), Procedural Web Audio Synthesis (0 KB Audio Files), 150 Handcrafted Stages | [Case Study](./projects/oops/) | [Oops Repo ↗](https://github.com/khalidabdullahh/Oops) |
-| **FinDoc** | NLP & Financial Alpha Extraction | SEC 10-K/10-Q MD&A Parser, Parent-Document Vector Retrieval, Chain-of-Verification Reasoning, PEAD Sentiment Scoring | [Case Study](./projects/findoc/) | [Lab Inquiry E-02 ↗](#lab) |
-| **AlgoViz** | Algorithms & CS Education | Canvas 2D Step-Through Arena, Dijkstra/A* Pathfinding, Sorting Pointer Visualizer, 2D Memoization Grid | [Case Study](./projects/algoviz/) | [Interactive Tools ↗](#tools) |
-| **AuRex** | Real-Time Game Mechanics Engine | Frame-Locked Input Buffering, Decoupled Combat/Movement State Machines, Spatial Hitbox/Hurtbox Indexing | [Case Study](./projects/aurex/) | [AuRex Repo ↗](https://github.com/khalidabdullahh/AuRex) |
-| **DevilsDoor** | Atmospheric Horror Framework | Psychological Sanity Accumulator FSM, Dynamic Vignette Shaders, Adaptive Sensory AI Perception | [Case Study](./projects/devil-door/) | [DevilsDoor Repo ↗](https://github.com/khalidabdullahh/DevilsDoor) |
-
----
-
-## 📚 Cross-Project Engineering Knowledge Base
-
-### 1. ⚙️ [Backend Engineering](./backend/)
-- **[Supabase OAuth & Session Lifecycles](./backend/authentication/supabase-auth-case-study.md):** Edge Middleware route guards, synchronous PostgreSQL profile triggers, and JWT validation.
-- **[Role-Based Access Control (RBAC) Matrix](./backend/authorization/rbac-super-admin-matrix.md):** `USER`, `SUPER_ADMIN`, and `OWNER` security hierarchy with database-enforced privilege immutability.
-- **[Server Actions vs REST vs RPC](./backend/api-design/server-actions-and-rpc.md):** Idempotent mutation patterns, Zod validation, and atomic database stored procedures.
-- **[Multi-Step Payment State Machine](./backend/server-architecture/payment-verification-workflow.md):** Manual transaction ID reconciliation, anti-replay constraints, and time-gated lobby access.
-
-### 2. 🗄️ [Databases & PostgreSQL](./databases/)
-- **[Complete Production PostgreSQL Schema & RLS](./databases/supabase/arenex-schema-and-rls.md):** DDL for 9 core tables with exhaustive Row Level Security policies.
-- **[Financial Privacy Isolation](./databases/schema-design/financial-privacy-isolation.md):** Decoupled accounting isolating public tournament parameters from internal business ledgers.
-- **[PostgreSQL Indexing & Optimization](./databases/indexing/performance-and-query-optimization.md):** B-Tree, composite, and partial indexes for high-concurrency tournament queues.
-
-### 3. 📐 [System Design & Scalability](./system-design/)
-- **[Multi-Tenant Esports Platform System Design](./system-design/system-design-case-studies/esports-tournament-platform.md):** High-concurrency architecture blueprint handling thousands of players.
-- **[Zero-Garbage-Collection State Loops](./system-design/architecture-patterns/zero-gc-state-machines.md):** Memory pool management and scratch vectors to prevent GC stutters in 60 FPS animation loops.
-- **[In-Browser Real-Time Stochastic Simulation](./system-design/scalability/realtime-regime-simulation.md):** Running Monte Carlo and Viterbi decoding in client browser threads with `Float64Array`.
-
-### 4. 🛠️ [Engineering Standards & Security](./engineering/)
-- **[Storage Bucket RLS & Dynamic Avatars](./engineering/security/storage-bucket-rls-and-dynamic-avatars.md):** Authenticated storage path scoping and relational leaderboard joins.
-- **[Pure Vector PDF Generation](./engineering/performance/vector-pdf-and-client-compression.md):** Direct PDF stream compilation vs DOM canvas rasterization.
-- **[Data-Driven UI Layering](./engineering/clean-architecture/data-driven-ui-layering.md):** Decoupled data stores, reactive UI views, and canvas physics engines.
-
----
-
-## 🛠️ In-Browser Live Interactive Simulators
-
-- **AI CV Builder v2.0:** 10 ATS-optimized templates with Gemini AI bullet assistance ([Live Demo](https://first-project-plum-phi.vercel.app)).
-- **Market Regime & Volatility Simulator:** Real-time Monte Carlo price path generation and 3-state HMM classification directly in the browser.
-- **ATS Keyword & Density Scanner:** Lexical overlap, TF-IDF keyword extraction, and missing skill analysis.
-- **Quantitative Kelly Criterion Calculator:** Optimal capital allocation $f^* = \frac{p(b+1)-1}{b}$ and 50% drawdown risk curves.
-- **Geometric Vector Norm ($L_p$) Visualizer:** Interactive 2D unit ball transformation canvas ($L_1, L_2, L_\infty$).
-
----
-
-## 🚀 Quick Setup & Local Execution
-
-Run locally with zero build dependencies using Python 3:
-
-```bash
-cd /Users/khalidabdullah/AntiGravity/Website
-python3 -m http.server 8080
-```
-
-Then navigate to: `http://localhost:8080` in your web browser.
 
 ---
 
