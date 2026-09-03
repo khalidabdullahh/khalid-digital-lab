@@ -67,7 +67,18 @@ window.toggleTheme = function () {
 // -----------------------------------------------------------------------------
 window.switchView = function (viewId) {
   state.currentView = viewId;
+  
+  // Desktop Nav Pills
   document.querySelectorAll('.nav-pill').forEach((el) => el.classList.remove('active'));
+  const pill = document.getElementById(`pill-${viewId}`);
+  if (pill) pill.classList.add('active');
+
+  // Mobile Dock Items
+  document.querySelectorAll('.dock-item').forEach((el) => el.classList.remove('active'));
+  const dock = document.getElementById(`dock-${viewId}`);
+  if (dock) dock.classList.add('active');
+
+  // Panels
   document.querySelectorAll('.panel-view').forEach((el) => el.classList.remove('active'));
 
   const canvas = document.getElementById('view-canvas');
@@ -80,8 +91,8 @@ window.switchView = function (viewId) {
     if (panel) panel.classList.add('active');
   }
 
-  const pill = document.getElementById(`pill-${viewId}`);
-  if (pill) pill.classList.add('active');
+  // Scroll to top of view
+  window.scrollTo(0, 0);
 };
 
 // -----------------------------------------------------------------------------
@@ -100,6 +111,12 @@ const nodeOrder = [
 function drawWires() {
   const svg = document.getElementById('connections-svg');
   if (!svg) return;
+
+  // On mobile screens (< 768px), nodes stack vertically without SVG wires
+  if (window.innerWidth <= 768) {
+    svg.innerHTML = '';
+    return;
+  }
 
   let pathsHtml = '';
 
@@ -285,7 +302,7 @@ window.executeWorkflow = async function () {
   const btn = document.getElementById('btn-execute-flow');
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = `<span>⏳ Running Workflow...</span>`;
+    btn.innerHTML = `<span>⏳ Running...</span>`;
   }
 
   // Sequentially animate through each node
@@ -310,9 +327,9 @@ window.executeWorkflow = async function () {
 
   if (btn) {
     btn.disabled = false;
-    btn.innerHTML = `<span>✅ Complete!</span>`;
+    btn.innerHTML = `<span>✅ Done!</span>`;
     setTimeout(() => {
-      btn.innerHTML = `<span>▶ Run Workflow</span>`;
+      btn.innerHTML = `<span>▶ Run</span>`;
     }, 2000);
   }
 };
@@ -436,8 +453,11 @@ async function fetchPendingApprovals() {
     state.pendingApprovals = data.pending || [];
     renderApprovalGrid(state.pendingApprovals);
     const countEl = document.getElementById('pending-count');
+    const dockBadge = document.getElementById('dock-badge-count');
     const kpiCount = document.getElementById('kpi-pending-count');
+    
     if (countEl) countEl.innerText = state.pendingApprovals.length;
+    if (dockBadge) dockBadge.innerText = state.pendingApprovals.length;
     if (kpiCount) kpiCount.innerText = state.pendingApprovals.length;
   } catch (err) {
     console.warn('API pending outreach fetch failed:', err);
@@ -473,7 +493,7 @@ function renderApprovalGrid(approvals) {
   if (!container) return;
 
   if (approvals.length === 0) {
-    container.innerHTML = `<div style="color:var(--text-muted); padding:40px; text-align:center; grid-column:1/-1;">No pending cold email approvals. All caught up! 🎉</div>`;
+    container.innerHTML = `<div style="color:var(--text-muted); padding:40px 20px; text-align:center; grid-column:1/-1;">No pending cold email approvals. All caught up! 🎉</div>`;
     return;
   }
 
@@ -497,10 +517,10 @@ function renderApprovalGrid(approvals) {
 
         <div class="actions-bar">
           <button class="btn btn-approve" onclick="approveOutreach('${item.id}')">
-            ✅ Approve & Authorize
+            ✅ Approve
           </button>
           <button class="btn btn-edit" onclick="editOutreach('${item.id}')">
-            ✏️ Edit Copy
+            ✏️ Edit
           </button>
           <button class="btn btn-reject" onclick="rejectOutreach('${item.id}')">
             ❌ Reject
@@ -584,7 +604,9 @@ window.approveOutreach = async function (id) {
         card.remove();
         state.pendingApprovals = state.pendingApprovals.filter((a) => a.id !== id);
         const countBadge = document.getElementById('pending-count');
+        const dockBadge = document.getElementById('dock-badge-count');
         if (countBadge) countBadge.innerText = state.pendingApprovals.length;
+        if (dockBadge) dockBadge.innerText = state.pendingApprovals.length;
       }, 700);
     }
   } catch (err) {
@@ -615,7 +637,9 @@ window.rejectOutreach = async function (id) {
         card.remove();
         state.pendingApprovals = state.pendingApprovals.filter((a) => a.id !== id);
         const countBadge = document.getElementById('pending-count');
+        const dockBadge = document.getElementById('dock-badge-count');
         if (countBadge) countBadge.innerText = state.pendingApprovals.length;
+        if (dockBadge) dockBadge.innerText = state.pendingApprovals.length;
       }, 700);
     }
   } catch (err) {
