@@ -13,7 +13,14 @@ export default {
     if (url.pathname === '/' || url.pathname === '/dashboard') {
       if (env.ASSETS) {
         const assetUrl = new URL('/index.html', request.url);
-        return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+        const res = await env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+        const newHeaders = new Headers(res.headers);
+        newHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        return new Response(res.body, {
+          status: res.status,
+          statusText: res.statusText,
+          headers: newHeaders,
+        });
       }
     }
 
