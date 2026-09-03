@@ -32,8 +32,11 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenRes.json();
     if (tokenData.access_token) {
-      // Redirect back to admin.html with token parameter
-      return res.redirect(302, `/admin.html?token=${encodeURIComponent(tokenData.access_token)}`);
+      const host = req.headers["x-forwarded-host"] || req.headers.host || "khalid-digital-lab.vercel.app";
+      const proto = req.headers["x-forwarded-proto"] || "https";
+      const redirectUrl = `${proto}://${host}/admin.html?token=${encodeURIComponent(tokenData.access_token)}`;
+      
+      return res.redirect(302, redirectUrl);
     } else {
       return res.status(401).send(`GitHub OAuth Error: ${tokenData.error_description || "Token exchange failed."}`);
     }
