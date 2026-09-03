@@ -162,12 +162,12 @@ const nodeMeta = {
       target_icps: ['Quant Traders', 'Pine Script Devs', 'Trading Educators', 'Prop Desks'],
       deduplication: 'Active on (email, source_id)',
     },
-    getOutput: () => (state.leads.length > 0 ? state.leads.map((l) => ({ name: l.full_name, title: l.job_title, company: l.company, email: l.email })) : [
-      { name: 'Khalid Abdullah', title: 'Founder & Quantitative Systems Architect', company: 'Trading OS Labs', email: 'seamafridi1237890@gmail.com' },
-      { name: 'Elena Rostova', title: 'Pine Script V5 & Algorithmic Trader', company: 'QuantSignals FX', email: 'elena.rostova@quantsignals.io' },
-      { name: 'David Chen', title: 'Managing Partner & Quant Lead', company: 'Chen Quantitative Fund', email: 'david.chen@chenquant.com' },
-      { name: 'Sarah Jenkins', title: 'Lead Quantitative Analyst', company: 'Systematic Capital Group', email: 'sarah.jenkins@systematiccap.com' }
-    ]),
+    getOutput: () => ({
+      status: 'READY_TO_INGEST',
+      target_icp: 'Quantitative Traders & Pine Script Developers',
+      total_ingested: state.leads.length,
+      leads: state.leads.map((l) => ({ name: l.full_name, title: l.job_title, company: l.company, email: l.email })),
+    }),
   },
   neon: {
     icon: '🐘',
@@ -182,7 +182,7 @@ const nodeMeta = {
     getOutput: () => ({
       database: 'neondb (AWS US-East-2)',
       connection_status: 'CONNECTED',
-      total_leads_stored: state.leads.length || 4,
+      total_leads_stored: state.leads.length,
       ssl_mode: 'require',
     }),
   },
@@ -197,14 +197,10 @@ const nodeMeta = {
       evidence_types: ['verified_fact', 'reasonable_inference', 'unknown'],
     },
     getOutput: () => ({
-      sample_target: 'Khalid Abdullah (Trading OS Labs)',
-      extracted_facts: [
-        'Founder & architect building Trading OS market regime analytics',
-        'Specializes in 3-state Gaussian HMM volatility & Monte Carlo modeling'
-      ],
-      trading_related: true,
-      quant_fit: true,
-      confidence_score: 0.98,
+      agent_status: 'READY_FOR_NEXT_PROSPECT',
+      model: 'gemini-3.6-flash',
+      prompt_pipeline: 'Fact Extraction -> ICP Scoring -> Cold Outreach Copy',
+      total_researched: state.leads.length,
     }),
   },
   scoring: {
@@ -216,12 +212,11 @@ const nodeMeta = {
       weights: { role_relevance: 0.35, company_fit: 0.25, problem_relevance: 0.2, evidence_strength: 0.2 },
       qualification_threshold: 70,
     },
-    getOutput: () => (state.leads.length > 0 ? state.leads.map((l) => ({ name: l.full_name, score: l.lead_score, qualification: l.qualification_status, priority: l.priority })) : [
-      { name: 'Khalid Abdullah', score: 98, qualification: 'QUALIFIED', priority: 'URGENT' },
-      { name: 'Elena Rostova', score: 88, qualification: 'QUALIFIED', priority: 'HIGH' },
-      { name: 'David Chen', score: 85, qualification: 'QUALIFIED', priority: 'HIGH' },
-      { name: 'Sarah Jenkins', score: 80, qualification: 'QUALIFIED', priority: 'MEDIUM' }
-    ]),
+    getOutput: () => ({
+      qualification_threshold: 70,
+      total_qualified: state.leads.filter((l) => (l.lead_score || 0) >= 70).length,
+      scored_leads: state.leads.map((l) => ({ name: l.full_name, score: l.lead_score, qualification: l.qualification_status, priority: l.priority })),
+    }),
   },
   outreach: {
     icon: '✍️',
@@ -234,13 +229,10 @@ const nodeMeta = {
       call_to_action: 'VIP Beta Access Request',
       default_status: 'PENDING_APPROVAL',
     },
-    getOutput: () => (state.pendingApprovals.length > 0 ? state.pendingApprovals.map((a) => ({ to: a.lead?.full_name, subject: a.subject, body: a.body_text })) : [
-      {
-        to: 'Khalid Abdullah',
-        subject: 'Stress-testing systematic models against HMM volatility shifts',
-        body_snippet: 'Khalid — noticed your work on quantitative regime analytics at Trading OS Labs. We built in-browser Monte Carlo & Gaussian HMM validation to stress-test systematic strategies before deploying capital. Open to testing your models on our free beta?'
-      }
-    ]),
+    getOutput: () => ({
+      pending_drafts_count: state.pendingApprovals.length,
+      drafts: state.pendingApprovals.map((a) => ({ to: a.lead?.full_name, subject: a.subject, body: a.body_text })),
+    }),
   },
   gate: {
     icon: '🛡️',
@@ -249,10 +241,14 @@ const nodeMeta = {
     description: 'Mandatory operator review step. The database strictly blocks automated email sending until an operator clicks Approve in this studio.',
     params: {
       enforcement: 'Database State Constraint',
-      pending_count: state.pendingApprovals.length || 4,
+      pending_count: state.pendingApprovals.length,
       allowed_transitions: ['PENDING_APPROVAL -> APPROVED', 'PENDING_APPROVAL -> REJECTED'],
     },
-    getOutput: () => ({ awaiting_approval: state.pendingApprovals.length || 4, status: 'READY_FOR_OPERATOR_REVIEW', safety_enforcement: 'ACTIVE' }),
+    getOutput: () => ({
+      awaiting_approval_count: state.pendingApprovals.length,
+      status: state.pendingApprovals.length > 0 ? 'REVIEW_REQUIRED' : 'ALL_CAUGHT_UP',
+      safety_enforcement: 'ACTIVE',
+    }),
   },
   instantly: {
     icon: '🚀',
@@ -528,21 +524,16 @@ function renderApprovalGrid(approvals) {
   if (!container) return;
 
   if (approvals.length === 0) {
-    // Render default sample approvals if empty
-    approvals = [
-      {
-        id: 'sample-1',
-        lead: { full_name: 'Khalid Abdullah', job_title: 'Founder & Quantitative Systems Architect', company: 'Trading OS Labs', lead_score: 98 },
-        subject: 'Stress-testing systematic models against HMM volatility shifts',
-        body_text: 'Khalid — noticed your work on quantitative regime analytics at Trading OS Labs. We built in-browser Monte Carlo & Gaussian HMM validation to stress-test systematic strategies before deploying capital. Open to testing your models on our free beta?'
-      },
-      {
-        id: 'sample-2',
-        lead: { full_name: 'Elena Rostova', job_title: 'Pine Script V5 & Algorithmic Trader', company: 'QuantSignals FX', lead_score: 88 },
-        subject: 'Real-time regime classification for Pine Script strategies',
-        body_text: 'Elena — saw your Pine Script indicator developments. We developed Trading OS with in-browser Monte Carlo & Parkinson volatility modeling to filter false breakout signals. Would love your feedback on the alpha release.'
-      }
-    ];
+    container.innerHTML = `
+      <div style="color:var(--text-muted); padding:60px 20px; text-align:center; grid-column:1/-1;">
+        <div style="font-size:36px; margin-bottom:12px;">🛡️</div>
+        <div style="font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:6px;">No Pending Approvals (0)</div>
+        <div style="font-size:13px; max-width:420px; margin:0 auto; line-height:1.6; color:var(--text-secondary);">
+          Click <strong>➕ Add</strong> to input a target prospect from LinkedIn or TradingView, and Gemini 3.6 Flash will immediately draft a personalized email for review!
+        </div>
+      </div>
+    `;
+    return;
   }
 
   container.innerHTML = approvals
@@ -555,7 +546,7 @@ function renderApprovalGrid(approvals) {
             <div class="lead-name">${escapeHtml(lead.full_name || 'Prospect')}</div>
             <div class="lead-title">${escapeHtml(lead.job_title || '')} &bull; ${escapeHtml(lead.company || '')}</div>
           </div>
-          <span class="node-tag tag-success" style="font-size:12px;">Score: ${lead.lead_score ?? 98}</span>
+          <span class="node-tag tag-success" style="font-size:12px;">Score: ${lead.lead_score ?? 90}</span>
         </div>
 
         <div class="email-box">
@@ -585,12 +576,17 @@ function renderDirectoryTable(leads) {
   if (!tbody) return;
 
   if (leads.length === 0) {
-    leads = [
-      { full_name: 'Khalid Abdullah', company: 'Trading OS Labs', job_title: 'Founder & Quantitative Systems Architect', lead_score: 98, qualification_status: 'QUALIFIED', priority: 'URGENT', status: 'RESEARCHED' },
-      { full_name: 'Elena Rostova', company: 'QuantSignals FX', job_title: 'Pine Script V5 Developer', lead_score: 88, qualification_status: 'QUALIFIED', priority: 'HIGH', status: 'RESEARCHED' },
-      { full_name: 'David Chen', company: 'Chen Quantitative Fund', job_title: 'Managing Partner & Quant Lead', lead_score: 85, qualification_status: 'QUALIFIED', priority: 'HIGH', status: 'RESEARCHED' },
-      { full_name: 'Sarah Jenkins', company: 'Systematic Capital Group', job_title: 'Lead Quantitative Analyst', lead_score: 80, qualification_status: 'QUALIFIED', priority: 'MEDIUM', status: 'RESEARCHED' }
-    ];
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; color:var(--text-muted); padding:40px 20px;">
+          <div style="font-size:32px; margin-bottom:10px;">👥</div>
+          <div style="font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:6px;">No Prospects in Database (0 Leads)</div>
+          <div style="font-size:13px; margin-bottom:16px; color:var(--text-secondary);">Your database is clean and ready. Click below to add your first target customer!</div>
+          <button class="btn btn-approve" onclick="openAddLeadModal()">➕ Add First Prospect</button>
+        </td>
+      </tr>
+    `;
+    return;
   }
 
   tbody.innerHTML = leads
@@ -613,15 +609,16 @@ function renderRepliesTable(replies) {
   if (!tbody) return;
 
   if (replies.length === 0) {
-    replies = [
-      {
-        lead: { full_name: 'Khalid Abdullah', company: 'Trading OS Labs' },
-        classification: 'INTERESTED_IN_BETA',
-        confidence: 0.98,
-        summary: 'Expressed strong interest in testing the 3-state Gaussian HMM volatility model on intraday systematic strategies.',
-        suggested_action: 'Send VIP beta access link & schedule 15-min product walkthrough.'
-      }
-    ];
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; color:var(--text-muted); padding:40px 20px;">
+          <div style="font-size:32px; margin-bottom:10px;">💬</div>
+          <div style="font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">No Inbound Replies (0)</div>
+          <div style="font-size:13px; color:var(--text-secondary);">When target prospects reply to your email campaigns, Gemini AI will automatically classify and summarize them here.</div>
+        </td>
+      </tr>
+    `;
+    return;
   }
 
   tbody.innerHTML = replies

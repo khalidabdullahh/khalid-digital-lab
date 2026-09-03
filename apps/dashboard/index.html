@@ -973,7 +973,7 @@
           <span>🔀 Workflow Canvas</span>
         </button>
         <button class="nav-pill" id="pill-approvals" onclick="switchView('approvals')">
-          <span>🛡️ Approvals (<span id="pending-count">4</span>)</span>
+          <span>🛡️ Approvals (<span id="pending-count">0</span>)</span>
         </button>
         <button class="nav-pill" id="pill-leads" onclick="switchView('leads')">
           <span>👥 Leads</span>
@@ -1012,7 +1012,7 @@
             Target: <strong>Quant Traders & Pine Script Devs</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-success" id="tag-apollo">4 Discovered</span>
+            <span class="node-tag tag-idle" id="tag-apollo">0 Discovered</span>
             <span>Click to Inspect</span>
           </div>
         </div>
@@ -1072,7 +1072,7 @@
             Rules: <strong>Score ≥ 70 → Qualified</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-success">4 Qualified</span>
+            <span class="node-tag tag-idle">0 Qualified</span>
             <span>Deterministic</span>
           </div>
         </div>
@@ -1092,7 +1092,7 @@
             Format: <strong>&lt;100 words, Zero-fluff, HMM hook</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-pending" id="tag-outreach">4 Drafts Ready</span>
+            <span class="node-tag tag-idle" id="tag-outreach">0 Drafts Ready</span>
             <span>Pending Review</span>
           </div>
         </div>
@@ -1112,7 +1112,7 @@
             Safety Gate: <strong>Mandatory manual approval</strong>
           </div>
           <div class="node-status">
-            <span class="node-tag tag-pending" id="tag-gate">Awaiting Review</span>
+            <span class="node-tag tag-idle" id="tag-gate">0 Pending Review</span>
             <span>MANDATORY</span>
           </div>
         </div>
@@ -1156,17 +1156,17 @@
         <div class="kpi-grid">
           <div class="kpi-card">
             <div class="kpi-label">Total Leads</div>
-            <div class="kpi-value" id="kpi-discovered">4</div>
+            <div class="kpi-value" id="kpi-discovered">0</div>
             <div class="kpi-subtext">Stored in Neon DB</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Qualified (≥ 70)</div>
-            <div class="kpi-value" id="kpi-qualified">4</div>
-            <div class="kpi-subtext">100% Rate</div>
+            <div class="kpi-value" id="kpi-qualified">0</div>
+            <div class="kpi-subtext">0% Rate</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Pending Approval</div>
-            <div class="kpi-value" id="kpi-pending-count">4</div>
+            <div class="kpi-value" id="kpi-pending-count">0</div>
             <div class="kpi-subtext">Awaiting Review</div>
           </div>
         </div>
@@ -1233,7 +1233,7 @@
     <button class="dock-item" id="dock-approvals" onclick="switchView('approvals')">
       <span class="dock-icon">🛡️</span>
       <span>Approvals</span>
-      <span class="dock-badge" id="dock-badge-count">4</span>
+      <span class="dock-badge" id="dock-badge-count">0</span>
     </button>
     <button class="dock-item" id="dock-leads" onclick="switchView('leads')">
       <span class="dock-icon">👥</span>
