@@ -5,13 +5,11 @@
 
 import { TOOLS } from "../data/tools.js";
 import { ATSAnalyzer } from "./InteractiveTools/ATSAnalyzer.js";
-import { RegimeSimulator } from "./InteractiveTools/RegimeSimulator.js";
 
 export class ToolsSection {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
-    this.activeInteractiveTool = "ats";
-    this.toolInstances = {};
+    this.toolInstance = null;
 
     this.init();
   }
@@ -37,12 +35,12 @@ export class ToolsSection {
               Interactive Tools & Production Software
             </h2>
             <p class="text-base text-text-secondary mt-2 max-w-2xl">
-              «What people can actually use.» Test live keyword analyzers, simulate market models, and launch production web applications directly from this hub.
+              «What people can actually use.» Test live keyword analyzers and launch production web applications directly from this hub.
             </p>
           </div>
         </div>
 
-        <!-- 1. Interactive Tool In-Browser Workbench (Embedded Execution Canvas) -->
+        <!-- 1. Interactive Tool In-Browser Workbench (Embedded ATS Keyword Scanner) -->
         <div class="mb-14 p-6 sm:p-8 rounded-3xl bg-surface-elevated/40 border border-cyan/30 shadow-2xl relative">
           <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
             <div class="flex items-center gap-2">
@@ -50,14 +48,8 @@ export class ToolsSection {
               <span class="text-xs font-mono text-text-muted">Direct in-browser execution</span>
             </div>
 
-            <!-- Tool Switcher Tabs -->
-            <div class="flex flex-wrap gap-1.5 p-1 rounded-xl bg-surface border border-border">
-              <button class="tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.activeInteractiveTool === "ats" ? "active bg-cyan/15 border border-cyan/40 text-cyan font-bold" : "text-text-secondary hover:text-text-primary"}" data-tool="ats">
-                📄 ATS Keyword Scanner
-              </button>
-              <button class="tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${this.activeInteractiveTool === "regime" ? "active bg-cyan/15 border border-cyan/40 text-cyan font-bold" : "text-text-secondary hover:text-text-primary"}" data-tool="regime">
-                📈 Market Regime Simulator
-              </button>
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-cyan/30 text-xs font-mono text-cyan font-bold">
+              <span>📄 ATS Resume Keyword Scanner</span>
             </div>
           </div>
 
@@ -84,7 +76,7 @@ export class ToolsSection {
                   <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold ${
                     tool.statusColor === "emerald" ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" :
                     tool.statusColor === "amber" ? "bg-amber-500/15 text-amber-300 border border-amber-500/30" :
-                    "bg-blue-500/15 text-blue-300 border border-blue-500/30"
+                    "bg-violet-500/15 text-violet-300 border border-violet-500/30"
                   }">
                     ● ${tool.status}
                   </span>
@@ -109,8 +101,8 @@ export class ToolsSection {
                 </ul>
               </div>
 
-              <!-- Footer -->
-              <div class="mt-6 pt-4 border-t border-border/70 flex items-center justify-between">
+              <!-- Footer Actions -->
+              <div class="mt-6 pt-4 border-t border-border/70 flex items-center justify-between gap-2">
                 <span class="text-[11px] font-mono text-text-muted">${tool.pricing}</span>
 
                 ${tool.isInteractiveInSite ? `
@@ -131,32 +123,9 @@ export class ToolsSection {
   }
 
   bindEvents() {
-    // Tool Tab Switcher
-    this.container.querySelectorAll(".tool-tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        this.container.querySelectorAll(".tool-tab-btn").forEach(b => {
-          b.className = "tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-text-secondary hover:text-text-primary";
-        });
-        btn.className = "tool-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono transition-all active bg-cyan/15 border border-cyan/40 text-cyan font-bold";
-        this.activeInteractiveTool = btn.dataset.tool;
-        this.mountActiveTool();
-      });
-    });
-
     // Launch bench button on tool cards
     this.container.querySelectorAll(".launch-bench-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        const benchId = btn.dataset.bench;
-        if (benchId === "tool-ats-analyzer") {
-          this.activeInteractiveTool = "ats";
-        } else if (benchId === "tool-regime-simulator") {
-          this.activeInteractiveTool = "regime";
-        }
-        
-        this.render();
-        this.bindEvents();
-        this.mountActiveTool();
-        
         const mount = document.getElementById("interactive-tool-mount");
         mount?.scrollIntoView({ behavior: "smooth", block: "center" });
       });
@@ -168,16 +137,6 @@ export class ToolsSection {
     if (!mountPoint) return;
 
     mountPoint.innerHTML = "";
-
-    switch (this.activeInteractiveTool) {
-      case "ats":
-        this.toolInstances.ats = new ATSAnalyzer("interactive-tool-mount");
-        break;
-      case "regime":
-        this.toolInstances.regime = new RegimeSimulator("interactive-tool-mount");
-        break;
-      default:
-        this.toolInstances.ats = new ATSAnalyzer("interactive-tool-mount");
-    }
+    this.toolInstance = new ATSAnalyzer("interactive-tool-mount");
   }
 }

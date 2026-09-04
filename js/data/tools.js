@@ -30,28 +30,28 @@ export const TOOLS = [
     relatedProject: "proj-cv-builder"
   },
   {
-    id: "tool-oops-game",
-    name: "Oops! (Chaos Realm)",
-    tagline: "Deceptive multiverse 2D platformer with real-time gravity inversion.",
+    id: "tool-devils-door",
+    name: "Devil's Door",
+    tagline: "Endless Dark Fantasy 2.5D action-platformer with 6 playable ninja & samurai heroes.",
     category: "Game Engineering",
-    icon: "gamepad-2",
+    icon: "swords",
     status: "Live / Playable",
     statusColor: "emerald",
     isInteractiveInSite: false,
-    externalUrl: "https://oops-snowy-three.vercel.app/",
+    externalUrl: "https://devils-door.vercel.app/",
     featured: true,
     badge: "Playable Game",
-    description: "Experience the deceptive 2D puzzle platformer directly in modern desktop and mobile browsers. Features zero-lag physics, real-time gravity inversion, and synthesized chiptune audio.",
+    description: "An atmospheric 2.5D dark fantasy action-platformer featuring 6 distinct hero classes (Shadow Ninja, Ronin, Oni Warrior, Cursed Monk, Assassin, Void Entity), dynamic biome cycles, and 60 FPS canvas combat physics.",
     capabilities: [
-      "150 handcrafted stages across 5 multiverse worlds",
-      "Touch gamepad for mobile and keyboard arrow controls for desktop",
-      "Zero-latency synthesized audio using Web Audio API",
-      "Runs with zero installations directly via modern web browsers"
+      "6 Playable Hero Classes with unique sprites, movement physics, and signature combat abilities",
+      "Dynamic Biome Engine with 6 signature visual environments cycling every 3 minutes",
+      "60 FPS 2.5D Canvas Physics Engine with frame-locked combat and dash strikes",
+      "Playable directly in modern desktop and mobile web browsers without installation"
     ],
     pricing: "100% Free / Play Online",
-    actionLabel: "Play Oops! Live ↗",
-    github: "https://github.com/khalidabdullahh/Oops",
-    relatedProject: "proj-oops"
+    actionLabel: "Play Devil's Door ↗",
+    github: "https://github.com/khalidabdullahh/DevilsDoor",
+    relatedProject: "proj-devil-door"
   },
   {
     id: "tool-arenex",
@@ -59,7 +59,7 @@ export const TOOLS = [
     tagline: "Full-stack tournament engine with PostgreSQL RLS & anti-replay payments.",
     category: "Full-Stack & Backend",
     icon: "shield-check",
-    status: "Live Engine",
+    status: "Active Engine",
     statusColor: "emerald",
     isInteractiveInSite: false,
     externalUrl: "https://github.com/khalidabdullahh/eSports",
@@ -73,13 +73,13 @@ export const TOOLS = [
       "Dynamic leaderboard scoring linked to real player profiles via Supabase Storage"
     ],
     pricing: "Open Source Platform",
-    actionLabel: "View Source Code ↗",
+    actionLabel: "Explore on GitHub ↗",
     github: "https://github.com/khalidabdullahh/eSports",
     relatedProject: "proj-arenex"
   },
   {
     id: "tool-trading-os",
-    name: "Trading OS Intelligence Suite",
+    name: "Trading OS Suite",
     tagline: "Quantitative finance strategy, technical indicator & volatility engine.",
     category: "Quantitative Finance",
     icon: "trending-up",
@@ -89,16 +89,39 @@ export const TOOLS = [
     externalUrl: "https://github.com/khalidabdullahh/Trading-OS",
     featured: false,
     badge: "Quant Suite",
-    description: "Quantitative finance repository containing JavaScript indicator engines, Pine Script strategies, and dynamic risk management models.",
+    description: "Quantitative finance suite containing JavaScript indicator engines, Pine Script strategies, and dynamic risk management models.",
     capabilities: [
       "Dynamic volatility clustering and trend indicators",
       "Custom Pine Script strategies for multi-asset backtesting",
       "Risk-adjusted position sizing models"
     ],
     pricing: "Open Source Repository",
-    actionLabel: "Explore Repository ↗",
+    actionLabel: "Explore on GitHub ↗",
     github: "https://github.com/khalidabdullahh/Trading-OS",
-    relatedProject: "proj-market-suite"
+    relatedProject: "proj-trading-os"
+  },
+  {
+    id: "tool-aurex",
+    name: "AuRex Combat Framework",
+    tagline: "Deterministic Action Combat Framework & Frame-Locked State Machines.",
+    category: "Game Engineering",
+    icon: "zap",
+    status: "Active Engine",
+    statusColor: "violet",
+    isInteractiveInSite: false,
+    externalUrl: "https://github.com/khalidabdullahh/AuRex",
+    featured: false,
+    badge: "Combat Engine",
+    description: "A high-performance action combat engineering framework featuring deterministic state transitions, input buffering queues, and spatial collision indexing for multi-entity combat systems.",
+    capabilities: [
+      "Deterministic frame-locked input buffering queue",
+      "Decoupled movement vs combat hierarchical state machine",
+      "Spatial broad-phase hitbox/hurtbox partitioner"
+    ],
+    pricing: "Open Source Framework",
+    actionLabel: "Explore on GitHub ↗",
+    github: "https://github.com/khalidabdullahh/AuRex",
+    relatedProject: "proj-aurex"
   },
   {
     id: "tool-ats-analyzer",
@@ -123,29 +146,5 @@ export const TOOLS = [
     actionLabel: "Open Keyword Scanner →",
     github: "https://github.com/khalidabdullahh/CV-Builder",
     relatedProject: "proj-cv-builder"
-  },
-  {
-    id: "tool-regime-simulator",
-    name: "Market Regime & Volatility Simulator",
-    tagline: "Simulate stochastic asset prices and classify market states in real time.",
-    category: "Interactive Tool",
-    icon: "activity",
-    status: "Interactive In-Browser",
-    statusColor: "amber",
-    isInteractiveInSite: true,
-    interactiveComponent: "RegimeSimulator",
-    featured: false,
-    badge: "In-Browser Simulator",
-    description: "An in-browser quantitative simulator powered by geometric Brownian motion and a 3-state Hidden Markov Model. Adjust volatility, drift, and observe real-time state decoding.",
-    capabilities: [
-      "Real-time Monte Carlo price path generation",
-      "Dynamic parameter controls: Drift, Volatility, and Jump Shocks",
-      "3-State State Machine (Bull Trend 🟢, Range Chop 🟡, Crash 🔴)",
-      "Instant parameter presets (Quiet Bull, Choppy Range, Flash Crash)"
-    ],
-    pricing: "100% Free In-Browser",
-    actionLabel: "Open Simulator →",
-    github: "https://github.com/khalidabdullahh/Trading-OS",
-    relatedProject: "proj-market-suite"
   }
 ];

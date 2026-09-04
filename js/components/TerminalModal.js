@@ -172,7 +172,7 @@ export class TerminalModal {
             <div><span class="text-emerald-400 font-bold">posts / blog</span> - List published engineering posts & articles</div>
             <div><span class="text-emerald-400 font-bold">admin / cms</span> - Launch the Git-Based Admin Studio</div>
             <div><span class="text-emerald-400 font-bold">tools</span> - List interactive tools and production web applications</div>
-            <div><span class="text-emerald-400 font-bold">run [tool]</span> - Execute in-site tool (<span class="text-cyan">run ats</span>, <span class="text-cyan">run regime-sim</span>)</div>
+            <div><span class="text-emerald-400 font-bold">run ats</span> - Execute in-site ATS Keyword Scanner</div>
             <div><span class="text-emerald-400 font-bold">sync / repos</span> - Auto-sync and print live GitHub repositories</div>
             <div><span class="text-emerald-400 font-bold">theme</span> - Toggle dark / light interface theme</div>
             <div><span class="text-emerald-400 font-bold">contact</span> - Display direct email & socials</div>
@@ -239,15 +239,9 @@ export class TerminalModal {
           this.close();
           const target = document.querySelector("#tools");
           target?.scrollIntoView({ behavior: "smooth" });
-          document.querySelector('button[data-tool="ats"]')?.click();
-        } else if (arg === "regime-sim" || arg === "regime" || arg === "hmm") {
-          this.log(`<div class="text-cyan">Launching Market Regime & Volatility Simulator...</div>`);
-          this.close();
-          const target = document.querySelector("#tools");
-          target?.scrollIntoView({ behavior: "smooth" });
-          document.querySelector('button[data-tool="regime"]')?.click();
+          document.querySelector('button[data-bench="tool-ats-analyzer"]')?.click();
         } else {
-          this.log(`<div class="text-rose-400">Unknown tool '${arg}'. Available tools to run: <span class="text-cyan font-bold">run ats</span>, <span class="text-cyan font-bold">run regime-sim</span></div>`);
+          this.log(`<div class="text-rose-400">Unknown tool '${arg}'. Type <span class="text-cyan font-bold">run ats</span> to launch the ATS keyword scanner.</div>`);
         }
         break;
 
