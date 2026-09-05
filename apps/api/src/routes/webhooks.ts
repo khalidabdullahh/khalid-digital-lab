@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify';
-import { InstantlyWebhookPayloadSchema, EventType } from '@growth/shared';
+import { InstantlyWebhookPayloadSchema, EventType, getEnv } from '@growth/shared';
 import { dbQuery, isMemoryFallbackAllowed, EventsRepository, LeadsRepository } from '@growth/database';
 import { processProspectReply } from '@growth/workers/reply-analysis/index.js';
 import { logger } from '@growth/logging';
@@ -10,6 +10,21 @@ export const webhooksRoutes: FastifyPluginAsync = async (fastify) => {
 
   fastify.post('/webhooks/instantly', async (request, reply) => {
     logger.info({ body: request.body }, 'Received Instantly Webhook event');
+
+    const env = getEnv();
+    if (env.INSTANTLY_WEBHOOK_SECRET) {
+      const clientSecret =
+        request.headers['x-webhook-secret'] ||
+        (request.query as any)?.secret ||
+        (typeof request.headers['authorization'] === 'string'
+          ? request.headers['authorization'].replace(/^Bearer\s+/i, '')
+          : '');
+
+      if (clientSecret !== env.INSTANTLY_WEBHOOK_SECRET) {
+        logger.warn('Unauthorized Instantly webhook invocation rejected: secret mismatch');
+        return reply.status(401).send({ error: 'Unauthorized: Invalid webhook secret' });
+      }
+    }
 
     const parsed = InstantlyWebhookPayloadSchema.safeParse(request.body);
     if (!parsed.success) {

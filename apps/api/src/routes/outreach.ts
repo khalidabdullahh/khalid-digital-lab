@@ -28,14 +28,19 @@ export const outreachRoutes: FastifyPluginAsync = async (fastify) => {
   // Approve outreach draft
   fastify.post('/outreach/:id/approve', async (request, reply) => {
     const { id } = request.params as { id: string };
-    const body = (request.body || {}) as { approved_by?: string };
+    if (!id || id.trim().length === 0) {
+      return reply.status(400).send({ error: 'Valid outreach ID is required' });
+    }
 
-    const approved = await outreachRepo.approve(id, body.approved_by || 'human_operator');
+    const body = (request.body || {}) as { approved_by?: string };
+    const approvedBy = (body.approved_by || 'human_operator').trim().slice(0, 100);
+
+    const approved = await outreachRepo.approve(id, approvedBy);
 
     await eventsRepo.log({
       lead_id: approved.lead_id,
       event_type: EventType.OUTREACH_APPROVED,
-      metadata: { outreach_id: id, approved_by: body.approved_by || 'human_operator' },
+      metadata: { outreach_id: id, approved_by: approvedBy },
       actor: 'api:outreach-approval',
     });
 
@@ -45,14 +50,19 @@ export const outreachRoutes: FastifyPluginAsync = async (fastify) => {
   // Reject outreach draft
   fastify.post('/outreach/:id/reject', async (request, reply) => {
     const { id } = request.params as { id: string };
-    const body = (request.body || {}) as { rejection_reason?: string };
+    if (!id || id.trim().length === 0) {
+      return reply.status(400).send({ error: 'Valid outreach ID is required' });
+    }
 
-    const rejected = await outreachRepo.reject(id, body.rejection_reason || 'Manual rejection by operator');
+    const body = (request.body || {}) as { rejection_reason?: string };
+    const reason = (body.rejection_reason || 'Manual rejection by operator').trim().slice(0, 500);
+
+    const rejected = await outreachRepo.reject(id, reason);
 
     await eventsRepo.log({
       lead_id: rejected.lead_id,
       event_type: EventType.OUTREACH_REJECTED,
-      metadata: { outreach_id: id, reason: body.rejection_reason },
+      metadata: { outreach_id: id, reason },
       actor: 'api:outreach-rejection',
     });
 
@@ -62,14 +72,21 @@ export const outreachRoutes: FastifyPluginAsync = async (fastify) => {
   // Edit outreach subject / body
   fastify.put('/outreach/:id/edit', async (request, reply) => {
     const { id } = request.params as { id: string };
-    const body = request.body as { subject: string; body_text: string; body_html?: string };
+    if (!id || id.trim().length === 0) {
+      return reply.status(400).send({ error: 'Valid outreach ID is required' });
+    }
 
-    if (!body.subject || !body.body_text) {
+    const body = (request.body || {}) as { subject?: string; body_text?: string; body_html?: string };
+
+    const subject = (body.subject || '').trim().slice(0, 255);
+    const bodyText = (body.body_text || '').trim().slice(0, 10000);
+
+    if (!subject || !bodyText) {
       return reply.status(400).send({ error: 'Subject and body_text are required' });
     }
 
-    const bodyHtml = body.body_html || body.body_text.replace(/\n/g, '<br/>');
-    const updated = await outreachRepo.updateContent(id, body.subject, body.body_text, bodyHtml);
+    const bodyHtml = body.body_html ? body.body_html.slice(0, 15000) : bodyText.replace(/\n/g, '<br/>');
+    const updated = await outreachRepo.updateContent(id, subject, bodyText, bodyHtml);
 
     return reply.send({ success: true, outreach: updated });
   });

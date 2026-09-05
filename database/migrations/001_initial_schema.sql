@@ -50,7 +50,8 @@ CREATE TABLE IF NOT EXISTS leads (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Unique constraint for source deduplication
+-- Unique constraint for source deduplication & normalized email deduplication
+CREATE UNIQUE INDEX IF NOT EXISTS idx_leads_lower_email ON leads(LOWER(TRIM(email)));
 CREATE UNIQUE INDEX IF NOT EXISTS idx_leads_source_source_id ON leads(source, source_id) WHERE source_id IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
 CREATE INDEX IF NOT EXISTS idx_leads_qualification_status ON leads(qualification_status);

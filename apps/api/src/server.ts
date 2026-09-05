@@ -48,6 +48,31 @@ export async function buildServer() {
     return reply.sendFile('apps/dashboard/index.html');
   });
 
+  // Lightweight in-memory rate limiter for API endpoints
+  const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+  fastify.addHook('onRequest', async (request, reply) => {
+    if (!request.url.startsWith('/api')) return;
+
+    const ip = request.ip || '127.0.0.1';
+    const now = Date.now();
+    const isHeavy = request.url.includes('/pipeline/run') || request.url.includes('/leads/create');
+    const maxRequests = isHeavy ? 20 : 180;
+    const windowMs = 60 * 1000;
+
+    const key = `${ip}:${isHeavy ? 'heavy' : 'general'}`;
+    const record = rateLimitMap.get(key);
+
+    if (!record || now > record.resetAt) {
+      rateLimitMap.set(key, { count: 1, resetAt: now + windowMs });
+    } else {
+      record.count++;
+      if (record.count > maxRequests) {
+        logger.warn({ ip, url: request.url }, 'Rate limit exceeded for client');
+        return reply.status(429).send({ error: 'Too Many Requests: Rate limit exceeded. Please wait.' });
+      }
+    }
+  });
+
   // Private Auth Token verification hook if AUTH_TOKEN is configured
   if (env.AUTH_TOKEN) {
     fastify.addHook('onRequest', async (request, reply) => {

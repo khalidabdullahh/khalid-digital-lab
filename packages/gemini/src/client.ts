@@ -51,7 +51,15 @@ export class GeminiClient {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         const result = await model.generateContent(params.prompt);
-        const text = result.response.text();
+        let text = result.response.text().trim();
+
+        // Resiliently strip markdown code fences if returned by model
+        if (text.startsWith('```json')) {
+          text = text.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
+        } else if (text.startsWith('```')) {
+          text = text.replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+        }
+
         const parsed = JSON.parse(text) as T;
 
         return {

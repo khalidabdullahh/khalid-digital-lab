@@ -128,10 +128,10 @@ export class OutreachRepository {
   }
 
   /**
-   * Transitions an APPROVED outreach record to SENT.
-   * STRICT SAFETY GATE: Throws an error if outreach is not already in APPROVED state.
+   * Transitions an APPROVED outreach record to SYNCING atomically.
+   * Prevents race conditions and duplicate concurrent sends.
    */
-  async markSent(id: string, instantlyLeadId: string): Promise<OutreachRecord> {
+  async markSyncing(id: string): Promise<OutreachRecord> {
     const current = await this.findById(id);
     if (!current) {
       throw new Error(`Outreach ${id} not found`);
@@ -139,7 +139,70 @@ export class OutreachRepository {
 
     if (current.status !== OutreachStatus.APPROVED) {
       throw new Error(
-        `SAFETY VIOLATION: Cannot mark outreach as SENT. Current status is '${current.status}', but must be '${OutreachStatus.APPROVED}'. Human approval is strictly mandatory.`
+        `SAFETY VIOLATION: Cannot mark outreach as SYNCING. Current status is '${current.status}', but must be '${OutreachStatus.APPROVED}'.`
+      );
+    }
+
+    if (isMemoryFallbackAllowed()) {
+      return memoryStore.updateOutreach(id, {
+        status: OutreachStatus.SYNCING,
+      });
+    }
+
+    const res = await dbQuery<OutreachRecord>(
+      `UPDATE outreach 
+       SET status = $1 
+       WHERE id = $2 AND status = $3
+       RETURNING *;`,
+      [OutreachStatus.SYNCING, id, OutreachStatus.APPROVED]
+    );
+
+    if (res.rows.length === 0) {
+      throw new Error(`Failed to mark outreach ${id} as SYNCING: concurrent lock or status changed`);
+    }
+
+    return res.rows[0];
+  }
+
+  /**
+   * Transitions a SYNCING outreach record to FAILED.
+   */
+  async markFailed(id: string, reason: string): Promise<OutreachRecord> {
+    if (isMemoryFallbackAllowed()) {
+      return memoryStore.updateOutreach(id, {
+        status: OutreachStatus.FAILED,
+        rejection_reason: reason,
+      });
+    }
+
+    const res = await dbQuery<OutreachRecord>(
+      `UPDATE outreach 
+       SET status = $1, rejection_reason = $2 
+       WHERE id = $3
+       RETURNING *;`,
+      [OutreachStatus.FAILED, reason, id]
+    );
+
+    if (res.rows.length === 0) {
+      throw new Error(`Outreach ${id} not found for failure recording`);
+    }
+
+    return res.rows[0];
+  }
+
+  /**
+   * Transitions an APPROVED or SYNCING outreach record to SENT.
+   * STRICT SAFETY GATE: Throws an error if outreach is not in APPROVED or SYNCING state.
+   */
+  async markSent(id: string, instantlyLeadId: string): Promise<OutreachRecord> {
+    const current = await this.findById(id);
+    if (!current) {
+      throw new Error(`Outreach ${id} not found`);
+    }
+
+    if (current.status !== OutreachStatus.APPROVED && current.status !== OutreachStatus.SYNCING) {
+      throw new Error(
+        `SAFETY VIOLATION: Cannot mark outreach as SENT. Current status is '${current.status}', but must be '${OutreachStatus.APPROVED}' or '${OutreachStatus.SYNCING}'. Human approval is strictly mandatory.`
       );
     }
 
@@ -154,9 +217,9 @@ export class OutreachRepository {
     const res = await dbQuery<OutreachRecord>(
       `UPDATE outreach 
        SET status = $1, sent_at = NOW(), instantly_lead_id = $2 
-       WHERE id = $3 AND status = $4
+       WHERE id = $3 AND (status = $4 OR status = $5)
        RETURNING *;`,
-      [OutreachStatus.SENT, instantlyLeadId, id, OutreachStatus.APPROVED]
+      [OutreachStatus.SENT, instantlyLeadId, id, OutreachStatus.APPROVED, OutreachStatus.SYNCING]
     );
 
     if (res.rows.length === 0) {

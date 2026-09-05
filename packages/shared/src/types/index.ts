@@ -47,6 +47,7 @@ export enum OutreachStatus {
   PENDING_APPROVAL = 'PENDING_APPROVAL',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
+  SYNCING = 'SYNCING',
   SENT = 'SENT',
   FAILED = 'FAILED',
 }

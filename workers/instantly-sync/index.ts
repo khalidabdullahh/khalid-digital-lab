@@ -33,8 +33,8 @@ export async function runInstantlySync(limit = 10) {
 
   for (const item of eligibleRecords) {
     const lead = (item as any).lead;
-    if (!lead || lead.opted_out) {
-      log.warn({ leadId: lead?.id, email: lead?.email }, 'Skipping sync: lead opted out or missing');
+    if (!lead || lead.opted_out || lead.status === LeadStatus.OPTED_OUT) {
+      log.warn({ leadId: lead?.id, email: lead?.email }, 'Skipping sync: lead opted out, suppressed, or missing');
       continue;
     }
 
@@ -48,11 +48,15 @@ export async function runInstantlySync(limit = 10) {
     }
 
     const leadLog = log.child({ outreachId: item.id, email: lead.email });
-    leadLog.info('Syncing approved lead to Instantly campaign');
 
     try {
+      // 1. Atomically transition from APPROVED -> SYNCING (prevents concurrent race conditions)
+      await outreachRepo.markSyncing(item.id);
+      leadLog.info('Locked outreach record in SYNCING state');
+
       const campaignId = item.campaign_id || 'instantly_camp_quant_v1';
 
+      // 2. Perform external Instantly sync
       const response = await instantlyClient.addLeadToCampaign(campaignId, {
         email: lead.email,
         first_name: lead.first_name,
@@ -67,16 +71,16 @@ export async function runInstantlySync(limit = 10) {
         },
       });
 
-      // Mark outreach as SENT in database (throws if not APPROVED)
+      // 3. Mark outreach as SENT in database
       await outreachRepo.markSent(item.id, response.lead_id || `instantly_${Date.now()}`);
 
-      // Update lead status
+      // 4. Update lead status
       await leadsRepo.update(lead.id, {
         status: LeadStatus.SENT,
         last_contacted_at: new Date().toISOString(),
       });
 
-      // Audit Log
+      // 5. Audit Log
       await eventsRepo.log({
         lead_id: lead.id,
         event_type: EventType.OUTREACH_SENT,
@@ -90,8 +94,13 @@ export async function runInstantlySync(limit = 10) {
 
       syncedCount++;
       leadLog.info('Successfully synced approved lead to Instantly');
-    } catch (err) {
+    } catch (err: any) {
       leadLog.error({ error: err }, 'Failed to sync lead to Instantly');
+      try {
+        await outreachRepo.markFailed(item.id, err?.message || 'Sync failure');
+      } catch (failedErr) {
+        leadLog.error({ error: failedErr }, 'Could not record failure state');
+      }
     }
   }
 

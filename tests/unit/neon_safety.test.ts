@@ -124,4 +124,126 @@ describe('Human Approval Enforcement & State Transition Safety', () => {
       outreachRepo.markSent(pendingDraft.id, 'instantly_sim_123')
     ).rejects.toThrow(/SAFETY VIOLATION/);
   });
+
+  it('should REJECT attempting to markSyncing on non-approved outreach', async () => {
+    const lead = await leadsRepo.create({
+      first_name: 'Test',
+      last_name: 'User',
+      full_name: 'Test User',
+      email: `sync.fail.${Date.now()}@test.io`,
+      company: 'Test Co',
+      job_title: 'Trader',
+      source: 'apollo',
+      status: LeadStatus.QUALIFIED,
+      qualification_status: QualificationStatus.QUALIFIED,
+      lead_score: 80,
+      priority: PriorityLevel.HIGH,
+      opted_out: false,
+    });
+
+    const pendingDraft = await outreachRepo.create({
+      lead_id: lead.id,
+      subject: 'Subject',
+      body_text: 'Body...',
+      body_html: '<p>Body</p>',
+      personalization_snippet: 'Snippet',
+      prompt_version: 'v1.0.0',
+      status: OutreachStatus.PENDING_APPROVAL,
+    });
+
+    await expect(outreachRepo.markSyncing(pendingDraft.id)).rejects.toThrow(/SAFETY VIOLATION/);
+
+    const rejectedDraft = await outreachRepo.reject(pendingDraft.id, 'Operator rejected');
+    expect(rejectedDraft.status).toBe(OutreachStatus.REJECTED);
+
+    await expect(outreachRepo.markSyncing(rejectedDraft.id)).rejects.toThrow(/SAFETY VIOLATION/);
+  });
+
+  it('should properly handle atomic SYNCING -> SENT transition for APPROVED outreach', async () => {
+    const lead = await leadsRepo.create({
+      first_name: 'Approved',
+      last_name: 'Sync',
+      full_name: 'Approved Sync',
+      email: `approved.sync.${Date.now()}@test.io`,
+      company: 'Quant Alpha',
+      job_title: 'Quant Trader',
+      source: 'apollo',
+      status: LeadStatus.QUALIFIED,
+      qualification_status: QualificationStatus.QUALIFIED,
+      lead_score: 88,
+      priority: PriorityLevel.HIGH,
+      opted_out: false,
+    });
+
+    const draft = await outreachRepo.create({
+      lead_id: lead.id,
+      subject: 'Subject',
+      body_text: 'Body',
+      body_html: '<p>Body</p>',
+      personalization_snippet: 'Snippet',
+      prompt_version: 'v1.0.0',
+      status: OutreachStatus.PENDING_APPROVAL,
+    });
+
+    // 1. Approve
+    await outreachRepo.approve(draft.id, 'khalid_operator');
+
+    // 2. Lock to SYNCING
+    const syncing = await outreachRepo.markSyncing(draft.id);
+    expect(syncing.status).toBe(OutreachStatus.SYNCING);
+
+    // 3. Mark SENT
+    const sent = await outreachRepo.markSent(draft.id, 'instantly_live_999');
+    expect(sent.status).toBe(OutreachStatus.SENT);
+    expect(sent.sent_at).toBeDefined();
+    expect(sent.instantly_lead_id).toBe('instantly_live_999');
+  });
+
+  it('should normalize email to lowercase trimmed and enforce deduplication', async () => {
+    const email = `TRADER.DEDUPE.${Date.now()}@EXAMPLE.COM`;
+    const lead1 = await leadsRepo.create({
+      first_name: 'Trader',
+      last_name: 'One',
+      full_name: 'Trader One',
+      email: email,
+      company: 'Dedupe Corp',
+      job_title: 'Quant',
+      source: 'apollo',
+      status: LeadStatus.NEW,
+      qualification_status: QualificationStatus.UNQUALIFIED,
+      lead_score: 0,
+      priority: PriorityLevel.MEDIUM,
+      opted_out: false,
+    });
+
+    expect(lead1.email).toBe(email.toLowerCase().trim());
+
+    const found = await leadsRepo.findByEmail(`  ${email.toUpperCase()}  `);
+    expect(found).not.toBeNull();
+    expect(found?.id).toBe(lead1.id);
+  });
+
+  it('should immediately set opted_out = true and status = OPTED_OUT when unsubscribed', async () => {
+    const email = `unsub.${Date.now()}@optout.io`;
+    const lead = await leadsRepo.create({
+      first_name: 'Opt',
+      last_name: 'Out',
+      full_name: 'Opt Out',
+      email,
+      company: 'Optout LLC',
+      job_title: 'Trader',
+      source: 'apollo',
+      status: LeadStatus.SENT,
+      qualification_status: QualificationStatus.QUALIFIED,
+      lead_score: 75,
+      priority: PriorityLevel.HIGH,
+      opted_out: false,
+    });
+
+    await leadsRepo.setOptedOut(email);
+
+    const updated = await leadsRepo.findById(lead.id);
+    expect(updated?.opted_out).toBe(true);
+    expect(updated?.status).toBe(LeadStatus.OPTED_OUT);
+  });
 });

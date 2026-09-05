@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ApolloNormalizer } from '../../packages/apollo/src/index.js';
 import { DeterministicScorer, CompositeScorer } from '../../packages/scoring/src/index.js';
 import {
@@ -10,9 +10,21 @@ import {
   ResearchOutputSchema,
   OutreachWriterOutputSchema,
   ReplyIntelligenceOutputSchema,
+  resetEnvCache,
 } from '../../packages/shared/src/index.js';
 
 describe('End-to-End Pipeline Workflow Simulation', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv, APP_ENV: 'test', DATABASE_URL: '' };
+    resetEnvCache();
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
+    resetEnvCache();
+  });
   it('should process a lead from Ingestion through Qualification and Outreach Approval', () => {
     // 1. Ingestion / Normalization (Apollo)
     const rawApolloProspect = {
@@ -130,5 +142,94 @@ describe('End-to-End Pipeline Workflow Simulation', () => {
     const parsed = ReplyIntelligenceOutputSchema.safeParse(unsubscribeReply);
     expect(parsed.success).toBe(true);
     expect(parsed.data?.opt_out_detected).toBe(true);
+  });
+
+  it('should execute full database-backed pipeline lifecycle with human approval gate and atomic sync', async () => {
+    const { LeadsRepository, OutreachRepository, EventsRepository } = await import('../../packages/database/src/index.js');
+    const leadsRepo = new LeadsRepository();
+    const outreachRepo = new OutreachRepository();
+    const eventsRepo = new EventsRepository();
+
+    // 1. Lead creation
+    const email = `lifecycle.trader.${Date.now()}@quantfunds.io`;
+    const lead = await leadsRepo.create({
+      first_name: 'Elena',
+      last_name: 'Rostova',
+      full_name: 'Elena Rostova',
+      email,
+      company: 'PineQuant Analytics',
+      job_title: 'Pine Script v5 Engineer & Quant',
+      source: 'apollo',
+      status: LeadStatus.NEW,
+      qualification_status: QualificationStatus.UNQUALIFIED,
+      lead_score: 0,
+      priority: PriorityLevel.MEDIUM,
+      opted_out: false,
+    });
+
+    expect(lead.id).toBeDefined();
+    expect(lead.email).toBe(email);
+
+    // 2. Score lead deterministically
+    const scoreRes = CompositeScorer.calculate({
+      jobTitle: lead.job_title,
+      company: lead.company,
+      aiScores: {
+        roleRelevance: 90,
+        companyFit: 85,
+        problemRelevance: 88,
+        evidenceStrength: 85,
+      },
+    });
+
+    const qualifiedLead = await leadsRepo.updateQualification(
+      lead.id,
+      scoreRes.qualificationStatus,
+      scoreRes.compositeScore,
+      scoreRes.priority
+    );
+    expect(qualifiedLead.status).toBe(LeadStatus.QUALIFIED);
+    expect(qualifiedLead.lead_score).toBeGreaterThanOrEqual(70);
+
+    // 3. Create personalized outreach draft
+    const draft = await outreachRepo.create({
+      lead_id: lead.id,
+      subject: 'Pine Script strategy stress-testing for PineQuant Analytics',
+      body_text: 'Hi Elena, testing Trading OS regime detection...',
+      body_html: '<p>Hi Elena...</p>',
+      personalization_snippet: 'Noticed your Pine Script engineering focus.',
+      prompt_version: 'v1.0.0',
+      status: OutreachStatus.PENDING_APPROVAL,
+    });
+    expect(draft.status).toBe(OutreachStatus.PENDING_APPROVAL);
+
+    // 4. Human Approval Gate
+    const approved = await outreachRepo.approve(draft.id, 'khalid_operator');
+    expect(approved.status).toBe(OutreachStatus.APPROVED);
+    expect(approved.approved_by).toBe('khalid_operator');
+
+    // 5. Atomic lock to SYNCING
+    const syncing = await outreachRepo.markSyncing(draft.id);
+    expect(syncing.status).toBe(OutreachStatus.SYNCING);
+
+    // 6. Complete Instantly Sync
+    const sent = await outreachRepo.markSent(draft.id, 'instantly_sim_id_101');
+    expect(sent.status).toBe(OutreachStatus.SENT);
+    expect(sent.instantly_lead_id).toBe('instantly_sim_id_101');
+
+    // 7. Update lead to SENT
+    const contactedLead = await leadsRepo.update(lead.id, {
+      status: LeadStatus.SENT,
+      last_contacted_at: new Date().toISOString(),
+    });
+    expect(contactedLead.status).toBe(LeadStatus.SENT);
+
+    // 8. Log audit trail
+    await eventsRepo.log({
+      lead_id: lead.id,
+      event_type: 'OUTREACH_SENT' as any,
+      metadata: { outreach_id: draft.id },
+      actor: 'test:lifecycle',
+    });
   });
 });

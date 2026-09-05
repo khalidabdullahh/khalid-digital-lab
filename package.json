@@ -4,7 +4,15 @@
   "description": "Personal Digital Lab & Innovation Hub of Khalid Abdullah",
   "type": "module",
   "scripts": {
-    "build": "echo 'Static showcase build complete'"
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "api:dev": "tsx apps/api/src/server.ts",
+    "pipeline": "tsx workers/orchestrator.ts",
+    "sync": "tsx workers/instantly-sync/index.ts",
+    "db:migrate": "tsx database/migrate.ts",
+    "db:seed": "tsx database/seed/dev_seed.ts"
   },
   "author": "Khalid Abdullah",
   "license": "MIT"

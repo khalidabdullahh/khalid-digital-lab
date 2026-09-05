@@ -64,27 +64,55 @@ export const leadsRoutes: FastifyPluginAsync = async (fastify) => {
 
   // Manually add / import a prospect & optionally auto-process with Gemini 3.6 Flash
   fastify.post('/leads/create', async (request, reply) => {
-    const body = request.body as {
-      full_name: string;
-      email: string;
-      company: string;
-      job_title: string;
+    const body = (request.body || {}) as {
+      full_name?: string;
+      email?: string;
+      company?: string;
+      job_title?: string;
       linkedin_url?: string;
       company_url?: string;
       location?: string;
       auto_process?: boolean;
     };
 
-    if (!body.full_name || !body.email || !body.company || !body.job_title) {
+    const fullName = (body.full_name || '').trim();
+    const email = (body.email || '').toLowerCase().trim();
+    const company = (body.company || '').trim();
+    const jobTitle = (body.job_title || '').trim();
+
+    if (!fullName || !email || !company || !jobTitle) {
       return reply.status(400).send({ error: 'Full name, email, company, and job title are required' });
     }
 
-    const nameParts = body.full_name.trim().split(' ');
+    // Email format validation & length cap
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email) || email.length > 255) {
+      return reply.status(400).send({ error: 'Invalid email address format or excessive length' });
+    }
+
+    if (fullName.length > 150 || company.length > 200 || jobTitle.length > 200) {
+      return reply.status(400).send({ error: 'Field length exceeds permitted maximum limit' });
+    }
+
+    // LinkedIn URL validation if provided
+    let linkedinUrl: string | null = null;
+    if (body.linkedin_url && body.linkedin_url.trim()) {
+      const cleanUrl = body.linkedin_url.trim();
+      if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+        return reply.status(400).send({ error: 'LinkedIn URL must be a valid http/https URL' });
+      }
+      linkedinUrl = cleanUrl.slice(0, 500);
+    }
+
+    const companyUrl = body.company_url ? body.company_url.trim().slice(0, 500) : null;
+    const location = body.location ? body.location.trim().slice(0, 150) : null;
+
+    const nameParts = fullName.split(' ');
     const firstName = nameParts[0] || 'Trader';
     const lastName = nameParts.slice(1).join(' ') || '';
 
     // Check duplicate
-    const existing = await leadsRepo.findByEmail(body.email);
+    const existing = await leadsRepo.findByEmail(email);
     if (existing) {
       return reply.status(409).send({ error: 'Lead with this email already exists in database', lead: existing });
     }
@@ -92,13 +120,13 @@ export const leadsRoutes: FastifyPluginAsync = async (fastify) => {
     const newLead: NewLead = {
       first_name: firstName,
       last_name: lastName,
-      full_name: body.full_name.trim(),
-      email: body.email.trim(),
-      company: body.company.trim(),
-      job_title: body.job_title.trim(),
-      linkedin_url: body.linkedin_url || null,
-      company_url: body.company_url || null,
-      location: body.location || null,
+      full_name: fullName,
+      email,
+      company,
+      job_title: jobTitle,
+      linkedin_url: linkedinUrl,
+      company_url: companyUrl,
+      location,
       source: 'manual',
       status: LeadStatus.NEW,
       qualification_status: QualificationStatus.UNQUALIFIED,
