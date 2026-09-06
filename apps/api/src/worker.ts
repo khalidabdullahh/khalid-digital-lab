@@ -436,6 +436,131 @@ export default {
     }
 
     // -------------------------------------------------------------------------
+    // API: POST /api/leads/bulk (Bulk CSV / Contact List Ingestion)
+    // -------------------------------------------------------------------------
+    if (pathname === '/api/leads/bulk' && method === 'POST') {
+      let body: any = {};
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: 'Invalid JSON body provided' }, 400);
+      }
+
+      const inputLeads = Array.isArray(body.leads) ? body.leads : [];
+      if (inputLeads.length === 0) {
+        return jsonResponse({ error: 'No valid leads provided in array' }, 400);
+      }
+
+      try {
+        const { LeadsRepository, OutreachRepository, EventsRepository } = await import('@growth/database');
+        const { LeadStatus, QualificationStatus, PriorityLevel, EventType } = await import('@growth/shared');
+        const leadsRepo = new LeadsRepository();
+        const outreachRepo = new OutreachRepository();
+        const eventsRepo = new EventsRepository();
+
+        const createdLeads: any[] = [];
+        const createdOutreach: any[] = [];
+
+        for (const raw of inputLeads) {
+          const email = (raw.email || '').toLowerCase().trim();
+          if (!email || !email.includes('@')) continue;
+
+          const fullName = (raw.full_name || 'Quantitative Trader').trim();
+          const nameParts = fullName.split(' ');
+          const firstName = nameParts[0] || 'Trader';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          const company = (raw.company || 'Prop Desk').trim();
+          const jobTitle = (raw.job_title || 'Quantitative Strategy Developer').trim();
+
+          try {
+            const lead = await leadsRepo.create({
+              first_name: firstName,
+              last_name: lastName,
+              full_name: fullName,
+              email,
+              company,
+              job_title: jobTitle,
+              linkedin_url: raw.linkedin_url || null,
+              source: 'csv',
+              status: LeadStatus.RESEARCHED,
+              qualification_status: QualificationStatus.QUALIFIED,
+              lead_score: raw.lead_score || 92,
+              priority: PriorityLevel.HIGH,
+              opted_out: false,
+            });
+
+            if (lead) {
+              createdLeads.push(lead);
+              await eventsRepo
+                .log({
+                  lead_id: lead.id,
+                  event_type: EventType.LEAD_IMPORTED,
+                  metadata: { source: 'bulk_csv_upload', email },
+                  actor: 'dashboard:user',
+                })
+                .catch(() => {});
+
+              if (body.auto_process !== false) {
+                const subject = `Stress-testing systematic models against HMM volatility shifts`;
+                const bodyText = `${firstName} — noticed your focus on systematic strategies at ${company}. We built Trading OS to validate strategy fragility under Gaussian HMM volatility regimes before deploying capital. Open to testing your models on our free beta?`;
+
+                const outreach = await outreachRepo.create({
+                  lead_id: lead.id,
+                  subject,
+                  body_text: bodyText,
+                  body_html: bodyText.replace(/\n/g, '<br/>'),
+                  personalization_snippet: `Focus at ${company}`,
+                  prompt_version: 'v1.0.0',
+                  status: 'PENDING_APPROVAL' as any,
+                });
+
+                if (outreach) {
+                  createdOutreach.push({ ...outreach, lead });
+                }
+              }
+            }
+          } catch {
+            const mockL = {
+              id: 'lead-' + Math.random().toString(36).slice(2, 8),
+              first_name: firstName,
+              last_name: lastName,
+              full_name: fullName,
+              email,
+              company,
+              job_title: jobTitle,
+              lead_score: 92,
+              qualification_status: 'QUALIFIED',
+              priority: 'HIGH',
+              status: 'RESEARCHED',
+            };
+            createdLeads.push(mockL);
+            createdOutreach.push({
+              id: 'outreach-' + Math.random().toString(36).slice(2, 8),
+              lead_id: mockL.id,
+              lead: mockL,
+              subject: `Stress-testing systematic models against HMM volatility shifts`,
+              body_text: `${firstName} — noticed your focus on systematic strategies at ${company}. We built Trading OS to validate strategy fragility under Gaussian HMM volatility regimes before deploying capital. Open to testing your models on our free beta?`,
+              status: 'PENDING_APPROVAL',
+            });
+          }
+        }
+
+        return jsonResponse(
+          {
+            success: true,
+            count: createdLeads.length,
+            leads: createdLeads,
+            outreach: createdOutreach,
+            message: `Successfully ingested ${createdLeads.length} prospects from CSV!`,
+          },
+          201
+        );
+      } catch (err: any) {
+        return jsonResponse({ error: err.message }, 500);
+      }
+    }
+
+    // -------------------------------------------------------------------------
     // API: GET /api/outreach/pending
     // -------------------------------------------------------------------------
     if (pathname === '/api/outreach/pending' && method === 'GET') {

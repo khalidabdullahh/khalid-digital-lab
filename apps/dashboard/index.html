@@ -965,6 +965,11 @@
         <span>⚡ Auto-Discover 5 Quants</span>
       </button>
 
+      <!-- Bulk CSV Upload Button -->
+      <button class="btn-header" id="btn-bulk-import-hdr" onclick="openBulkImportModal()" title="Upload Apollo CSV or Paste Bulk Lead List" style="background: var(--bg-node); border: 1px solid var(--border-subtle); color: var(--text-primary); font-weight: 600;">
+        <span>📥 Bulk CSV</span>
+      </button>
+
       <!-- Add Prospect Button -->
       <button class="btn-header btn-add-lead" onclick="openAddLeadModal()">
         <span>➕ Add</span>
@@ -1297,6 +1302,59 @@
       <div class="modal-footer">
         <button class="btn btn-edit" onclick="closeAddLeadModal()">Cancel</button>
         <button class="btn btn-approve" id="btn-save-lead" onclick="submitNewLead()">Save & Run AI</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Bulk CSV & List Import -->
+  <div class="modal-overlay" id="modal-bulk-import">
+    <div class="modal-card" style="max-width: 560px;">
+      <div class="modal-header">
+        <div class="modal-title"><span>📥</span> Bulk Upload Apollo CSV / Prospect List</div>
+        <button class="btn-close-drawer" onclick="closeBulkImportModal()">&times;</button>
+      </div>
+
+      <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
+        Upload an Apollo.io exported CSV file or paste contact rows directly. All prospects will be ingested into Neon DB and drafted with Gemini 3.6.
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+        <button type="button" class="btn btn-header active" id="tab-btn-file" onclick="switchBulkTab('file')" style="flex: 1; justify-content: center; font-size: 12px; background: var(--bg-node-hover); border: 1px solid var(--border-active);">📁 Upload .CSV File</button>
+        <button type="button" class="btn btn-header" id="tab-btn-paste" onclick="switchBulkTab('paste')" style="flex: 1; justify-content: center; font-size: 12px; background: var(--bg-node); border: 1px solid var(--border-subtle);">📋 Paste Raw List</button>
+      </div>
+
+      <!-- Tab 1: File Upload -->
+      <div id="bulk-tab-file">
+        <div style="border: 2px dashed var(--border-subtle); border-radius: 10px; padding: 24px; text-align: center; background: var(--bg-input); cursor: pointer;" onclick="document.getElementById('file-csv-input').click()">
+          <input type="file" id="file-csv-input" accept=".csv,text/csv" style="display: none;" onchange="handleCsvFileSelected(event)" />
+          <div style="font-size: 32px; margin-bottom: 8px;">📄</div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);" id="csv-file-label">Click to select Apollo export .CSV file</div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Supports standard Apollo headers (First Name, Last Name, Email, Title, Company)</div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Paste Text -->
+      <div id="bulk-tab-paste" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Paste CSV Rows or Name, Email, Company, Title</label>
+          <textarea class="form-input" id="inp-bulk-paste" rows="6" placeholder="Name, Email, Company, Job Title
+Marcus Vance, marcus@vancetrading.com, Vance Trading, Quant Trader
+Elena Rostova, elena@pinequant.io, PineQuant, Pine Script Dev" style="font-family: var(--font-mono); font-size: 12px; resize: vertical; line-height: 1.5;"></textarea>
+        </div>
+      </div>
+
+      <div id="bulk-preview-status" style="margin-top: 10px; font-size: 12px; color: var(--accent-emerald); font-weight: 700; display: none;"></div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 14px;">
+        <input type="checkbox" id="chk-bulk-auto-process" checked />
+        <label for="chk-bulk-auto-process" style="font-size: 12px; color: var(--accent-cyan); font-weight: 600; cursor: pointer;">
+          ⚡ Run Gemini 3.6 Flash Research & Draft Outreach for all
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-edit" onclick="closeBulkImportModal()">Cancel</button>
+        <button class="btn btn-approve" id="btn-submit-bulk" onclick="submitBulkLeads()">🚀 Ingest & Process</button>
       </div>
     </div>
   </div>
