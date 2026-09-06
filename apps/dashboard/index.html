@@ -960,6 +960,11 @@
         <span id="theme-icon">☀️</span>
       </button>
 
+      <!-- 1-Click Auto-Discover Quants Button -->
+      <button class="btn-header" id="btn-auto-discover" onclick="triggerAutoDiscover()" title="Auto-Discover 5 Target Quants & Draft Outreach" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color:#fff; border:none; font-weight:700; gap:5px;">
+        <span>⚡ Auto-Discover 5 Quants</span>
+      </button>
+
       <!-- Add Prospect Button -->
       <button class="btn-header btn-add-lead" onclick="openAddLeadModal()">
         <span>➕ Add</span>
@@ -1180,7 +1185,12 @@
         <div class="card-panel">
           <div class="panel-header">
             <div class="panel-title">Prospect Database Records</div>
-            <button class="btn btn-approve" onclick="openAddLeadModal()">➕ Add Lead</button>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-approve" id="btn-discover-leads-panel" onclick="triggerAutoDiscover()" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); border:none;">
+                ⚡ 1-Click Auto-Discover
+              </button>
+              <button class="btn btn-edit" onclick="openAddLeadModal()">➕ Add Single</button>
+            </div>
           </div>
           <table class="data-table">
             <thead>

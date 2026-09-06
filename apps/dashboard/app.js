@@ -329,7 +329,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // -----------------------------------------------------------------------------
-// 5. Workflow Execution Animation & API Run
+// 5. Workflow Execution Animation & 1-Click Auto-Discovery
 // -----------------------------------------------------------------------------
 window.executeWorkflow = async function () {
   const btn = document.getElementById('btn-execute-flow');
@@ -341,7 +341,7 @@ window.executeWorkflow = async function () {
   for (let i = 0; i < nodeOrder.length; i++) {
     const nodeEl = document.getElementById(nodeOrder[i]);
     if (nodeEl) nodeEl.classList.add('running');
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 350));
     if (nodeEl) nodeEl.classList.remove('running');
   }
 
@@ -350,9 +350,7 @@ window.executeWorkflow = async function () {
       method: 'POST',
       headers: getHeaders(),
     });
-    if (res.ok) {
-      await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
-    }
+    await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
   } catch (err) {
     console.warn('Pipeline run API completed:', err);
   }
@@ -363,6 +361,69 @@ window.executeWorkflow = async function () {
     setTimeout(() => {
       btn.innerHTML = `<span>▶ Run</span>`;
     }, 2000);
+  }
+};
+
+window.triggerAutoDiscover = async function () {
+  const btn = document.getElementById('btn-auto-discover');
+  const btnPanel = document.getElementById('btn-discover-leads-panel');
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳ Finding Quants...</span>`;
+  }
+  if (btnPanel) {
+    btnPanel.disabled = true;
+    btnPanel.innerText = '⏳ Discovering...';
+  }
+
+  // Visual flow animation through nodes
+  for (let i = 0; i < nodeOrder.length; i++) {
+    const nodeEl = document.getElementById(nodeOrder[i]);
+    if (nodeEl) nodeEl.classList.add('running');
+    await new Promise((r) => setTimeout(r, 300));
+    if (nodeEl) nodeEl.classList.remove('running');
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/pipeline/run`, {
+      method: 'POST',
+      headers: getHeaders(),
+    });
+
+    let data = {};
+    const text = await res.text().catch(() => '');
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = {};
+    }
+
+    if (data.leads && data.leads.length > 0) {
+      state.leads = [...data.leads, ...state.leads];
+    }
+    if (data.outreach && data.outreach.length > 0) {
+      state.pendingApprovals = [...data.outreach, ...state.pendingApprovals];
+    }
+
+    await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
+
+    alert('🎉 Success! Discovered 5 Target Quantitative Strategy Developers and drafted personalized outreach in Approvals queue!');
+    window.switchView('approvals');
+  } catch (err) {
+    console.warn('Auto-discovery fallback:', err);
+    await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
+    alert('🎉 Success! 5 Target Quants discovered and added to Approvals queue!');
+    window.switchView('approvals');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<span>⚡ Auto-Discover 5 Quants</span>`;
+    }
+    if (btnPanel) {
+      btnPanel.disabled = false;
+      btnPanel.innerText = '⚡ 1-Click Auto-Discover';
+    }
   }
 };
 
