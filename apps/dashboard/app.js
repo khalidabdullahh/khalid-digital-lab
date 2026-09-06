@@ -381,30 +381,15 @@ window.triggerAutoDiscover = async function () {
   for (let i = 0; i < nodeOrder.length; i++) {
     const nodeEl = document.getElementById(nodeOrder[i]);
     if (nodeEl) nodeEl.classList.add('running');
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 250));
     if (nodeEl) nodeEl.classList.remove('running');
   }
 
   try {
-    const res = await fetch(`${API_BASE}/pipeline/run`, {
+    await fetch(`${API_BASE}/pipeline/run`, {
       method: 'POST',
       headers: getHeaders(),
     });
-
-    let data = {};
-    const text = await res.text().catch(() => '');
-    try {
-      data = text ? JSON.parse(text) : {};
-    } catch {
-      data = {};
-    }
-
-    if (data.leads && data.leads.length > 0) {
-      state.leads = [...data.leads, ...state.leads];
-    }
-    if (data.outreach && data.outreach.length > 0) {
-      state.pendingApprovals = [...data.outreach, ...state.pendingApprovals];
-    }
 
     await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
 
@@ -720,51 +705,15 @@ window.submitBulkLeads = async function () {
       data = text ? JSON.parse(text) : {};
     } catch {
       data = {};
-    }
-
-    if (data.leads && data.leads.length > 0) {
-      state.leads = [...data.leads, ...state.leads];
-    }
-    if (data.outreach && data.outreach.length > 0) {
-      state.pendingApprovals = [...data.outreach, ...state.pendingApprovals];
-    }
-
     alert(`🎉 Success! Successfully ingested ${parsedBulkLeads.length} real prospects from your list into Neon DB!`);
     window.closeBulkImportModal();
     await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
     window.switchView('approvals');
   } catch (err) {
     console.warn('Bulk import fallback:', err);
-    for (const lead of parsedBulkLeads) {
-      const mockL = {
-        id: 'lead-' + Math.random().toString(36).slice(2, 8),
-        lead_score: 93,
-        qualification_status: 'QUALIFIED',
-        priority: 'HIGH',
-        status: 'RESEARCHED',
-        ...lead,
-      };
-      state.leads = [mockL, ...state.leads];
-
-      const draftSubject = `Stress-testing systematic models against HMM volatility shifts`;
-      const draftBody = `${lead.full_name.split(' ')[0] || 'Hi'} — noticed your focus on systematic trading at ${lead.company}. We built Trading OS to validate strategy fragility under Gaussian HMM volatility regimes before deploying capital. Open to testing your models on our free beta?`;
-
-      state.pendingApprovals = [
-        {
-          id: 'outreach-' + Math.random().toString(36).slice(2, 8),
-          lead: mockL,
-          subject: draftSubject,
-          body_text: draftBody,
-        },
-        ...state.pendingApprovals,
-      ];
-    }
-
+    await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
     alert(`🎉 Success! Ingested ${parsedBulkLeads.length} prospects and generated personalized outreach drafts!`);
     window.closeBulkImportModal();
-    renderDirectoryTable(state.leads);
-    renderApprovalGrid(state.pendingApprovals);
-    renderKPIs(state.metrics);
     window.switchView('approvals');
   } finally {
     if (btn) {
@@ -802,12 +751,37 @@ async function fetchFunnelMetrics() {
   }
 }
 
+function deduplicateLeads(leads) {
+  const seen = new Set();
+  return (leads || []).filter((l) => {
+    const emailKey = (l.email || '').toLowerCase().trim();
+    const nameKey = (l.full_name || '').toLowerCase().trim();
+    const key = emailKey || nameKey || (l.id ? String(l.id) : '');
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function deduplicateApprovals(approvals) {
+  const seen = new Set();
+  return (approvals || []).filter((a) => {
+    const lead = a.lead || {};
+    const emailKey = (lead.email || '').toLowerCase().trim();
+    const nameKey = (lead.full_name || '').toLowerCase().trim();
+    const key = emailKey || nameKey || (a.id ? String(a.id) : '');
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 async function fetchLeads() {
   try {
     const res = await fetch(`${API_BASE}/leads?limit=100`, { headers: getHeaders() });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    state.leads = (data.leads && data.leads.length > 0) ? data.leads : [];
+    state.leads = deduplicateLeads(data.leads || []);
   } catch (err) {
     console.warn('API leads fetch failed:', err);
   }
@@ -834,7 +808,7 @@ async function fetchPendingApprovals() {
     const res = await fetch(`${API_BASE}/outreach/pending`, { headers: getHeaders() });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    state.pendingApprovals = (data.pending && data.pending.length > 0) ? data.pending : [];
+    state.pendingApprovals = deduplicateApprovals(data.pending || []);
   } catch (err) {
     console.warn('API pending outreach fetch failed:', err);
   }
@@ -894,6 +868,8 @@ function renderApprovalGrid(approvals) {
   const container = document.getElementById('approval-grid');
   if (!container) return;
 
+  approvals = deduplicateApprovals(approvals);
+
   if (approvals.length === 0) {
     // Exactly 1 sample pending approval for clear understanding of HITL flow
     approvals = [
@@ -950,6 +926,8 @@ function renderApprovalGrid(approvals) {
 function renderDirectoryTable(leads) {
   const tbody = document.getElementById('directory-leads-table');
   if (!tbody) return;
+
+  leads = deduplicateLeads(leads);
 
   if (leads.length === 0) {
     leads = [
