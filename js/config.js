@@ -11,7 +11,7 @@ export const CONFIG = {
     bio: "Computer Science researcher, backend engineer, and quantitative enthusiast based in Dhaka. Focused on machine learning architectures, statistical regime detection in financial time series, and production-grade developer, gaming & productivity systems.",
     email: "seamafridi1237890@gmail.com",
     github: "https://github.com/khalidabdullahh",
-    linkedin: "https://linkedin.com/in/khalid-abdullah-847724339",
+    linkedin: "https://www.linkedin.com/in/khalidabdullahh/",
     location: "Dhaka, Bangladesh",
     status: "Building & Researching",
     focus: "Backend Systems, Market Regime Detection & LLM Agents"

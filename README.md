@@ -166,5 +166,5 @@ graph TD
 ## 👤 Author
 **Khalid Abdullah**
 - **GitHub:** [github.com/khalidabdullahh](https://github.com/khalidabdullahh)
-- **LinkedIn:** [linkedin.com/in/khalid-abdullah-847724339](https://linkedin.com/in/khalid-abdullah-847724339)
-- **Email:** seamafridi123456789@gmail.com
+- **LinkedIn:** [linkedin.com/in/khalidabdullahh](https://www.linkedin.com/in/khalidabdullahh/)
+- **Email:** seamafridi1237890@gmail.com
