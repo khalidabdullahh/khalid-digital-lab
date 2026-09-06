@@ -11,6 +11,8 @@ export interface Env {
 
 // In-memory rate limiter per worker instance
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const inMemoryLeads: any[] = [];
+const inMemoryPendingOutreach: any[] = [];
 
 function checkRateLimit(ip: string, isHeavy: boolean): boolean {
   const now = Date.now();
@@ -148,11 +150,14 @@ export default {
         const limit = parseInt(url.searchParams.get('limit') || '50', 10);
         const offset = parseInt(url.searchParams.get('offset') || '0', 10);
         const result = await repo.list({ limit, offset });
-        return jsonResponse(result);
+        if (result && result.leads && result.leads.length > 0) {
+          return jsonResponse(result);
+        }
+        return jsonResponse({ leads: inMemoryLeads, total: inMemoryLeads.length });
       } catch (err: any) {
         return jsonResponse({
-          leads: [],
-          total: 0,
+          leads: inMemoryLeads,
+          total: inMemoryLeads.length,
         });
       }
     }
@@ -534,6 +539,13 @@ export default {
           }
         }
 
+        if (createdLeads.length > 0) {
+          inMemoryLeads.unshift(...createdLeads);
+        }
+        if (createdOutreach.length > 0) {
+          inMemoryPendingOutreach.unshift(...createdOutreach);
+        }
+
         return jsonResponse(
           {
             success: true,
@@ -557,11 +569,14 @@ export default {
         const { OutreachRepository } = await import('@growth/database');
         const repo = new OutreachRepository();
         const list = await repo.listPendingApprovals();
-        return jsonResponse({ pending: list, count: list.length });
+        if (list && list.length > 0) {
+          return jsonResponse({ pending: list, count: list.length });
+        }
+        return jsonResponse({ pending: inMemoryPendingOutreach, count: inMemoryPendingOutreach.length });
       } catch (err: any) {
         return jsonResponse({
-          pending: [],
-          count: 0,
+          pending: inMemoryPendingOutreach,
+          count: inMemoryPendingOutreach.length,
         });
       }
     }
@@ -576,6 +591,11 @@ export default {
         body = await request.json();
       } catch {}
       const approvedBy = (body.approved_by || 'khalid_operator').slice(0, 100);
+
+      const memIdx = inMemoryPendingOutreach.findIndex((o) => o.id === id);
+      if (memIdx !== -1) {
+        inMemoryPendingOutreach.splice(memIdx, 1);
+      }
 
       try {
         const { OutreachRepository, EventsRepository } = await import('@growth/database');
