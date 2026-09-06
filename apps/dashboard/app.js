@@ -809,20 +809,6 @@ async function fetchLeads() {
     console.warn('API leads fetch failed:', err);
   }
 
-  if (state.leads.length === 0) {
-    state.leads = [
-      {
-        full_name: 'David Vance',
-        company: 'Apex Alpha Research',
-        job_title: 'Quantitative Strategy Developer',
-        lead_score: 94,
-        qualification_status: 'QUALIFIED',
-        priority: 'URGENT',
-        status: 'RESEARCHED'
-      }
-    ];
-  }
-
   renderDirectoryTable(state.leads);
 }
 
@@ -836,30 +822,15 @@ async function fetchPendingApprovals() {
     console.warn('API pending outreach fetch failed:', err);
   }
 
-  if (state.pendingApprovals.length === 0 && !sessionStorage.getItem('sample_lead_approved')) {
-    state.pendingApprovals = [
-      {
-        id: 'sample-lead-1',
-        lead: {
-          full_name: 'David Vance',
-          job_title: 'Quantitative Strategy Developer',
-          company: 'Apex Alpha Research',
-          lead_score: 94
-        },
-        subject: 'Stress-testing systematic models against HMM volatility shifts',
-        body_text: 'David — noticed your focus on systematic futures and regime shifts at Apex Alpha. We built Trading OS to validate strategy fragility under Gaussian HMM volatility regimes before deploying capital. Open to testing your models on our free beta?'
-      }
-    ];
-  }
-
   renderApprovalGrid(state.pendingApprovals);
   const countEl = document.getElementById('pending-count');
   const dockBadge = document.getElementById('dock-badge-count');
   const kpiCount = document.getElementById('kpi-pending-count');
   
-  if (countEl) countEl.innerText = state.pendingApprovals.length;
-  if (dockBadge) dockBadge.innerText = state.pendingApprovals.length;
-  if (kpiCount) kpiCount.innerText = state.pendingApprovals.length;
+  const count = state.pendingApprovals.length;
+  if (countEl) countEl.innerText = count;
+  if (dockBadge) dockBadge.innerText = count;
+  if (kpiCount) kpiCount.innerText = count;
 }
 
 async function fetchReplies() {
@@ -882,8 +853,8 @@ function renderKPIs(metrics) {
   const elQualified = document.getElementById('kpi-qualified');
   const elPending = document.getElementById('kpi-pending-count');
 
-  if (elDiscovered) elDiscovered.innerText = metrics ? metrics.total_leads_discovered : (state.leads.length || 1);
-  if (elQualified) elQualified.innerText = metrics ? metrics.total_qualified : (state.leads.length || 1);
+  if (elDiscovered) elDiscovered.innerText = metrics ? metrics.total_leads_discovered : (state.leads.length || 0);
+  if (elQualified) elQualified.innerText = metrics ? metrics.total_qualified : (state.leads.length || 0);
   if (elPending) elPending.innerText = state.pendingApprovals.length;
 }
 
@@ -894,21 +865,17 @@ function renderApprovalGrid(approvals) {
   approvals = deduplicateApprovals(approvals);
 
   if (approvals.length === 0) {
-    // Exactly 1 sample pending approval for clear understanding of HITL flow
-    approvals = [
-      {
-        id: 'sample-lead-1',
-        lead: {
-          full_name: 'David Vance',
-          job_title: 'Quantitative Strategy Developer',
-          company: 'Apex Alpha Research',
-          lead_score: 94
-        },
-        subject: 'Stress-testing systematic models against HMM volatility shifts',
-        body_text: 'David — noticed your focus on systematic futures and regime shifts at Apex Alpha. We built Trading OS to validate strategy fragility under Gaussian HMM volatility regimes before deploying capital. Open to testing your models on our free beta?'
-      }
-    ];
-    state.pendingApprovals = approvals;
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; padding: 48px 24px; text-align: center; background: var(--bg-panel); border: 1px dashed var(--border-subtle); border-radius: 14px;">
+        <div style="font-size: 36px; margin-bottom: 12px;">🛡️</div>
+        <div style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Approval Queue is Empty</div>
+        <div style="font-size: 13px; color: var(--text-muted); max-width: 440px; margin: 0 auto 18px auto;">All pending emails have been reviewed, or no new prospects are waiting for review.</div>
+        <button class="btn btn-approve" onclick="triggerAutoDiscover()" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); border:none; margin: 0 auto;">
+          ⚡ 1-Click Auto-Discover
+        </button>
+      </div>
+    `;
+    return;
   }
 
   container.innerHTML = approvals
@@ -953,18 +920,14 @@ function renderDirectoryTable(leads) {
   leads = deduplicateLeads(leads);
 
   if (leads.length === 0) {
-    leads = [
-      {
-        full_name: 'David Vance',
-        company: 'Apex Alpha Research',
-        job_title: 'Quantitative Strategy Developer',
-        lead_score: 94,
-        qualification_status: 'QUALIFIED',
-        priority: 'URGENT',
-        status: 'RESEARCHED'
-      }
-    ];
-    state.leads = leads;
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center; padding: 36px 20px; color: var(--text-muted);">
+          No prospects in database yet. Click <strong>⚡ Auto-Discover</strong> or <strong>📥 Bulk CSV</strong> to import leads.
+        </td>
+      </tr>
+    `;
+    return;
   }
 
   tbody.innerHTML = leads
@@ -987,15 +950,14 @@ function renderRepliesTable(replies) {
   if (!tbody) return;
 
   if (replies.length === 0) {
-    replies = [
-      {
-        lead: { full_name: 'David Vance', company: 'Apex Alpha Research' },
-        classification: 'INTERESTED_IN_BETA',
-        confidence: 0.96,
-        summary: 'Interested in testing 3-state Gaussian HMM volatility filter on futures trend-following models.',
-        suggested_action: 'Send VIP beta activation link.'
-      }
-    ];
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding: 36px 20px; color: var(--text-muted);">
+          No inbound replies waiting for action.
+        </td>
+      </tr>
+    `;
+    return;
   }
 
   tbody.innerHTML = replies

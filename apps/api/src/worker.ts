@@ -151,19 +151,8 @@ export default {
         return jsonResponse(result);
       } catch (err: any) {
         return jsonResponse({
-          leads: [
-            {
-              id: 'lead-baseline-1',
-              full_name: 'David Vance',
-              company: 'Apex Alpha Research',
-              job_title: 'Quantitative Strategy Developer',
-              lead_score: 94,
-              qualification_status: 'QUALIFIED',
-              priority: 'URGENT',
-              status: 'RESEARCHED',
-            },
-          ],
-          total: 1,
+          leads: [],
+          total: 0,
         });
       }
     }
@@ -571,21 +560,8 @@ export default {
         return jsonResponse({ pending: list, count: list.length });
       } catch (err: any) {
         return jsonResponse({
-          pending: [
-            {
-              id: 'sample-lead-1',
-              lead: {
-                full_name: 'David Vance',
-                job_title: 'Quantitative Strategy Developer',
-                company: 'Apex Alpha Research',
-                lead_score: 94,
-              },
-              subject: 'Stress-testing systematic models against HMM volatility shifts',
-              body_text:
-                'David — noticed your focus on systematic futures and regime shifts at Apex Alpha. We built Trading OS to validate strategy fragility under Gaussian HMM volatility regimes before deploying capital. Open to testing your models on our free beta?',
-            },
-          ],
-          count: 1,
+          pending: [],
+          count: 0,
         });
       }
     }
@@ -714,17 +690,8 @@ export default {
         return jsonResponse({ replies, count: replies.length });
       } catch (err: any) {
         return jsonResponse({
-          replies: [
-            {
-              id: 'reply-1',
-              lead: { full_name: 'David Vance', company: 'Apex Alpha Research' },
-              classification: 'INTERESTED_IN_BETA',
-              confidence: 0.96,
-              summary: 'Interested in testing 3-state Gaussian HMM volatility filter on futures trend-following models.',
-              suggested_action: 'Send VIP beta activation link.',
-            },
-          ],
-          count: 1,
+          replies: [],
+          count: 0,
         });
       }
     }
