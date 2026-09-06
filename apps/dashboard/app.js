@@ -333,9 +333,14 @@ document.addEventListener('keydown', (e) => {
 // -----------------------------------------------------------------------------
 window.executeWorkflow = async function () {
   const btn = document.getElementById('btn-execute-flow');
+  const btnMobile = document.getElementById('btn-execute-flow-mobile');
   if (btn) {
     btn.disabled = true;
     btn.innerHTML = `<span>⏳ Running...</span>`;
+  }
+  if (btnMobile) {
+    btnMobile.disabled = true;
+    btnMobile.innerHTML = `<span>⏳ Running...</span>`;
   }
 
   for (let i = 0; i < nodeOrder.length; i++) {
@@ -362,15 +367,27 @@ window.executeWorkflow = async function () {
       btn.innerHTML = `<span>▶ Run</span>`;
     }, 2000);
   }
+  if (btnMobile) {
+    btnMobile.disabled = false;
+    btnMobile.innerHTML = `<span>✅ Done!</span>`;
+    setTimeout(() => {
+      btnMobile.innerHTML = `<span>▶ Run Flow</span>`;
+    }, 2000);
+  }
 };
 
 window.triggerAutoDiscover = async function () {
   const btn = document.getElementById('btn-auto-discover');
+  const btnMobile = document.getElementById('btn-auto-discover-mobile');
   const btnPanel = document.getElementById('btn-discover-leads-panel');
 
   if (btn) {
     btn.disabled = true;
     btn.innerHTML = `<span>⏳ Finding Quants...</span>`;
+  }
+  if (btnMobile) {
+    btnMobile.disabled = true;
+    btnMobile.innerHTML = `<span>⏳ Discovering...</span>`;
   }
   if (btnPanel) {
     btnPanel.disabled = true;
@@ -404,6 +421,10 @@ window.triggerAutoDiscover = async function () {
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = `<span>⚡ Auto-Discover 5 Quants</span>`;
+    }
+    if (btnMobile) {
+      btnMobile.disabled = false;
+      btnMobile.innerHTML = `<span>⚡ Auto-Discover</span>`;
     }
     if (btnPanel) {
       btnPanel.disabled = false;

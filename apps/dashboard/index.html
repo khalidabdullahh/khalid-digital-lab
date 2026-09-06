@@ -767,20 +767,26 @@
     }
 
     /* Mobile Ergonomic Bottom Navigation Dock */
+    /* Mobile Quick Action Toolbar */
+    #mobile-action-bar {
+      display: none;
+    }
+
+    /* Mobile Ergonomic Bottom Navigation Dock */
     #mobile-dock {
       display: none;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 62px;
+      height: 64px;
       background: var(--bg-header);
       border-top: 1px solid var(--border-subtle);
       z-index: 120;
       justify-content: space-around;
       align-items: center;
-      padding: 0 4px;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+      padding: 0 8px;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.28);
     }
 
     .dock-item {
@@ -792,27 +798,40 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       gap: 3px;
       cursor: pointer;
-      padding: 6px 0;
+      padding: 6px 4px;
       position: relative;
-      transition: color 0.15s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 10px;
+    }
+
+    .dock-item:active {
+      transform: scale(0.92);
     }
 
     .dock-item .dock-icon {
-      font-size: 17px;
+      font-size: 18px;
+      line-height: 1;
+      transition: transform 0.2s;
     }
 
     .dock-item.active {
       color: var(--n8n-orange);
+      background: rgba(255, 109, 90, 0.12);
+      font-weight: 700;
+    }
+
+    .dock-item.active .dock-icon {
+      transform: translateY(-2px);
     }
 
     .dock-badge {
       position: absolute;
-      top: 2px;
-      right: calc(50% - 18px);
+      top: 3px;
+      right: calc(50% - 16px);
       background: var(--accent-rose);
       color: #fff;
       font-size: 9px;
@@ -820,6 +839,7 @@
       padding: 1px 5px;
       border-radius: 10px;
       font-family: var(--font-mono);
+      box-shadow: 0 2px 6px rgba(244, 63, 94, 0.4);
     }
 
     /* ==========================================================================
@@ -827,12 +847,13 @@
        ========================================================================== */
     @media (max-width: 768px) {
       header {
-        height: 56px;
-        padding: 0 14px;
+        height: 52px;
+        padding: 0 12px;
         position: sticky;
         top: 0;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border-subtle);
       }
 
       .brand {
@@ -852,7 +873,13 @@
         letter-spacing: -0.01em;
       }
 
-      .workflow-badge, .btn-sender-cfg, .nav-pill-group {
+      /* Clean top header: hide large buttons that belong in the action toolbar */
+      .workflow-badge, 
+      .nav-pill-group, 
+      #btn-auto-discover, 
+      #btn-bulk-import-hdr, 
+      #btn-execute-flow, 
+      .btn-sender-cfg {
         display: none !important;
       }
 
@@ -861,35 +888,92 @@
       }
 
       .btn-header {
-        padding: 6px 10px;
-        font-size: 11px;
-        border-radius: 7px;
+        padding: 6px 11px;
+        font-size: 12px;
+        border-radius: 8px;
       }
 
       .btn-theme-toggle {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
-        border-radius: 7px;
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+        border-radius: 8px;
+      }
+
+      /* Mobile Quick Action Toolbar */
+      #mobile-action-bar {
+        display: flex;
+        gap: 8px;
+        padding: 9px 12px;
+        background: var(--bg-panel);
+        border-bottom: 1px solid var(--border-subtle);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        position: sticky;
+        top: 52px;
+        z-index: 99;
+      }
+
+      #mobile-action-bar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .mobile-action-pill {
+        flex-shrink: 0;
+        padding: 7px 13px;
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 20px;
+        border: 1px solid var(--border-subtle);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .mobile-action-pill:active {
+        transform: scale(0.94);
+      }
+
+      .pill-primary {
+        background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+        color: #fff;
+        border: none;
+        box-shadow: 0 2px 8px rgba(6, 182, 212, 0.25);
+      }
+
+      .pill-secondary {
+        background: var(--bg-node);
+        color: var(--text-primary);
+      }
+
+      .pill-run {
+        background: linear-gradient(135deg, var(--n8n-orange), #ea580c);
+        color: #fff;
+        border: none;
+        box-shadow: 0 2px 8px rgba(255, 109, 90, 0.25);
       }
 
       #mobile-dock {
         display: flex;
-        height: calc(58px + env(safe-area-inset-bottom, 0px));
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        height: calc(60px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: env(safe-area-inset-bottom, 4px);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
       }
 
       .workspace {
-        margin-bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+        margin-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
       }
 
       .canvas-content {
         width: 100% !important;
         position: relative !important;
         height: auto !important;
-        padding: 16px 16px 40px 16px !important;
+        padding: 16px 14px 40px 14px !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 16px !important;
@@ -930,11 +1014,16 @@
       }
 
       .panel-view {
-        padding: 16px 12px 24px 12px;
+        padding: 14px 10px 30px 10px;
       }
 
       .approval-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .approval-card {
+        padding: 18px 14px;
       }
     }
   </style>
@@ -960,12 +1049,12 @@
         <span id="theme-icon">☀️</span>
       </button>
 
-      <!-- 1-Click Auto-Discover Quants Button -->
+      <!-- 1-Click Auto-Discover Quants Button (Desktop) -->
       <button class="btn-header" id="btn-auto-discover" onclick="triggerAutoDiscover()" title="Auto-Discover 5 Target Quants & Draft Outreach" style="background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color:#fff; border:none; font-weight:700; gap:5px;">
         <span>⚡ Auto-Discover 5 Quants</span>
       </button>
 
-      <!-- Bulk CSV Upload Button -->
+      <!-- Bulk CSV Upload Button (Desktop) -->
       <button class="btn-header" id="btn-bulk-import-hdr" onclick="openBulkImportModal()" title="Upload Apollo CSV or Paste Bulk Lead List" style="background: var(--bg-node); border: 1px solid var(--border-subtle); color: var(--text-primary); font-weight: 600;">
         <span>📥 Bulk CSV</span>
       </button>
@@ -1001,6 +1090,25 @@
       </button>
     </div>
   </header>
+
+  <!-- Mobile Quick Action Toolbar (Pill Carousel) -->
+  <div id="mobile-action-bar">
+    <button class="mobile-action-pill pill-primary" id="btn-auto-discover-mobile" onclick="triggerAutoDiscover()" title="Auto-Discover 5 Target Quants">
+      <span>⚡ Auto-Discover</span>
+    </button>
+    <button class="mobile-action-pill pill-secondary" onclick="openBulkImportModal()" title="Import Apollo CSV / List">
+      <span>📥 Bulk CSV</span>
+    </button>
+    <button class="mobile-action-pill pill-secondary" onclick="openAddLeadModal()" title="Add Target Lead">
+      <span>➕ Add Lead</span>
+    </button>
+    <button class="mobile-action-pill pill-run" id="btn-execute-flow-mobile" onclick="executeWorkflow()" title="Run Workflow Pipeline">
+      <span>▶ Run Flow</span>
+    </button>
+    <button class="mobile-action-pill pill-secondary" onclick="openSenderModal()" title="Outbound Sender Configuration">
+      <span>✉️ Sender</span>
+    </button>
+  </div>
 
   <!-- Workspace Container -->
   <div class="workspace">
