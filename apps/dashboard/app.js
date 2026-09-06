@@ -726,6 +726,8 @@ window.submitBulkLeads = async function () {
       data = text ? JSON.parse(text) : {};
     } catch {
       data = {};
+    }
+
     alert(`🎉 Success! Successfully ingested ${parsedBulkLeads.length} real prospects from your list into Neon DB!`);
     window.closeBulkImportModal();
     await Promise.all([fetchLeads(), fetchPendingApprovals(), fetchFunnelMetrics()]);
