@@ -770,6 +770,8 @@
     /* Mobile Quick Action Toolbar */
     #mobile-action-bar {
       display: none;
+      flex-shrink: 0;
+      position: relative;
     }
 
     /* Mobile Ergonomic Bottom Navigation Dock */
@@ -846,13 +848,17 @@
        MOBILE RESPONSIVE BREAKPOINT (< 768px)
        ========================================================================== */
     @media (max-width: 768px) {
+      body {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+      }
+
       header {
         height: 52px;
         padding: 0 12px;
-        position: sticky;
-        top: 0;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        position: relative;
+        flex-shrink: 0;
         border-bottom: 1px solid var(--border-subtle);
       }
 
@@ -903,16 +909,16 @@
       /* Mobile Quick Action Toolbar */
       #mobile-action-bar {
         display: flex;
+        flex-shrink: 0;
+        position: relative;
         gap: 8px;
-        padding: 9px 12px;
+        padding: 8px 12px;
         background: var(--bg-panel);
         border-bottom: 1px solid var(--border-subtle);
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        position: sticky;
-        top: 52px;
-        z-index: 99;
+        z-index: 50;
       }
 
       #mobile-action-bar::-webkit-scrollbar {
@@ -959,31 +965,56 @@
 
       #mobile-dock {
         display: flex;
-        height: calc(60px + env(safe-area-inset-bottom, 0px));
-        padding-bottom: env(safe-area-inset-bottom, 4px);
+        height: calc(62px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: env(safe-area-inset-bottom, 6px);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
+        z-index: 120;
       }
 
       .workspace {
-        margin-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+        flex: 1;
+        min-height: 0;
+        margin-bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+        display: flex;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #view-canvas {
+        flex: 1;
+        height: 100%;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
       }
 
       .canvas-content {
         width: 100% !important;
+        max-width: 100% !important;
         position: relative !important;
         height: auto !important;
-        padding: 16px 14px 40px 14px !important;
+        min-height: min-content !important;
+        padding: 16px 12px 100px 12px !important;
         display: flex !important;
         flex-direction: column !important;
-        gap: 16px !important;
+        gap: 14px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
       }
 
       .n8n-node {
         position: relative !important;
-        top: auto !important;
-        left: auto !important;
+        top: 0 !important;
+        left: 0 !important;
         width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        border-radius: 14px !important;
+        flex-shrink: 0 !important;
       }
 
       .pin {
@@ -1014,7 +1045,13 @@
       }
 
       .panel-view {
-        padding: 14px 10px 30px 10px;
+        flex: 1;
+        height: 100%;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 16px 12px 100px 12px !important;
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
       }
 
       .approval-grid {
@@ -1542,6 +1579,6 @@ Elena Rostova, elena@pinequant.io, PineQuant, Pine Script Dev" style="font-famil
       });
     });
   </script>
-  <script src="/app.js?v=2.8.0"></script>
+  <script src="/app.js?v=2.9.0"></script>
 </body>
 </html>

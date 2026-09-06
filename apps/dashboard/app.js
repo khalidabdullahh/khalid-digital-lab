@@ -84,12 +84,18 @@ window.switchView = function (viewId) {
 
   const canvas = document.getElementById('view-canvas');
   if (viewId === 'canvas') {
-    if (canvas) canvas.style.display = 'block';
+    if (canvas) {
+      canvas.style.display = 'block';
+      canvas.scrollTop = 0;
+    }
     setTimeout(drawWires, 50);
   } else {
     if (canvas) canvas.style.display = 'none';
     const panel = document.getElementById(`view-${viewId}`);
-    if (panel) panel.classList.add('active');
+    if (panel) {
+      panel.classList.add('active');
+      panel.scrollTop = 0;
+    }
   }
 
   window.scrollTo(0, 0);
