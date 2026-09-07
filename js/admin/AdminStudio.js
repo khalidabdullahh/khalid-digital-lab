@@ -40,16 +40,37 @@ export class AdminStudio {
   bindEvents() {
     // 1-Click GitHub OAuth Login Button
     document.getElementById("btn-github-oauth")?.addEventListener("click", () => {
+      const authStatus = document.getElementById("auth-status-text");
+      if (authStatus) {
+        authStatus.innerHTML = `<span class="text-cyan animate-pulse">Redirecting to GitHub OAuth...</span>`;
+      }
       window.location.href = "/api/auth/login";
     });
 
-    // Manual PAT Login Form
-    document.getElementById("btn-auth-login")?.addEventListener("click", async () => {
+    const submitPatLogin = async () => {
       const input = document.getElementById("pat-input");
       const token = input?.value.trim();
-      if (!token) return alert("Please enter your GitHub Personal Access Token.");
+      const authStatus = document.getElementById("auth-status-text");
+      if (!token) {
+        if (authStatus) {
+          authStatus.innerHTML = `<span class="text-rose-400 font-mono text-[11px]">Please enter your GitHub Personal Access Token.</span>`;
+        }
+        input?.focus();
+        return;
+      }
       this.token = token;
       await this.verifyAuth();
+    };
+
+    // Manual PAT Login Form
+    document.getElementById("btn-auth-login")?.addEventListener("click", submitPatLogin);
+
+    // Enter key support in PAT input
+    document.getElementById("pat-input")?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submitPatLogin();
+      }
     });
 
     // Logout button
@@ -91,7 +112,9 @@ export class AdminStudio {
 
   async verifyAuth() {
     const authStatus = document.getElementById("auth-status-text");
-    if (authStatus) authStatus.textContent = "Verifying token with GitHub API...";
+    if (authStatus) {
+      authStatus.innerHTML = `<span class="text-cyan animate-pulse">⏳ Verifying credentials with api.github.com...</span>`;
+    }
 
     try {
       const res = await fetch("https://api.github.com/user", {
@@ -102,7 +125,7 @@ export class AdminStudio {
       });
 
       if (!res.ok) {
-        throw new Error(`Invalid token (HTTP ${res.status})`);
+        throw new Error(`Invalid token or expired (HTTP ${res.status})`);
       }
 
       const userData = await res.json();
@@ -112,20 +135,27 @@ export class AdminStudio {
 
       this.user = userData;
       localStorage.setItem("khalid_github_admin_token", this.token);
-      this.showDashboard();
-      await this.loadPosts();
+      if (authStatus) {
+        authStatus.innerHTML = `<span class="text-emerald-400">✓ Authenticated as @${userData.login}! Launching...</span>`;
+      }
+      setTimeout(() => {
+        this.showDashboard();
+        this.loadPosts();
+      }, 400);
     } catch (err) {
       console.error("Auth error:", err);
-      alert(`Authentication Failed: ${err.message}`);
+      localStorage.removeItem("khalid_github_admin_token");
+      this.token = "";
       this.showAuthScreen();
+      if (authStatus) {
+        authStatus.innerHTML = `<span class="text-rose-400 font-mono text-[11px]">⚠️ ${err.message}</span>`;
+      }
     }
   }
 
   showAuthScreen() {
     document.getElementById("auth-view")?.classList.remove("hidden");
     document.getElementById("dashboard-view")?.classList.add("hidden");
-    const authStatus = document.getElementById("auth-status-text");
-    if (authStatus) authStatus.textContent = "";
   }
 
   showDashboard() {
